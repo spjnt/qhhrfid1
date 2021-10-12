@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="tramais.hnb.hhrfid">
 
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- SDCard读权限 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" /> <!-- 因为拍照需要写入文件 所以需要申请读取内存的权限 -->
@@ -131,6 +133,7 @@
         <activity android:name=".ui.ActivitySubmitCore" />
         <activity android:name=".ui.crop.ActivityFieldSampling" />
         <activity android:name=".ui.crop.ActtivityCropSearchBy" />
+        <activity android:name=".ui.ActivityNumber" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

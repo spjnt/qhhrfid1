@@ -25,7 +25,7 @@ class WateImagsTask {
         } else {
             userName
         }
-        var startY = 1 - 0.03 * textList.size + 0.01
+        var startY = 1 - 0.03 * textList.size - 0.01
         for (index in 1..10) {
             var postionX = if (index % 2 == 0)
                 0.61

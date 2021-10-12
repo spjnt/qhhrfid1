@@ -170,7 +170,7 @@ class SettingFragment : BaseFragment() {
             }
         }
         /*更新缓存*/mRlCache!!.setOnClickListener { view: View? ->
-            if (NetUtil.checkNet(context)) {
+            if (NetUtil.checkNet(requireContext())) {
                 // showStr(context, "正在缓存,请稍等")
                 startDownload()
 

@@ -128,7 +128,7 @@ class FragmentSign : BaseFragment(), ChoicePhoto {
             }
         }
         mIvUploadCard.setOnClickListener { view: View? ->
-            if (NetUtil.checkNet(context)) {
+            if (NetUtil.checkNet(requireContext())) {
                 if (!backCard_path.isNullOrEmpty())
                     RequestUtil.getInstance(context)!!.getBankInfo(ImageUtils.getStream(backCard_path), object : GetResultJsonObject {
                         override fun getResult(rtnCode: Int, message: String?, totalNums: Int, datas: JSONObject?) {
@@ -160,7 +160,7 @@ class FragmentSign : BaseFragment(), ChoicePhoto {
 
     var getBankResulData: MutableList<BankInfoDetail.GetBankResulDataDTO?>? = ArrayList()
     fun getBankInfo(bankCode: String) {
-        if (NetUtil.checkNet(context)) {
+        if (NetUtil.checkNet(requireContext())) {
             RequestUtil.getInstance(context)!!.getBankInfoDetail(bankCode, object : GetBankInfo {
                 override fun bankInfo(info: BankInfoDetail?) {
                     info?.let {
@@ -206,7 +206,7 @@ class FragmentSign : BaseFragment(), ChoicePhoto {
         }
         /*if (!path.isNullOrEmpty()) {*/
 
-        if (NetUtil.checkNet(context)) {
+        if (NetUtil.checkNet(requireContext())) {
             showAvi()
 
             sing.clear()
@@ -242,7 +242,7 @@ class FragmentSign : BaseFragment(), ChoicePhoto {
     }
 
     fun getChaKanDetail(number: String?) {
-        if (NetUtil.checkNet(context)) {
+        if (NetUtil.checkNet(requireContext())) {
             RequestUtil.getInstance(context)!!.getChaKanDetail(number) { detail ->
 
                 detail?.let {

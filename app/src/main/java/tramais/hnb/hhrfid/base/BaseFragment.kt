@@ -84,7 +84,7 @@ abstract class BaseFragment : ImmersionFragment() /*Fragment()*/{
         }
     }
     fun netTips() {
-        if (!NetUtil.checkNet(context)) {
+        if (!NetUtil.checkNet(context!!)) {
             "请在联网环境下操作".showStr()
             return
         }

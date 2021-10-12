@@ -20,7 +20,6 @@ import kotlinx.android.synthetic.main.activity_camera_only.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import top.zibin.luban.OnCompressListener
 import tramais.hnb.hhrfid.R
 import tramais.hnb.hhrfid.base.BaseActivity
 import tramais.hnb.hhrfid.bean.FenPei
@@ -28,7 +27,6 @@ import tramais.hnb.hhrfid.constant.Constants
 import tramais.hnb.hhrfid.listener.MyLocationListener
 import tramais.hnb.hhrfid.ui.dialog.DialogImg
 import tramais.hnb.hhrfid.util.*
-import java.io.File
 
 class CameraOnlyActivity
     : BaseActivity() {
@@ -177,12 +175,13 @@ class CameraOnlyActivity
     override fun initListner() {
         btn_showcamera!!.setOnClickListener { view: View? -> takePhoto() }
         mImvGallery!!.setOnClickListener { v: View? -> goBack() }
-
-        imv_pic!!.setOnClickListener { v: View? ->
-            if (bitmaps == null || bitmaps.size == 0) return@setOnClickListener
-            val dialogImg = DialogImg(this, path)
-            if (dialogImg != null && !isFinishing) dialogImg.show()
-        }
+        if (imv_pic != null)
+            imv_pic!!.setOnClickListener { v: View? ->
+                if (bitmaps == null || bitmaps.size == 0) return@setOnClickListener
+                if (path.isNullOrEmpty()) return@setOnClickListener
+                val dialogImg = DialogImg(this, path)
+                if (dialogImg != null && !isFinishing) dialogImg.show()
+            }
     }
 
     private fun goBack() {
@@ -232,7 +231,7 @@ class CameraOnlyActivity
                 textList.add("📍:$first")
                 textList.add(end)
 
-              //  LogUtils.e("location_add  $location_add   $first  $end")
+                //  LogUtils.e("location_add  $location_add   $first  $end")
             } else {
                 textList.add("📍:$location_add")
             }
@@ -317,25 +316,5 @@ class CameraOnlyActivity
     var path: String? = null
 
 
-    private fun compress(bitmap: String) {
-        top.zibin.luban.Luban.with(this)
-                .load(bitmap)
-                .ignoreBy(100)
-                .setCompressListener(object : OnCompressListener {
-                    override fun onStart() {
-                        LogUtils.e("onStart")
-                    }
-
-                    override fun onSuccess(file: File?) {
-                        LogUtils.e("onSuccess")
-                    }
-
-                    override fun onError(e: Throwable?) {
-                        LogUtils.e("onError")
-                    }
-                })
-
-
-    }
 }
 

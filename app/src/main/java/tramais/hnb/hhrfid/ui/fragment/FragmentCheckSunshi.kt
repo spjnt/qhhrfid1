@@ -91,7 +91,7 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
             if (riskReasons != null) riskReasons!!.clear()
             if (reasons != null) reasons!!.clear()
             if (reason_code != null) reason_code!!.clear()
-            if (NetUtil.checkNet(context)) {
+            if (NetUtil.checkNet(requireContext())) {
                 RequestUtil.getInstance(context)!!.getRiskReason("养殖险事故类型", object : GetCommon<RiskReason> {
                     override fun getCommon(t: RiskReason) {
                         riskReasons = t.data as MutableList<RiskReason.DataDTO>
@@ -633,7 +633,7 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
 
     var quck_list: MutableList<CheckDetail.LiPeiAnimalDataDTO?>? = ArrayList()
     fun getDetail(num: String?) {
-        if (NetUtil.checkNet(context)) {
+        if (NetUtil.checkNet(context!!)) {
             RequestUtil.getInstance(context)!!.getChaKanDetail(num) { detail ->
                 if (detail.code == 0) {
                     detail?.let {

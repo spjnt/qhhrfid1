@@ -93,7 +93,7 @@ class FragmentCheck : BaseFragment()/*, ChoicePhoto*/ {
 
     fun saveInfo() {
         val name = PreferUtils.getString(context, Constants.UserName)
-        if (NetUtil.checkNet(context)) {
+        if (NetUtil.checkNet(requireContext())) {
             showAvi()
             RequestUtil.getInstance(context)!!.saveChaKan(fenPei!!, Utils.getText(checkDate), Utils.getEdit(address), Utils.getEdit(sunshi), Utils.getEdit(guji), Utils.getEdit(advice), name, null, TimeUtil.getTime(Constants.yyyy_mm_dd), TimeUtil.getTime(Constants.yyyy_mm_dd)) { rtnCode, message ->
                 hideAvi()
@@ -129,7 +129,7 @@ class FragmentCheck : BaseFragment()/*, ChoicePhoto*/ {
 
 
     fun getChaKanDetail(number: String?) {
-        if (NetUtil.checkNet(context)) {
+        if (NetUtil.checkNet(requireContext())) {
             RequestUtil.getInstance(context)!!.getChaKanDetail(number) { detail ->
                 detail?.let {
                     requireActivity()!!.runOnUiThread {
@@ -236,7 +236,7 @@ class FragmentCheck : BaseFragment()/*, ChoicePhoto*/ {
     override fun onResume() {
         super.onResume()
 
-        if (NetUtil.checkNet(context)) {
+        if (NetUtil.checkNet(context!!)) {
             mLocationClient = LocationClient(context)
             BDLoactionUtil.initLoaction(mLocationClient)
             mLocationClient!!.start()

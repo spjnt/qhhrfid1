@@ -1,66 +1,51 @@
-package tramais.hnb.hhrfid.util;
+package tramais.hnb.hhrfid.util
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.annotation.SuppressLint
+import android.content.Context
+import android.net.ConnectivityManager
 
-public class NetUtil {
-
-    public static boolean checkNet(Context context) {
-
-
+object NetUtil {
+    fun checkNet(context: Context): Boolean {
         /**
          * 判断是否为WiFi连接
          */
-        boolean isWIFI = isWIFIConnection(context);
+        val isWIFI = isWIFIConnection(context)
+
         /**
          * 判断是否为移动网络连接
          */
-        boolean isMobile = isMobileConnection(context);
-
-        return isMobile || isWIFI;
+        val isMobile = isMobileConnection(context)
+        return isMobile || isWIFI
     }
 
-    private static boolean isMobileConnection(Context context) {
+    @SuppressLint("MissingPermission")
+    private fun isMobileConnection(context: Context): Boolean {
         //获取连接管理器
-        ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        val manager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         //获取mobile连接
-        NetworkInfo networkInfo = manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-
-        if (networkInfo != null) {
-            return networkInfo.isConnected();
-        }
-        return false;
+        val networkInfo = manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)
+        return networkInfo?.isConnected ?: false
+    }
+    @SuppressLint("MissingPermission")
+    fun isWIFIConnection(context: Context): Boolean {
+        val manager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        //获取mobile连接
+        val networkInfo = manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
+        return networkInfo?.isConnected ?: false
     }
 
-    public static boolean isWIFIConnection(Context context) {
-        ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        //获取mobile连接
-        NetworkInfo networkInfo = manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-
-        if (networkInfo != null) {
-            return networkInfo.isConnected();
-        }
-        return false;
-    }
-    public static final int TYPE_WIFI = 1;
-    public static final int TYPE_MOBILE = 2;
-    public static final int TYPE_NOT_CONNECTED = 0;
-
-
-    public static int getConnectivityStatus(Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+    const val TYPE_WIFI = 1
+    const val TYPE_MOBILE = 2
+    const val TYPE_NOT_CONNECTED = 0
+    @SuppressLint("MissingPermission")
+    fun getConnectivityStatus(context: Context): Int {
+        val cm = context
+                .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork = cm.activeNetworkInfo
         if (null != activeNetwork) {
-            if(activeNetwork.getType() == ConnectivityManager.TYPE_WIFI)
-                return TYPE_WIFI;
-
-            if(activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE)
-                return TYPE_MOBILE;
+            if (activeNetwork.type == ConnectivityManager.TYPE_WIFI) return TYPE_WIFI
+            if (activeNetwork.type == ConnectivityManager.TYPE_MOBILE) return TYPE_MOBILE
         }
-        return TYPE_NOT_CONNECTED;
+        return TYPE_NOT_CONNECTED
     }
-
 }
