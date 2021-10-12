@@ -99,14 +99,14 @@
             android:configChanges="orientation|keyboardHidden"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity android:name=".ui.crop.CropMakeDealActivity" />
-        <activity android:name=".ui.crop.CropListActivtiy" />
+
         <activity android:name=".ui.PdfActivity" />
         <activity android:name=".ui.crop.CropInsureCheckPublic" />
         <activity android:name=".ui.crop.CropSyncPayment" /> <!-- <activity android:name=".ui.crop.CropCheck" /> -->
         <activity android:name=".ui.crop.CropCheckPassActivity" />
         <activity android:name=".ui.crop.CropAddNewCheckActivity" />
         <activity android:name=".ui.crop.CropSmipleActivity" />
-        <activity android:name=".ui.crop.CropClaimAndLossDeter" />
+        <!--<activity android:name=".ui.crop.CropClaimAndLossDeter" />-->
         <activity android:name=".ui.WebActivity" /> <!-- <activity android:name=".ui.crop.CropActivityFenPei" /> -->
         <activity
             android:name=".ui.ActivitySign"
@@ -118,9 +118,8 @@
         <activity
             android:name=".ui.crop.CheckSunShiList"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
-        <activity android:name=".ui.crop.ActivityDingSunResult" />
+
         <activity android:name=".ui.ActivityAnimalLPPublic" />
-        <activity android:name=".ui.CameraTagActivity" />
         <activity android:name=".ui.ActivityAnimalCBPublic" />
         <activity android:name=".ui.ActivityAnimalPay" />
         <activity android:name=".ui.ActivityAnimalPayDetail" />

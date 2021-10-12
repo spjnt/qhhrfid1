@@ -12,3 +12,6 @@
 /captures
 .externalNativeBuild
 .cxx
+/.idea/codeStyles/
+/.idea/dictionaries/
+/.idea/inspectionProfiles/Project_Default.xml
