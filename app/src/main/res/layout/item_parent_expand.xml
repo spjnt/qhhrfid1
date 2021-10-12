@@ -30,7 +30,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/size_10"
-                android:layout_toLeftOf="@id/del_ear_tag"
+
                 android:padding="@dimen/size_2"
                 android:text="123"
                 android:textColor="@color/black"
@@ -48,7 +48,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/size_10"
-                    android:layout_toLeftOf="@id/del_ear_tag"
+
                     android:layout_weight="1"
                     android:padding="@dimen/size_2"
                     android:text="123"
@@ -62,7 +62,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/size_10"
-                    android:layout_toLeftOf="@id/del_ear_tag"
+
                     android:layout_weight="1"
                     android:padding="@dimen/size_2"
                     android:text="123"

@@ -22,18 +22,6 @@
     <string name="name">名&#160;&#160;&#160;&#160;&#160;&#160;&#160;称:</string>
     <string name="quite">退出登录</string>
     <string name="checkbox_text"><Data><![CDATA[我已阅读并同意<font color="#738ffe"><b>&#060;&#060;农险相关条款&#062;&#062;</b></font>]]></Data></string>
-    <string name="file_farmer_info">养殖户信息:</string>
-    <string name="file_under_writing_data">承&#160;保&#160;数&#160;据:</string>
-    <string name="file_waiting_up_load_tags">待上传耳标数量</string>
-    <string name="waiting_up_load_under_writing">待上传投保清单</string>
-    <string name="file_accident_report">出险报案</string>
-    <string name="filr_survey_data">查勘数据</string>
-    <string name="file_loss_data">定损数据</string>
-    <string name="file_up_load">提交上传</string>
-    <string name="input_name_number_mobile">请输入投保人姓名/报案号/报案电话</string>
-    <string name="all_text">全部</string>
-    <string name="task_allocation">任务分配</string>
-    <string name="task_allocation_self">分配给自己</string>
     <string name="todo">TODO</string>
     <string name="scan_again">重扫</string>
     <string name="scan_tag_again_bykey">按扫描键扫描电子耳标</string>
@@ -48,7 +36,6 @@
     <string name="insurance_end_start">保险止期:</string>
     <string name="public_date">公示起期:</string>
     <string name="insurance_type">险&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;种:</string>
-    <string name="subject_address">标的地址:</string>
     <string name="plot_details">地块详情:</string>
     <string name="unit_insure_amount">单位保额:</string>
     <string name="input_unit_insure_amount">请输入单位保额</string>
