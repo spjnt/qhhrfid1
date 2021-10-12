@@ -256,7 +256,6 @@ class ActtivitySearchByFarmerOrTel : BaseActivity() {
                     val lableNum = item.farmName
                     LogUtils.e("lableNum:$lableNum")
                     val tel = item.tel
-
                     if (!TextUtils.isEmpty(lableNum) && !search_list.contains(lableNum)) search_list.add(lableNum)
                     if (!TextUtils.isEmpty(tel) && !search_list.contains(tel)) search_list.add(tel)
                 }
