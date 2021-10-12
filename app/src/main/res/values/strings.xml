@@ -1,0 +1,73 @@
+<resources>
+    <string name="app_name">青农保·测试</string><!--·测试-->
+    <string name="inpuut_account">请输入用户名</string>
+    <string name="input_password">请输入密码</string>
+    <string name="rem_password">记住密码</string>
+    <string name="forget_password">忘记密码</string>
+    <string name="change_password">修改密码</string>
+    <!--忘记密码-->
+    <string name="phone_num">手机号码</string>
+    <string name="phone_num_hint">请输入正确的手机号码</string>
+    <string name="verification_code">验证码</string>
+    <string name="get_verification_code">获取验证码</string>
+    <string name="get_verification_code_again">重新获取</string>
+    <string name="verification_code_hint">请输入您的验证码</string>
+    <string name="new_psw">新密码</string>
+    <string name="new_psw_hint">请输入8-16位的新密码,至少包含数字和字母</string>
+    <string name="new_psw_confim">新密码确认</string>
+    <string name="new_psw_confim_hint">新再次输入密码</string>
+    <string name="change_confim">确认修改</string>
+    <string name="copy_right">Copyright © 中国人民财务保险股份有限公司青海省分公司</string>
+    <string name="login">登&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;录</string>
+    <string name="name">名&#160;&#160;&#160;&#160;&#160;&#160;&#160;称:</string>
+    <string name="quite">退出登录</string>
+    <string name="checkbox_text"><Data><![CDATA[我已阅读并同意<font color="#738ffe"><b>&#060;&#060;农险相关条款&#062;&#062;</b></font>]]></Data></string>
+    <string name="file_farmer_info">养殖户信息:</string>
+    <string name="file_under_writing_data">承&#160;保&#160;数&#160;据:</string>
+    <string name="file_waiting_up_load_tags">待上传耳标数量</string>
+    <string name="waiting_up_load_under_writing">待上传投保清单</string>
+    <string name="file_accident_report">出险报案</string>
+    <string name="filr_survey_data">查勘数据</string>
+    <string name="file_loss_data">定损数据</string>
+    <string name="file_up_load">提交上传</string>
+    <string name="input_name_number_mobile">请输入投保人姓名/报案号/报案电话</string>
+    <string name="all_text">全部</string>
+    <string name="task_allocation">任务分配</string>
+    <string name="task_allocation_self">分配给自己</string>
+    <string name="todo">TODO</string>
+    <string name="scan_again">重扫</string>
+    <string name="scan_tag_again_bykey">按扫描键扫描电子耳标</string>
+    <string name="choice_animal">畜种选择</string>
+    <string name="complete">完成</string>
+    <string name="bill_no">清单编号:</string>
+    <string name="insurance_method">投保方式:</string>
+    <string name="choice_insurance_method">请选择投保方式</string>
+    <string name="self_insure">个体投保</string>
+    <string name="insurance_date">承保日期:</string>
+    <string name="insurance_start_date">保险起期:</string>
+    <string name="insurance_end_start">保险止期:</string>
+    <string name="public_date">公示起期:</string>
+    <string name="insurance_type">险&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;种:</string>
+    <string name="subject_address">标的地址:</string>
+    <string name="plot_details">地块详情:</string>
+    <string name="unit_insure_amount">单位保额:</string>
+    <string name="input_unit_insure_amount">请输入单位保额</string>
+    <string name="premium_amount">保费金额:</string>
+    <string name="input_premium_amount">请输入保费金额</string>
+    <string name="amount_financial_subsidy">财政补贴金额:</string>
+    <string name="input_amount_financial_subsidy">请输入财政补贴金额</string>
+    <string name="central_subsidy">&#160;&#160;&#160;&#160;中央补贴:</string>
+    <string name="provincial_subsidies">&#160;&#160;&#160;&#160;省级补贴:</string>
+    <string name="city_subsidy">&#160;&#160;&#160;&#160;市级补贴:</string>
+    <string name="country_subsidies">&#160;&#160;&#160;&#160;县级补贴:</string>
+    <string name="amount_paid_by_farmers">农户自缴金额:</string>
+    <string name="input_amount_paid_by_farmers">请输入农户自缴金额</string>
+    <string name="save">保存</string>
+    <string name="modify">修改</string>
+
+    <!-- Preference Titles -->
+
+    <!-- Messages Preferences -->
+
+    <!-- Sync Preferences -->
+</resources>

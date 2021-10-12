@@ -1,0 +1,116 @@
+<resources>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowBackground">@android:color/white</item>
+    </style>
+
+
+    <!-- Base application theme. -->
+    <style name="textStyle">
+
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+    <!--popuwindow进出的动画-->
+    <style name="PopMenuAnimation">
+        <item name="android:windowEnterAnimation">@anim/popshow</item>
+        <item name="android:windowExitAnimation">@anim/pophide</item>
+    </style>
+
+    <style name="TopPopAnim" parent="@android:style/Animation.Activity">
+        <item name="android:windowEnterAnimation">@anim/top_in</item>
+        <item name="android:windowExitAnimation">@anim/top_out</item>
+    </style>
+
+    <style name="dialog" parent="@android:style/Theme.Dialog">
+        <!--点击外部关闭-->
+        <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="android:windowFrame">@null</item>
+        <!--边框-->
+        <item name="android:windowIsFloating">true</item>
+        <!--是否浮现在activity之上-->
+        <item name="android:windowIsTranslucent">false</item>
+        <!--半透明-->
+        <item name="android:windowNoTitle">true</item>
+        <!--无标题-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!--背景透明-->
+        <item name="android:backgroundDimEnabled">true</item>
+        <!--模糊-->
+    </style>
+
+    <style name="dialog_avi" parent="@android:style/Theme.Dialog">
+        <!--点击外部关闭-->
+        <item name="android:windowCloseOnTouchOutside">false</item>
+        <item name="android:windowFrame">@null</item>
+        <!--边框-->
+        <item name="android:windowIsFloating">true</item>
+        <!--是否浮现在activity之上-->
+        <item name="android:windowIsTranslucent">false</item>
+        <!--半透明-->
+        <item name="android:windowNoTitle">true</item>
+        <!--无标题-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!--背景透明-->
+        <item name="android:backgroundDimEnabled">true</item>
+        <!--模糊-->
+    </style>
+
+    <declare-styleable name="WaitingDots">
+        <attr name="dotsColor" format="color" />
+        <attr name="period" format="integer" />
+        <attr name="jumpHeight" format="integer" />
+        <attr name="autoplay" format="boolean" />
+    </declare-styleable>
+
+    <style name="ll">
+        <item name="android:layout_height">@dimen/size_40</item>
+        <item name="android:layout_width">match_parent</item>
+
+    </style>
+
+    <style name="text_left">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_marginLeft">@dimen/size_4</item>
+        <item name="android:textColor">@color/f33</item>
+        <item name="android:textSize">@dimen/text_size_14sp</item>
+        <item name="android:gravity">center</item>
+    </style>
+    <style name="text_wrap">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">@dimen/size_6</item>
+        <item name="android:textColor">@color/f33</item>
+        <item name="android:textSize">@dimen/text_size_12sp</item>
+
+    </style>
+    <style name="text_left_ll" parent="text_left">
+
+        <item name="android:layout_width">@dimen/size_75</item>
+
+    </style>
+
+    <style name="text_left_ll_big" parent="text_left">
+
+        <item name="android:layout_width">wrap_content</item>
+
+    </style>
+
+    <style name="text_right_ll">
+        <item name="android:layout_marginLeft">@dimen/size_10</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/text_size_14sp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="MyRadioButton" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">@color/light_blue</item>
+        <item name="colorControlActivated">@color/red</item>
+    </style>
+
+</resources>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent">
+    <tramais.hnb.hhrfid.ui.view.OutSideScrollView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/size_10" android:layout_above="@+id/ll_bottom">
+        <LinearLayout android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content">
+            <RelativeLayout android:background="@drawable/four_conner_no_stroke_six_gray" android:layout_width="match_parent" android:layout_height="@dimen/size_80" android:layout_margin="@dimen/size_6">
+                <EditText android:textSize="@dimen/text_size_14sp" android:textColor="@color/black" android:gravity="top" android:id="@+id/input_info" android:background="@null" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_margin="@dimen/size_4" android:text="" android:hint="抽样结论..." android:maxLength="500"/>
+            </RelativeLayout>
+            <RelativeLayout android:layout_width="match_parent" android:layout_height="@dimen/size_48">
+                <TextView android:textSize="@dimen/size_16" android:textStyle="bold" android:textColor="@color/black" android:gravity="right" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/size_10" android:text="鉴定机构/技术专家签名:" android:drawableLeft="@mipmap/important"/>
+                <Button android:textSize="@dimen/text_size_16sp" android:textColor="@color/black" android:id="@+id/btn_zhuanjia_sign" android:background="@drawable/bottom_no_conner" android:layout_width="wrap_content" android:layout_height="@dimen/size_35" android:layout_marginRight="@dimen/size_10" android:text="去签名" android:layout_alignParentRight="true" android:layout_centerVertical="true"/>
+            </RelativeLayout>
+            <RelativeLayout android:background="@color/e6" android:layout_width="match_parent" android:layout_height="@dimen/size_200">
+                <ImageView android:id="@+id/zhuanjia_sign" android:background="#ffffff" android:focusableInTouchMode="true" android:visibility="visible" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_marginLeft="@dimen/size_20" android:layout_marginRight="@dimen/size_20"/>
+            </RelativeLayout>
+            <RelativeLayout android:layout_width="match_parent" android:layout_height="@dimen/size_48">
+                <TextView android:textSize="@dimen/size_16" android:textStyle="bold" android:textColor="@color/black" android:gravity="right" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/size_10" android:text="查勘人签名:" android:drawableLeft="@mipmap/important"/>
+                <Button android:textSize="@dimen/text_size_16sp" android:textColor="@color/black" android:id="@+id/btn_employee_sign" android:background="@drawable/bottom_no_conner" android:layout_width="wrap_content" android:layout_height="@dimen/size_35" android:layout_marginRight="@dimen/size_10" android:text="去签名" android:layout_alignParentRight="true" android:layout_centerVertical="true"/>
+            </RelativeLayout>
+            <RelativeLayout android:background="@color/e6" android:layout_width="match_parent" android:layout_height="@dimen/size_200">
+                <ImageView android:id="@+id/employee_sign" android:background="#ffffff" android:focusableInTouchMode="true" android:visibility="visible" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_marginLeft="@dimen/size_20" android:layout_marginRight="@dimen/size_20"/>
+            </RelativeLayout>
+            <RelativeLayout android:layout_width="match_parent" android:layout_height="@dimen/size_48">
+                <TextView android:textSize="@dimen/size_16" android:textStyle="bold" android:textColor="@color/black" android:gravity="right" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/size_10" android:text="被保险人签名:" android:drawableLeft="@mipmap/important"/>
+                <Button android:textSize="@dimen/text_size_16sp" android:textColor="@color/black" android:id="@+id/btn_farmer_sign" android:background="@drawable/bottom_no_conner" android:layout_width="wrap_content" android:layout_height="@dimen/size_35" android:layout_marginRight="@dimen/size_10" android:text="去签名" android:layout_alignParentRight="true" android:layout_centerVertical="true"/>
+            </RelativeLayout>
+            <RelativeLayout android:background="@color/e6" android:layout_width="match_parent" android:layout_height="@dimen/size_200">
+                <ImageView android:id="@+id/farmer_sign" android:background="#ffffff" android:focusableInTouchMode="true" android:visibility="visible" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_marginLeft="@dimen/size_20" android:layout_marginRight="@dimen/size_20"/>
+            </RelativeLayout>
+        </LinearLayout>
+    </tramais.hnb.hhrfid.ui.view.OutSideScrollView>
+    <LinearLayout android:orientation="horizontal" android:id="@+id/ll_bottom" android:layout_width="match_parent" android:layout_height="@dimen/size_40" android:layout_alignParentBottom="true">
+        <Button android:textColor="@color/white" android:id="@+id/only_save" android:background="@drawable/big_conner_new" android:layout_width="match_parent" android:layout_height="@dimen/size_40" android:layout_marginLeft="@dimen/size_10" android:layout_marginRight="@dimen/size_10" android:layout_marginBottom="@dimen/size_10" android:text="保存" android:layout_weight="1" android:layout_alignParentBottom="true"/>
+        <Button android:textColor="@color/white" android:background="@drawable/big_conner_new" android:layout_width="match_parent" android:layout_height="@dimen/size_40" android:layout_marginLeft="@dimen/size_10" android:layout_marginRight="@dimen/size_10" android:layout_marginBottom="@dimen/size_10" android:text="理赔定损" android:layout_weight="1" android:layout_alignParentBottom="true"/>
+    </LinearLayout>
+</RelativeLayout>

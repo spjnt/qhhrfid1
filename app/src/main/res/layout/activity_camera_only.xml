@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activityMain"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <TextView
+                android:id="@+id/scan_total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/size_8"
+                android:text=""
+                android:textColor="@color/red"
+                android:textSize="@dimen/text_size_20sp" />
+
+            <com.camerakit.CameraKitView
+                android:id="@+id/camera"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                app:camera_facing="back"
+                app:camera_focus="continuous"
+                app:camera_imageJpegQuality="100"
+                app:camera_imageMegaPixels="30.0"
+                app:camera_permissions="camera" />
+
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_margin="12dp">
+
+        <TextView
+            android:id="@+id/imv_gallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+
+            android:background="@drawable/small_conner_new"
+            android:paddingLeft="@dimen/size_14"
+            android:paddingTop="@dimen/size_10"
+            android:paddingRight="@dimen/size_14"
+            android:paddingBottom="@dimen/size_10"
+            android:text="@string/complete"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_14sp"
+            android:visibility="visible" />
+
+        <ImageButton
+            android:id="@+id/btn_showcamera"
+            android:layout_width="@dimen/size_50"
+            android:layout_height="@dimen/size_50"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:background="@drawable/iv_border"
+            android:contentDescription="@string/todo"
+            android:src="@android:drawable/ic_menu_camera"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <ImageView
+
+            android:id="@+id/imageView"
+            android:layout_width="@dimen/size_80"
+            android:layout_height="@dimen/size_80"
+            android:layout_gravity="right|center_horizontal"
+            android:layout_margin="16dp"
+            android:alpha="1.0"
+            android:scaleType="centerInside" />
+    </FrameLayout>
+
+</FrameLayout>
+
+
+    <!--
+    <?xml version="1.0" encoding="utf-8"?>
+    <tramais.hnb.hhrfid.ui.view.CustomCameraView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/cc_camera"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/background_dark">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/imv_gallery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/size_10"
+                android:background="@drawable/small_conner_new"
+                android:paddingLeft="@dimen/size_14"
+                android:paddingTop="@dimen/size_10"
+                android:paddingRight="@dimen/size_14"
+                android:paddingBottom="@dimen/size_10"
+                android:text="@string/complete"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_14sp"
+                android:visibility="visible"
+                tools:ignore="TextContrastCheck" />
+
+            <ImageButton
+                android:id="@+id/btn_showcamera"
+                android:layout_width="@dimen/size_50"
+                android:layout_height="@dimen/size_50"
+                android:layout_centerInParent="true"
+                android:background="@drawable/iv_border"
+                android:contentDescription="@string/todo"
+                android:src="@android:drawable/ic_menu_camera"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <ImageView
+                android:id="@+id/imv_pic"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerInParent="true"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/bg_border"
+                android:scaleType="centerInside"
+                android:visibility="gone"
+                android:contentDescription="@string/todo" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/scan_total"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/size_8"
+                android:text=""
+                android:textColor="@color/red"
+                android:textSize="@dimen/text_size_20sp" />
+        </LinearLayout>
+    </tramais.hnb.hhrfid.ui.view.CustomCameraView>
+    -->

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        style="@style/text_wrap"
+        android:layout_marginTop="@dimen/size_6"
+        android:text="投保人" />
+
+    <TextView
+        android:id="@+id/et_farmer"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_40"
+        android:layout_marginLeft="@dimen/size_16"
+        android:background="@null"
+        android:gravity="center_vertical"
+        android:hint=""
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_12sp" />
+
+    <include layout="@layout/gray_line" />
+
+    <TextView
+        style="@style/text_wrap"
+        android:layout_marginTop="@dimen/size_6"
+        android:text="报案号" />
+
+    <TextView
+        android:id="@+id/et_number"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_40"
+        android:layout_marginLeft="@dimen/size_16"
+        android:background="@null"
+        android:gravity="center_vertical"
+        android:hint=""
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_12sp" />
+
+    <include layout="@layout/gray_line" />
+
+
+    <TextView
+        style="@style/text_wrap"
+        android:layout_marginTop="@dimen/size_6"
+        android:text="核保人" />
+
+    <TextView
+        android:id="@+id/et_checker"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_40"
+        android:layout_marginLeft="@dimen/size_16"
+        android:layout_marginRight="@dimen/size_10"
+        android:background="@null"
+        android:drawableRight="@mipmap/arrow_right_small"
+        android:gravity="center_vertical"
+        android:hint="点击选择核保人"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_12sp" />
+
+    <include layout="@layout/gray_line" />
+
+    <TextView
+        android:id="@+id/submit_result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/size_16"
+        android:layout_marginTop="@dimen/size_10"
+        android:layout_marginRight="@dimen/size_16"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:hint=""
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_12sp" />
+
+    <Button
+        android:id="@+id/submit"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_40"
+        android:layout_margin="@dimen/size_10"
+        android:background="@drawable/small_conner_new"
+        android:text="提交"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_14sp"
+        tools:ignore="TouchTargetSizeCheck" />
+
+
+</LinearLayout>

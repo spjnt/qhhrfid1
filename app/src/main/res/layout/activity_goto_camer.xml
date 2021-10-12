@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/text_wrap"
+            android:layout_marginTop="@dimen/size_6"
+            android:text="险种" />
+
+        <TextView
+            android:id="@+id/insurance_type"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_40"
+            android:layout_marginLeft="@dimen/size_10"
+            android:layout_marginRight="@dimen/size_6"
+            android:background="@null"
+            android:drawableRight="@mipmap/more"
+            android:gravity="center_vertical"
+            android:hint="请选择险种"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_12sp" />
+
+        <include layout="@layout/gray_line" />
+
+        <TextView
+            style="@style/text_wrap"
+            android:layout_marginTop="@dimen/size_6"
+            android:text="被保险人姓名" />
+
+        <EditText
+            android:id="@+id/et_farmer_name"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_40"
+            android:layout_marginLeft="@dimen/size_10"
+            android:background="@null"
+            android:hint="被保险人姓名"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_12sp" />
+
+        <include layout="@layout/gray_line" />
+
+
+        <TextView
+            style="@style/text_wrap"
+            android:layout_marginTop="@dimen/size_6"
+            android:text="耳标号" />
+
+        <EditText
+            android:id="@+id/et_ear_tag"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_40"
+            android:layout_marginLeft="@dimen/size_10"
+            android:background="@null"
+            android:hint="请输入耳标号"
+            android:inputType="number"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_12sp" />
+
+        <include layout="@layout/gray_line" />
+
+        <TextView
+            style="@style/text_wrap"
+            android:layout_marginTop="@dimen/size_6"
+            android:text="出险时间" />
+
+        <TextView
+            android:id="@+id/choice_time"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_40"
+            android:layout_marginLeft="@dimen/size_10"
+            android:layout_marginRight="@dimen/size_6"
+            android:background="@null"
+            android:drawableRight="@mipmap/more"
+            android:gravity="center_vertical"
+            android:hint="请选择出险时间"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_12sp" />
+
+        <include layout="@layout/gray_line" />
+
+        <TextView
+            style="@style/text_wrap"
+            android:layout_marginTop="@dimen/size_6"
+            android:text="报案原因" />
+
+        <TextView
+            android:id="@+id/reason"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_40"
+            android:layout_marginLeft="@dimen/size_10"
+            android:layout_marginRight="@dimen/size_6"
+            android:background="@null"
+            android:drawableRight="@mipmap/more"
+            android:gravity="center_vertical"
+            android:hint="请选择报案原因"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_12sp" />
+
+        <include layout="@layout/gray_line" />
+
+        <TextView
+            style="@style/text_wrap"
+            android:layout_marginTop="@dimen/size_6"
+            android:text="标的名称" />
+
+        <TextView
+            android:id="@+id/biaodi_name"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_40"
+            android:layout_marginLeft="@dimen/size_10"
+            android:layout_marginRight="@dimen/size_6"
+            android:background="@null"
+            android:drawableRight="@mipmap/more"
+            android:gravity="center_vertical"
+            android:hint="请选择标的名称"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_12sp" />
+
+        <include layout="@layout/gray_line" />
+
+        <TextView
+            style="@style/text_wrap"
+            android:layout_marginTop="@dimen/size_6"
+            android:text="机构地址" />
+
+        <TextView
+            android:id="@+id/tv_address"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_40"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/size_10"
+            android:gravity="center_vertical"
+
+            android:hint="请输入耳标号"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_12sp" />
+
+        <include layout="@layout/gray_line" />
+
+        <TextView
+            style="@style/text_wrap"
+            android:layout_marginTop="@dimen/size_6"
+            android:text="村镇地址" />
+
+        <TextView
+            android:id="@+id/tv_address_detail"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_40"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/size_10"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:hint="请选择村镇地址"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_12sp" />
+
+        <include layout="@layout/gray_line" />
+
+        <Button
+            android:id="@+id/camer"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_40"
+            android:layout_margin="@dimen/size_10"
+            android:background="@drawable/small_conner_new"
+            android:text="去     拍     照"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_14sp" />
+
+        <TextView
+            style="@style/text_wrap"
+            android:layout_marginTop="@dimen/size_6"
+            android:text="只显示最后一张照片"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/iv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/size_20"
+            android:visibility="gone" />
+    </LinearLayout>
+
+</ScrollView>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:background="@color/white" android:layout_width="match_parent" android:layout_height="wrap_content">
+    <RelativeLayout android:id="@+id/id_pop_layout" android:background="@color/white" android:layout_width="match_parent" android:layout_height="@dimen/size_40">
+        <TextView android:textSize="@dimen/text_size_14sp" android:textColor="@color/black" android:id="@+id/tv_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="@dimen/size_4" android:layout_marginRight="@dimen/size_15" android:text="" android:layout_alignParentLeft="true" android:layout_centerVertical="true"/>
+        <TextView android:textSize="@dimen/text_size_14sp" android:textColor="@color/black" android:id="@+id/tv_confim" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="@dimen/size_15" android:text="取消" android:layout_alignParentRight="true" android:layout_centerVertical="true"/>
+    </RelativeLayout>
+    <include layout="@layout/gray_line"/>
+    <ListView android:id="@+id/list_room_choice" android:scrollbars="none" android:layout_width="match_parent" android:layout_height="match_parent" android:dividerHeight="@dimen/size_0"/>
+</LinearLayout>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
+    <LinearLayout style="@style/ll">
+        <TextView android:text="投保单号:" style="@style/text_left_ll"/>
+        <TextView android:id="@+id/banan_num" style="@style/text_right_ll"/>
+    </LinearLayout>
+    <include layout="@layout/item_line"/>
+    <LinearLayout style="@style/ll">
+        <TextView android:text="被保险人:" style="@style/text_left_ll"/>
+        <TextView android:id="@+id/tv_name" style="@style/text_right_ll"/>
+    </LinearLayout>
+    <include layout="@layout/item_line"/>
+    <LinearLayout style="@style/ll">
+        <TextView android:text="保险期限:" style="@style/text_left_ll"/>
+        <TextView android:id="@+id/et_mobile" style="@style/text_right_ll"/>
+    </LinearLayout>
+    <include layout="@layout/item_line"/>
+    <LinearLayout style="@style/ll">
+        <TextView android:text="所  在  地:" style="@style/text_left_ll"/>
+        <TextView android:id="@+id/banan_danhao" style="@style/text_right_ll"/>
+    </LinearLayout>
+    <include layout="@layout/item_line"/>
+    <LinearLayout style="@style/ll">
+        <TextView android:text="报  案  号:" style="@style/text_left_ll"/>
+        <TextView android:id="@+id/chuxian_address" style="@style/text_right_ll"/>
+    </LinearLayout>
+    <include layout="@layout/item_line"/>
+    <LinearLayout style="@style/ll">
+        <TextView android:text="出险日期:" style="@style/text_left_ll"/>
+        <TextView android:id="@+id/tv_chuxian_date" style="@style/text_right_ll"/>
+    </LinearLayout>
+    <include layout="@layout/item_line"/>
+    <LinearLayout style="@style/ll">
+        <TextView android:text="报案时间:" style="@style/text_left_ll"/>
+        <TextView android:id="@+id/tv_baoan_date" style="@style/text_right_ll"/>
+    </LinearLayout>
+    <include layout="@layout/item_line"/>
+    <LinearLayout style="@style/ll">
+        <TextView android:text="出险地点:" style="@style/text_left_ll"/>
+        <TextView android:id="@+id/tv_chuxian_reason" style="@style/text_right_ll"/>
+    </LinearLayout>
+    <include layout="@layout/item_line"/>
+</LinearLayout>

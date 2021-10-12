@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/save"
+        android:layout_alignParentTop="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout style="@style/ll">
+
+                <TextView
+                    android:id="@+id/tv_shouzai"
+                    style="@style/text_left_ll_big"
+                    android:text="受灾比例(%):" />
+
+                <EditText
+                    android:inputType="numberDecimal|number"
+                    android:id="@+id/et_shouzai"
+                    style="@style/text_right_ll"
+                    android:layout_toLeftOf="@+id/tv_shouzai_more"
+                    android:layout_toRightOf="@+id/tv_shouzai"
+                    android:background="@null"
+                    android:hint="请输入受灾比例" />
+
+                <TextView
+                    android:id="@+id/tv_shouzai_more"
+                    android:layout_width="@dimen/size_65"
+                    android:layout_height="@dimen/size_30"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/size_10"
+                    android:background="@drawable/bottom_no_conner"
+                    android:gravity="center"
+                    android:padding="@dimen/size_4"
+                    android:text="批量修改"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_12sp" />
+            </RelativeLayout>
+
+            <include layout="@layout/gray_line" />
+
+            <RelativeLayout style="@style/ll">
+
+                <TextView
+                    android:id="@+id/tv_sunshi"
+                    style="@style/text_left_ll_big"
+                    android:text="损失比例(%):" />
+
+                <EditText
+                    android:inputType="numberDecimal|number"
+                    android:id="@+id/et_sun_shi"
+                    style="@style/text_right_ll"
+                    android:layout_toLeftOf="@+id/tv_sunshi_more"
+                    android:layout_toRightOf="@+id/tv_sunshi"
+                    android:background="@null"
+                    android:hint="请输入损失比例" />
+
+                <TextView
+                    android:id="@+id/tv_sunshi_more"
+                    android:layout_width="@dimen/size_65"
+                    android:layout_height="@dimen/size_30"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/size_10"
+                    android:background="@drawable/bottom_no_conner"
+                    android:gravity="center"
+                    android:padding="@dimen/size_4"
+                    android:text="批量修改"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_12sp" />
+            </RelativeLayout>
+
+            <include layout="@layout/gray_line" />
+
+            <tramais.hnb.hhrfid.ui.view.RecyleViewForScrollView
+                android:id="@+id/recyle_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/save"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_40"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="@dimen/size_20"
+        android:layout_marginTop="@dimen/size_10"
+        android:layout_marginRight="@dimen/size_20"
+        android:layout_marginBottom="@dimen/size_10"
+        android:background="@drawable/big_conner_new"
+        android:text="保存"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_14sp" />
+</RelativeLayout>

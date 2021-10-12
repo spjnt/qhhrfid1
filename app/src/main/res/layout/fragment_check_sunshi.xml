@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/save"
+        android:layout_alignParentTop="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout style="@style/ll">
+
+                <TextView
+                    style="@style/text_left_ll_big"
+                    android:text="险       种:" />
+
+                <TextView
+
+                    android:id="@+id/insure_type"
+                    style="@style/text_right_ll"
+                    android:hint="请选择险种"
+                    android:text="" />
+            </LinearLayout>
+
+
+            <include layout="@layout/item_line" />
+
+            <LinearLayout style="@style/ll">
+
+                <TextView
+                    style="@style/text_left_ll_big"
+                    android:text="单位保额:" />
+
+                <TextView
+
+                    android:id="@+id/unit_coverage"
+                    style="@style/text_right_ll"
+
+                    android:text="" />
+            </LinearLayout>
+
+
+            <include layout="@layout/item_line" />
+
+            <LinearLayout style="@style/ll">
+
+                <TextView
+                    style="@style/text_left_ll_big"
+                    android:text="灾害类型:" />
+
+                <TextView
+                    android:id="@+id/huarm_type"
+                    style="@style/text_right_ll"
+                    android:layout_marginRight="@dimen/size_10"
+                    android:drawableRight="@mipmap/arrow_right_small"
+                    android:hint="请选择灾害类型"
+                    android:text="" />
+            </LinearLayout>
+
+            <include layout="@layout/item_line" />
+
+            <LinearLayout style="@style/ll">
+
+                <TextView
+                    style="@style/text_left_ll_big"
+                    android:text="耳  标  号:" />
+
+                <TextView
+                    android:id="@+id/ear_tags"
+                    style="@style/text_right_ll"
+                    android:layout_marginRight="@dimen/size_10"
+                    android:drawableRight="@mipmap/arrow_right_small"
+                    android:hint="请选择耳标号"
+                    android:text="" />
+            </LinearLayout>
+
+            <include layout="@layout/item_line" />
+
+            <RelativeLayout style="@style/ll">
+
+                <TextView
+                    android:id="@+id/tv_loss_total"
+                    style="@style/text_left_ll_big"
+                    android:text="损失数量:" />
+
+                <EditText
+                    android:id="@+id/loss_total"
+                    style="@style/text_right_ll"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="0dp"
+                    android:layout_toLeftOf="@id/tv_sure"
+                    android:layout_toRightOf="@id/tv_loss_total"
+                    android:background="@null"
+                    android:hint="请输入损失数量"
+                    android:inputType="number"
+                    android:text="" />
+
+                <TextView
+                    android:id="@+id/tv_sure"
+                    android:layout_width="@dimen/size_65"
+                    android:layout_height="@dimen/size_30"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/size_10"
+                    android:background="@drawable/bottom_no_conner"
+                    android:gravity="center"
+                    android:paddingLeft="@dimen/size_8"
+                    android:paddingRight="@dimen/size_8"
+
+                    android:text="确认"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_12sp" />
+            </RelativeLayout>
+
+            <include layout="@layout/item_line" />
+
+            <RelativeLayout style="@style/ll">
+
+                <TextView
+                    android:id="@+id/tv_com_total"
+                    style="@style/text_left_ll_big"
+                    android:text="损失金额:" />
+
+                <EditText
+                    android:id="@+id/com_total"
+                    style="@style/text_right_ll"
+                    android:layout_toLeftOf="@id/com_total_batch"
+                    android:layout_toRightOf="@id/tv_com_total"
+                    android:background="@null"
+                    android:hint="请输入损失金额"
+                    android:inputType="number|numberDecimal"
+                    android:text="" />
+
+                <TextView
+                    android:id="@+id/com_total_batch"
+                    android:layout_width="@dimen/size_65"
+                    android:layout_height="@dimen/size_30"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/size_10"
+                    android:background="@drawable/bottom_no_conner"
+                    android:gravity="center"
+                    android:paddingLeft="@dimen/size_8"
+                    android:paddingRight="@dimen/size_8"
+
+                    android:text="批量修改"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_12sp" />
+            </RelativeLayout>
+
+
+            <include layout="@layout/item_line" />
+
+            <RelativeLayout style="@style/ll">
+
+                <TextView
+                    android:id="@+id/tv_com_rate"
+                    style="@style/text_left_ll_big"
+                    android:text="损失比例(%):" />
+
+                <EditText
+
+                    android:id="@+id/com_rate"
+                    style="@style/text_right_ll"
+                    android:layout_toLeftOf="@id/com_rate_batch"
+                    android:layout_toRightOf="@id/tv_com_rate"
+                    android:background="@null"
+                    android:hint="请输入损失比例"
+                    android:inputType="number|numberDecimal"
+                    android:text="" />
+
+                <TextView
+                    android:id="@+id/com_rate_batch"
+                    android:layout_width="@dimen/size_65"
+                    android:layout_height="@dimen/size_30"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/size_10"
+                    android:background="@drawable/bottom_no_conner"
+                    android:gravity="center"
+                    android:paddingLeft="@dimen/size_8"
+                    android:paddingRight="@dimen/size_8"
+
+                    android:text="批量修改"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_12sp" />
+            </RelativeLayout>
+
+
+            <include layout="@layout/item_line" />
+
+            <tramais.hnb.hhrfid.ui.view.RecyleViewForScrollView
+                android:id="@+id/recyle_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/save"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_40"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="@dimen/size_20"
+        android:layout_marginTop="@dimen/size_10"
+        android:layout_marginRight="@dimen/size_20"
+        android:layout_marginBottom="@dimen/size_10"
+        android:background="@drawable/big_conner_new"
+        android:text="保存"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_14sp" />
+</RelativeLayout>

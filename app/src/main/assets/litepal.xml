@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<litepal>
+    <!--
+          Define the database name of your application.
+          By default each database name should be end with .db.
+          If you didn't name your database end with .db,
+          LitePal would plus the suffix automatically for you.
+          For example:
+          <dbname value="demo" />
+      -->
+    <dbname value="Qnb" />
+    <!--6.15 统一版本-->
+    <!--
+      Define the version of your database. Each time you want
+      to upgrade your database, the version tag would helps.
+      Modify the models you defined in the mapping tag, and just
+      make the version value plus one, the upgrade of database
+      will be processed automatically without concern.
+          For example:
+      <version value="1" />
+  -->
+    <version value="110" />
+
+    <list>
+        <mapping class="tramais.hnb.hhrfid.litePalBean.IdCategoryCache" />
+        <mapping class="tramais.hnb.hhrfid.litePalBean.AnimalCateGoryCache" />
+        <mapping class="tramais.hnb.hhrfid.litePalBean.FarmListCache" />
+        <mapping class="tramais.hnb.hhrfid.litePalBean.EarTagCache" />
+        <mapping class="tramais.hnb.hhrfid.litePalBean.AnimalSaveCache" />
+        <mapping class="tramais.hnb.hhrfid.litePalBean.BanAnInfo" />
+        <mapping class="tramais.hnb.hhrfid.litePalBean.MakeTouBaoDealBean" />
+        <mapping class="tramais.hnb.hhrfid.litePalBean.BillListListCache" />
+        <mapping class="tramais.hnb.hhrfid.litePalBean.ChaKanCache" />
+        <mapping class="tramais.hnb.hhrfid.litePalBean.DingSunCache" />
+        <mapping class="tramais.hnb.hhrfid.litePalBean.RiskReasonCache" />
+        <mapping class="tramais.hnb.hhrfid.litePalBean.EmployeeCache" />
+        <mapping class="tramais.hnb.hhrfid.litePalBean.BaoAnListCache" />
+        <mapping class="tramais.hnb.hhrfid.litePalBean.AllBillDetailCache" />
+
+        <mapping class="tramais.hnb.hhrfid.litePalBean.ChaKanDetailListCache" />
+        <mapping class="tramais.hnb.hhrfid.litePalBean.LossListCache" />
+        <mapping class="tramais.hnb.hhrfid.litePalBean.ChanKanEntrysBean" />
+        <mapping class="tramais.hnb.hhrfid.litePalBean.CropTypeCache" />
+        <mapping class="tramais.hnb.hhrfid.litePalBean.RoleCache" />
+        <mapping class="tramais.hnb.hhrfid.litePalBean.RegionCache" />
+        <mapping class="tramais.hnb.hhrfid.litePalBean.AnimalInsureBillListCache" />
+        <mapping class="tramais.hnb.hhrfid.litePalBean.BankInfoCache" />
+        <mapping class="tramais.hnb.hhrfid.litePalBean.NatureanCache" />
+        <mapping class="tramais.hnb.hhrfid.litePalBean.DeptCache" />
+
+    </list>
+
+    <storage value="external" />
+</litepal>

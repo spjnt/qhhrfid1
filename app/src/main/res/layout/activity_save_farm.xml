@@ -1,0 +1,608 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/common_background"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/size_4"
+            android:background="@drawable/shape_white_5_corner"
+            android:orientation="vertical">
+
+            <LinearLayout style="@style/ll">
+
+                <TextView
+                    style="@style/text_left_ll"
+                    android:drawableLeft="@mipmap/important"
+                    android:text="投保方式:" />
+
+                <CheckBox
+                    android:id="@+id/cb_self"
+                    android:layout_width="@dimen/size_20"
+                    android:layout_height="@dimen/size_20"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/size_10"
+                    android:background="@drawable/remember_pwd"
+                    android:button="@null"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/size_5"
+                    android:text="自行投保"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_14sp" />
+
+                <CheckBox
+                    android:id="@+id/cb_together"
+                    android:layout_width="@dimen/size_20"
+                    android:layout_height="@dimen/size_20"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/size_30"
+                    android:background="@drawable/remember_pwd"
+                    android:button="@null"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/size_5"
+                    android:text="集体投保"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_14sp" />
+            </LinearLayout>
+
+            <include layout="@layout/gray_line_s" />
+
+            <RelativeLayout
+                android:id="@+id/ll_together"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size_40">
+
+                <TextView
+                    android:id="@+id/tv_fa"
+                    style="@style/text_left_ll_big"
+                    android:drawableLeft="@mipmap/important"
+                    android:text="集体投保名称:" />
+
+                <TextView
+                    android:id="@+id/et_together_name"
+                    style="@style/text_right_ll"
+                    android:layout_toLeftOf="@+id/iv_more"
+                    android:layout_toRightOf="@+id/tv_fa"
+                    android:background="@null"
+                    android:hint="请选择集体投保名称" />
+
+                <ImageView
+                    android:id="@+id/iv_more"
+                    android:layout_width="@dimen/size_25"
+                    android:layout_height="@dimen/size_25"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/size_10"
+                    android:src="@mipmap/more" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/size_4"
+            android:background="@drawable/shape_white_5_corner"
+            android:orientation="vertical">
+
+            <LinearLayout style="@style/ll">
+
+                <TextView
+                    style="@style/text_left_ll"
+                    android:drawableLeft="@mipmap/important"
+                    android:text="证件类型:" />
+
+                <TextView
+                    android:id="@+id/tv_category"
+                    style="@style/text_right_ll"
+                    android:layout_marginRight="@dimen/size_10"
+                    android:drawableRight="@mipmap/arrow_right_small"
+                    android:text="身份证" />
+            </LinearLayout>
+
+            <include layout="@layout/gray_line_s" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size_80">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true">
+
+                    <RelativeLayout
+                        android:layout_width="@dimen/size_70"
+                        android:layout_height="@dimen/size_70">
+
+                        <ImageView
+                            android:id="@+id/iv_take_id_photo"
+                            android:layout_width="@dimen/size_60"
+                            android:layout_height="@dimen/size_60"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginTop="@dimen/size_5"
+                            android:layout_marginRight="@dimen/size_15"
+                            android:src="@mipmap/idcard_font" />
+
+                        <ImageView
+                            android:id="@+id/iv_del_font"
+                            android:layout_width="@dimen/size_20"
+                            android:layout_height="@dimen/size_20"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginTop="@dimen/size_5"
+                            android:layout_marginRight="6dp"
+                            android:src="@mipmap/del"
+                            android:visibility="gone" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rl_back"
+                        android:layout_width="@dimen/size_70"
+                        android:layout_height="@dimen/size_70">
+
+                        <ImageView
+                            android:id="@+id/iv_take_id_photo_back"
+                            android:layout_width="@dimen/size_60"
+                            android:layout_height="@dimen/size_60"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginTop="@dimen/size_5"
+                            android:layout_marginRight="@dimen/size_15"
+                            android:src="@mipmap/idcard_back" />
+
+                        <ImageView
+                            android:id="@+id/iv_del_back"
+                            android:layout_width="@dimen/size_20"
+                            android:layout_height="@dimen/size_20"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginTop="@dimen/size_5"
+                            android:layout_marginRight="6dp"
+                            android:src="@mipmap/del"
+                            android:visibility="gone" />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/iv_up_idPh"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/size_20"
+                        android:background="@drawable/small_conner_new"
+                        android:gravity="center"
+                        android:paddingLeft="@dimen/size_10"
+                        android:paddingTop="@dimen/size_5"
+                        android:paddingRight="@dimen/size_10"
+                        android:paddingBottom="@dimen/size_5"
+                        android:text="上传识别"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_16sp" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <LinearLayout
+                style="@style/ll"
+                android:layout_marginTop="@dimen/size_10">
+
+                <TextView
+                    android:id="@+id/tv_name"
+                    style="@style/text_left_ll"
+                    android:drawableLeft="@mipmap/important"
+                    android:text="@string/name" />
+
+                <EditText
+                    android:id="@+id/et_name"
+                    style="@style/text_right_ll"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:hint="请拍照识别或手工输入"
+                    tools:ignore="TouchTargetSizeCheck" />
+            </LinearLayout>
+
+            <include layout="@layout/gray_line_s" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size_40"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="@dimen/size_100"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:text="投保人编号:"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/size_16" />
+
+                <EditText
+                    android:id="@+id/et_under_ser"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/size_10"
+                    android:background="@null"
+                    android:hint="请输入投保人编号"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_16sp" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/ll">
+
+                <TextView
+                    style="@style/text_left_ll"
+                    android:drawableLeft="@mipmap/important"
+                    android:text="证件号码:" />
+
+                <EditText
+                    android:id="@+id/et_under_id_nums"
+                    style="@style/text_right_ll"
+                    android:background="@null"
+                    android:hint="请拍照识别输入或手工输入"
+                    tools:ignore="TouchTargetSizeCheck" />
+            </LinearLayout>
+
+            <include layout="@layout/gray_line_s" />
+
+            <LinearLayout style="@style/ll">
+
+                <TextView
+                    style="@style/text_left_ll"
+                    android:drawableLeft="@mipmap/important"
+                    android:text="证件地址:" />
+
+                <EditText
+                    android:id="@+id/et_under_id_address"
+                    style="@style/text_right_ll"
+                    android:background="@null"
+                    android:hint="请拍照识别输入或手工输入"
+                    tools:ignore="TouchTargetSizeCheck" />
+            </LinearLayout>
+
+            <include layout="@layout/gray_line_s" />
+
+            <LinearLayout
+
+                style="@style/ll">
+
+                <TextView
+                    style="@style/text_left_ll_big"
+                    android:drawableLeft="@mipmap/important"
+                    android:text="企业性质:" />
+
+                <TextView
+
+                    android:id="@+id/tv_nature"
+                    style="@style/text_right_ll"
+                    android:layout_marginRight="@dimen/size_10"
+                    android:drawableRight="@mipmap/arrow_right_small"
+                    android:text="无" />
+            </LinearLayout>
+
+            <include layout="@layout/gray_line_s" />
+
+            <LinearLayout
+                android:id="@+id/ll_startTime"
+                style="@style/ll">
+
+                <TextView
+                    style="@style/text_left_ll_big"
+                    android:drawableLeft="@mipmap/important"
+                    android:text="证件签发日期:" />
+
+                <TextView
+                    android:id="@+id/tv_startTime"
+                    style="@style/text_right_ll"
+                    android:layout_marginRight="@dimen/size_10"
+                    android:drawableRight="@mipmap/arrow_right_small"
+                    android:text="" />
+            </LinearLayout>
+
+            <include layout="@layout/gray_line_s" />
+
+            <LinearLayout
+                android:id="@+id/ll_overTime"
+                style="@style/ll">
+
+                <TextView
+                    style="@style/text_left_ll_big"
+                    android:drawableLeft="@mipmap/important"
+                    android:text="证件有效期至:" />
+
+                <TextView
+                    android:id="@+id/tv_overTime"
+                    style="@style/text_right_ll"
+                    android:layout_marginRight="@dimen/size_10"
+                    android:drawableRight="@mipmap/arrow_right_small"
+                    android:text="" />
+            </LinearLayout>
+
+            <include layout="@layout/gray_line_s" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/size_4"
+            android:background="@drawable/shape_white_5_corner"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size_80">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true">
+
+                    <RelativeLayout
+                        android:layout_width="@dimen/size_70"
+                        android:layout_height="@dimen/size_70">
+
+                        <ImageView
+                            android:id="@+id/iv_take_bank_photo"
+                            android:layout_width="@dimen/size_60"
+                            android:layout_height="@dimen/size_60"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginTop="@dimen/size_5"
+                            android:layout_marginRight="@dimen/size_15"
+                            android:src="@mipmap/bank_cark" />
+
+                        <ImageView
+                            android:id="@+id/del_bank"
+                            android:layout_width="@dimen/size_20"
+                            android:layout_height="@dimen/size_20"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginTop="@dimen/size_5"
+                            android:layout_marginRight="6dp"
+                            android:src="@mipmap/del"
+                            android:visibility="gone" />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/iv_upload_card"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/size_20"
+                        android:background="@drawable/small_conner_new"
+                        android:gravity="center"
+                        android:paddingLeft="@dimen/size_10"
+                        android:paddingTop="@dimen/size_5"
+                        android:paddingRight="@dimen/size_10"
+                        android:paddingBottom="@dimen/size_5"
+                        android:text="上传识别"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_16sp" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <LinearLayout style="@style/ll">
+
+                <TextView
+                    style="@style/text_left_ll"
+                    android:drawableLeft="@mipmap/important"
+                    android:text="开  户  人:" />
+
+                <EditText
+                    android:id="@+id/et_card_acc"
+                    style="@style/text_right_ll"
+                    android:background="@null"
+                    android:hint="请拍照识别或手工输入"
+                    tools:ignore="TouchTargetSizeCheck" />
+            </LinearLayout>
+
+            <include layout="@layout/gray_line_s" />
+
+            <LinearLayout style="@style/ll">
+
+                <TextView
+                    style="@style/text_left_ll"
+                    android:drawableLeft="@mipmap/important"
+                    android:text="开  户  行:" />
+
+                <TextView
+                    android:id="@+id/et_card_bank"
+                    style="@style/text_right_ll"
+                    android:background="@null"
+                    android:drawableRight="@mipmap/arrow_right_small"
+                    android:hint="请拍照识别或选择开户行" />
+            </LinearLayout>
+
+            <include layout="@layout/gray_line_s" />
+
+            <LinearLayout style="@style/ll">
+
+                <TextView
+                    style="@style/text_left_ll"
+                    android:drawableLeft="@mipmap/important"
+                    android:text="银行账号:" />
+
+                <EditText
+                    android:id="@+id/et_card_num"
+                    style="@style/text_right_ll"
+                    android:background="@null"
+                    android:hint="请拍照识别或手工输入"
+                    android:inputType="number"
+                    tools:ignore="TouchTargetSizeCheck" />
+            </LinearLayout>
+
+            <include layout="@layout/gray_line_s" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/size_4"
+            android:background="@drawable/shape_white_5_corner"
+            android:orientation="vertical">
+
+            <LinearLayout
+                style="@style/ll"
+                android:layout_marginTop="@dimen/size_10">
+
+                <TextView
+                    style="@style/text_left_ll"
+                    android:drawableLeft="@mipmap/important"
+                    android:text="手机号码:" />
+
+                <EditText
+                    android:id="@+id/et_phone_num"
+                    style="@style/text_right_ll"
+                    android:background="@null"
+                    android:hint="请输入投保人的电话号码"
+                    android:inputType="phone"
+                    android:maxLength="11"
+                    tools:ignore="TouchTargetSizeCheck" />
+            </LinearLayout>
+
+            <include layout="@layout/gray_line_s" />
+
+            <LinearLayout style="@style/ll">
+
+                <TextView
+                    style="@style/text_left_ll"
+                    android:drawableLeft="@mipmap/important"
+                    android:text="养殖地址:" />
+
+                <EditText
+                    android:id="@+id/et_under_address"
+                    style="@style/text_right_ll"
+                    android:background="@null"
+                    android:hint="请输入养殖地址" />
+            </LinearLayout>
+
+            <include layout="@layout/gray_line_s" />
+
+            <LinearLayout style="@style/ll">
+
+                <TextView
+                    style="@style/text_left_ll_big"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/size_10"
+                    android:text="是否贫困户:" />
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/is_poor_true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/size_50"
+                    android:text="是"
+                    android:textColorHint="@color/login_button" />
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/is_poor_false"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/size_50"
+                    android:text="否"
+                    android:textColorHint="@color/login_button" />
+            </LinearLayout>
+
+            <include layout="@layout/gray_line_s" />
+        </LinearLayout>
+
+        <include layout="@layout/sign_ly" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_80"
+            android:layout_margin="@dimen/size_6"
+            android:background="@drawable/shape_white_5_corner">
+
+            <EditText
+                android:id="@+id/input_info"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/input_measure"
+                android:layout_margin="@dimen/size_4"
+                android:background="@null"
+                android:gravity="top"
+                android:hint="我想说..."
+                android:text=""
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_14sp" />
+
+            <EditText
+                android:id="@+id/input_measure"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:background="@null"
+                android:hint="最多可输入500个字符"
+                android:textColorHint="@color/ff999"
+                android:textSize="@dimen/text_size_12sp" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/size_4"
+            android:background="@drawable/shape_white_5_corner">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/only_save_farm"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/size_40"
+                    android:layout_margin="@dimen/size_10"
+                    android:layout_weight="1"
+                    android:background="@drawable/small_conner_new"
+                    android:text="保存"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_12sp" />
+
+                <Button
+                    android:id="@+id/change"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/size_40"
+                    android:layout_margin="@dimen/size_12"
+                    android:layout_weight="1"
+                    android:background="@drawable/small_conner_new"
+                    android:text="修改"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_14sp" />
+
+                <Button
+                    android:id="@+id/save_farm"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/size_40"
+                    android:layout_margin="@dimen/size_10"
+                    android:layout_weight="1"
+                    android:background="@drawable/small_conner_new"
+                    android:text="保存并开始承保"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_12sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rl_sign_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_40">
+
+        <TextView
+            style="@style/text_left_ll_big"
+            android:layout_marginTop="@dimen/size_10"
+            android:drawableLeft="@mipmap/important"
+            android:text="电子签名:"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/to_sign"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/size_30"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/size_10"
+            android:background="@drawable/bottom_no_conner"
+            android:text="去签名"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_14sp" />
+    </RelativeLayout>
+
+
+    <ImageView
+        android:id="@+id/iv_sign"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginLeft="@dimen/size_20"
+        android:layout_marginRight="@dimen/size_20"
+        android:background="#ffffff"
+        android:focusableInTouchMode="true"
+        android:visibility="visible" />
+
+</LinearLayout>

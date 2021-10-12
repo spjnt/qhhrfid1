@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--<translate-->
+
+    <!--android:duration="500"-->
+    <!--android:fromYDelta="100%p"-->
+    <!--android:toYDelta="0" />-->
+    <!-- 持续时间 -->
+    <alpha android:duration="500">
+        <!-- 开始显示时的透明度 -->
+        android:fromAlpha="0.3"
+        <!-- 最后显示的透明度 -->
+        android:toAlpha="1.0"
+        />
+    </alpha>
+
+
+    <scale
+        android:duration="500"
+        android:fillAfter="true"
+        android:fillBefore="false"
+        android:fromXScale="0.1"
+        android:fromYScale="0.1"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:toXScale="1.0"
+        android:toYScale="1.0" />
+</set>

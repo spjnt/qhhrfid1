@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_phone"
+        style="@style/text_wrap"
+        android:layout_marginTop="@dimen/size_10"
+        android:text="@string/phone_num" />
+
+    <EditText
+        android:maxLength="11"
+        android:id="@+id/et_phone_num"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_40"
+        android:layout_marginLeft="@dimen/size_10"
+        android:background="@null"
+        android:hint="@string/phone_num_hint"
+        android:inputType="phone"
+        android:textColor="@color/f33"
+        android:textColorHint="@color/ff999"
+        android:textSize="@dimen/text_size_12sp" />
+
+    <include layout="@layout/gray_line" />
+
+    <TextView
+        android:id="@+id/tv_ver_code"
+        style="@style/text_wrap"
+        android:layout_marginTop="@dimen/size_10"
+        android:text="@string/verification_code" />
+
+    <RelativeLayout
+        android:id="@+id/rl_ver_code"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_40">
+
+        <EditText
+            android:id="@+id/et_ver_code"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/size_10"
+            android:layout_toLeftOf="@id/tv_get_ver_code"
+            android:background="@null"
+            android:hint="@string/verification_code_hint"
+            android:inputType="number"
+            android:maxLength="6"
+            android:textColor="@color/f33"
+            android:textColorHint="@color/ff999"
+            android:textSize="@dimen/text_size_12sp" />
+
+        <TextView
+            android:id="@+id/tv_get_ver_code"
+            style="@style/text_wrap"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/size_10"
+            android:text="@string/get_verification_code"
+
+            android:textColor="@color/light_blue" />
+
+    </RelativeLayout>
+
+    <include layout="@layout/gray_line" />
+
+
+    <TextView
+        style="@style/text_wrap"
+        android:layout_marginTop="@dimen/size_10"
+        android:text="@string/new_psw" />
+
+    <EditText
+        android:id="@+id/et_new_psw"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_40"
+        android:layout_marginLeft="@dimen/size_10"
+        android:background="@null"
+        android:hint="@string/new_psw_hint"
+        android:inputType="textPassword"
+        android:textColor="@color/f33"
+        android:textColorHint="@color/ff999"
+        android:textSize="@dimen/text_size_12sp" />
+
+    <include layout="@layout/gray_line" />
+
+    <TextView
+        style="@style/text_wrap"
+        android:layout_marginTop="@dimen/size_10"
+        android:text="@string/new_psw_confim" />
+
+    <EditText
+        android:id="@+id/et_new_psw_confim"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_40"
+        android:layout_marginLeft="@dimen/size_10"
+        android:background="@null"
+        android:hint="@string/new_psw_confim_hint"
+        android:inputType="textPassword"
+        android:textColor="@color/f33"
+        android:textColorHint="@color/ff999"
+        android:textSize="@dimen/text_size_12sp" />
+
+    <include layout="@layout/gray_line" />
+
+    <Button
+        android:id="@+id/btn_change"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="@dimen/size_20"
+        android:layout_marginTop="@dimen/size_30"
+        android:layout_marginRight="@dimen/size_20"
+        android:layout_marginBottom="@dimen/size_30"
+        android:alpha="0.75"
+        android:background="@drawable/big_conner_new"
+        android:text="@string/change_confim"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_14sp" />
+</LinearLayout>

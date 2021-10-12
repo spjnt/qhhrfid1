@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout style="@style/ll">
+
+        <TextView
+            android:text="地        址:"
+            style="@style/text_left_ll_big" />
+
+        <TextView
+            android:id="@+id/et_areaName"
+            android:background="@null"
+            style="@style/text_right_ll" />
+    </LinearLayout>
+
+    <include layout="@layout/gray_line_s" />
+
+    <RelativeLayout style="@style/ll">
+
+        <TextView
+            android:id="@+id/tv_detail_qh"
+            android:text="详细地址:"
+            style="@style/text_left_ll_big" />
+
+        <TextView
+            android:id="@+id/et_areaName_detail"
+            style="@style/text_right_ll"
+            android:layout_toLeftOf="@+id/iv_choice"
+            android:layout_toRightOf="@+id/tv_detail_qh"
+            android:background="@null" />
+
+        <ImageView
+            android:id="@+id/iv_choice"
+            android:layout_width="@dimen/size_25"
+            android:layout_height="@dimen/size_25"
+            android:layout_marginRight="@dimen/size_10"
+            android:src="@mipmap/more"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" />
+    </RelativeLayout>
+
+    <include layout="@layout/gray_line_s" />
+
+    <LinearLayout style="@style/ll">
+
+        <TextView
+            android:id="@+id/tv_baoan_name"
+            android:text="标的名称:"
+            style="@style/text_left_ll_big" />
+
+        <TextView
+            android:id="@+id/et_nf"
+            android:layout_marginRight="@dimen/size_10"
+            android:hint="请选择标"
+            android:drawableRight="@mipmap/arrow_right_small"
+            style="@style/text_right_ll" />
+    </LinearLayout>
+
+    <include layout="@layout/gray_line_s" />
+
+    <LinearLayout
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="45dp">
+
+        <TextView
+            android:textSize="17sp"
+            android:textColor="@color/text_color_444444"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="国源key:" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="必填" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="45dp">
+
+        <TextView
+            android:textSize="17sp"
+            android:textColor="@color/text_color_444444"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="国源screte:" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="必填" />
+    </LinearLayout>
+
+    <Button
+        android:textSize="@dimen/text_size_18sp"
+        android:textColor="@color/white"
+        android:id="@+id/only_save_farm"
+        android:background="@drawable/small_conner_new"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_48"
+        android:layout_margin="@dimen/size_10"
+        android:text="去验标"
+        android:layout_weight="1" />
+</LinearLayout>

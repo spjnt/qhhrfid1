@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
+    <LinearLayout android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <RelativeLayout style="@style/ll">
+            <TextView android:id="@+id/tv1" android:text="耳标号码:" style="@style/text_left_ll_big"/>
+            <AutoCompleteTextView android:id="@+id/et_ear_tag" android:background="@null" android:hint="请输入或者扫描耳标号" android:layout_toLeftOf="@+id/iv_rfid_scan" android:layout_toRightOf="@+id/tv1" style="@style/text_right_ll"/>
+            <ImageView android:id="@+id/iv_rfid_scan" android:layout_width="@dimen/size_30" android:layout_height="@dimen/size_30" android:layout_marginRight="@dimen/size_10" android:src="@mipmap/frid_scan" android:layout_alignParentRight="true"/>
+        </RelativeLayout>
+        <include layout="@layout/gray_line_s"/>
+        <LinearLayout style="@style/ll">
+            <TextView android:text="投保人:" style="@style/text_left_ll_big"/>
+            <TextView android:textSize="@dimen/text_size_16sp" android:textColor="@color/black" android:gravity="center" android:layout_gravity="center" android:id="@+id/tv_farm" android:background="@null" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_marginLeft="@dimen/size_10"/>
+        </LinearLayout>
+        <include layout="@layout/gray_line_s"/>
+        <LinearLayout style="@style/ll">
+            <TextView android:text="证件号码:" style="@style/text_left_ll_big"/>
+            <TextView android:id="@+id/tv_ids" style="@style/text_right_ll"/>
+        </LinearLayout>
+        <include layout="@layout/gray_line_s"/>
+        <LinearLayout style="@style/ll">
+            <LinearLayout android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1">
+                <LinearLayout style="@style/ll">
+                    <TextView android:text="验标时间:" style="@style/text_left_ll_big"/>
+                    <TextView android:id="@+id/tv_check_time" style="@style/text_right_ll"/>
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="2">
+                <LinearLayout style="@style/ll">
+                    <TextView android:text="状态:" style="@style/text_left_ll_big"/>
+                    <TextView android:id="@+id/tv_satate" style="@style/text_right_ll"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+        <include layout="@layout/gray_line_s"/>
+        <TextView android:textStyle="bold" android:layout_marginTop="@dimen/size_10" android:text="验标照片:" style="@style/text_left_ll_big"/>
+        <androidx.recyclerview.widget.RecyclerView android:id="@+id/rv_photos" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_margin="@dimen/size_4"/>
+    </LinearLayout>
+    <Button android:textSize="@dimen/text_size_18sp" android:textColor="@color/white" android:id="@+id/search_lable" android:background="@drawable/big_conner_new" android:layout_width="match_parent" android:layout_height="@dimen/size_48" android:layout_margin="@dimen/size_10" android:layout_marginBottom="@dimen/size_4" android:text="查询" android:layout_alignParentBottom="true"/>
+</RelativeLayout>

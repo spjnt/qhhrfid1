@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@drawable/bottom_no_conner"
+    android:padding="@dimen/size_20"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:textSize="@dimen/text_size_18sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/size_6"
+        android:text="版本更新" />
+
+    <TextView
+        android:textSize="@dimen/text_size_16sp"
+        android:textColor="@color/textColorSecondary"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/version_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@id/versionchecklib_version_dialog_commit"
+            android:textSize="@dimen/text_size_16sp"
+            android:textColor="@color/new_theme"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/size_10"
+            android:text="更新"
+            android:layout_alignParentRight="true" />
+    </RelativeLayout>
+</LinearLayout>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/size_400"
+    android:background="@drawable/bottom_no_conner"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_40"
+        android:gravity="center"
+        android:text="请选择支行"
+        android:textColor="@color/themeColor"
+        android:textSize="@dimen/text_size_12sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_0.5px"
+        android:background="@color/gray" />
+
+    <com.yanzhenjie.recyclerview.SwipeRecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_0.5px"
+        android:background="@color/gray" />
+</LinearLayout>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_right"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/size_3"
+    android:layout_marginLeft="@dimen/size_4"
+    android:layout_marginRight="@dimen/size_4"
+    android:elevation="@dimen/size_3"
+    android:padding="@dimen/size_3"
+    android:translationZ="@dimen/size_3"
+    app:cardCornerRadius="@dimen/size_8"
+    app:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/size_6">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/iv_arrow"
+            android:orientation="vertical"
+            tools:ignore="NotSibling">
+
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:text="蔡万平"
+
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_14sp"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:id="@+id/tv_bank_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/size_10"
+
+                android:gravity="center_vertical"
+                android:padding="@dimen/size_1"
+                android:paddingHorizontal="@dimen/size_6"
+                android:text=""
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_14sp" />
+
+            <TextView
+                android:id="@+id/tv_bank_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/size_10"
+
+                android:gravity="center_vertical"
+                android:padding="@dimen/size_1"
+                android:paddingHorizontal="@dimen/size_4"
+                android:text=""
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_14sp" />
+        </LinearLayout>
+        <!--
+
+                <ImageView
+                    android:layout_marginRight="@dimen/size_30"
+                    android:layout_toLeftOf="@id/iv_arrow"
+                    android:id="@+id/iv_sign"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/no_pic" />
+        -->
+
+        <ImageView
+            android:id="@+id/iv_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/arrow_right_small" />
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

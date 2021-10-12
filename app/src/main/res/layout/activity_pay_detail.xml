@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/common_background"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/size_4"
+            android:background="@drawable/shape_white_5_corner"
+            android:orientation="vertical">
+
+            <LinearLayout style="@style/ll">
+
+                <TextView
+                    style="@style/text_left_ll_big"
+                    android:text="同步结果:" />
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/syn_result"
+                        style="@style/text_right_ll"
+                        android:text="" />
+                </ScrollView>
+
+            </LinearLayout>
+
+            <include layout="@layout/gray_line_s" />
+
+            <LinearLayout style="@style/ll">
+
+                <TextView
+                    style="@style/text_left_ll_big"
+                    android:text="投保单号:" />
+
+                <TextView
+                    android:id="@+id/bao_num"
+                    style="@style/text_right_ll"
+                    android:text="" />
+            </LinearLayout>
+
+            <include layout="@layout/gray_line_s" />
+
+            <LinearLayout style="@style/ll">
+
+                <TextView
+                    style="@style/text_left_ll_big"
+                    android:text="保  单  号:" />
+
+                <TextView
+                    android:id="@+id/ba_num"
+                    style="@style/text_right_ll"
+                    android:text="" />
+            </LinearLayout>
+
+            <include layout="@layout/gray_line_s" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/size_4"
+            android:background="@drawable/shape_white_5_corner"
+            android:orientation="vertical">
+
+            <LinearLayout style="@style/ll">
+
+                <TextView
+                    style="@style/text_left_ll_big"
+                    android:text="支付方式:" />
+
+                <TextView
+                    android:id="@+id/pay_method"
+                    style="@style/text_right_ll"
+                    android:layout_marginRight="@dimen/size_10"
+                    android:drawableRight="@mipmap/arrow_right_small"
+                    android:text="微信" />
+            </LinearLayout>
+
+            <include layout="@layout/gray_line_s" />
+
+            <LinearLayout style="@style/ll">
+
+                <TextView
+                    style="@style/text_left_ll_big"
+                    android:text="支付金额:" />
+
+                <TextView
+                    android:id="@+id/pay_much"
+                    style="@style/text_right_ll"
+                    android:layout_marginRight="@dimen/size_10"
+                    android:hint="请申请支付"
+
+                    android:text="" />
+            </LinearLayout>
+
+            <include layout="@layout/gray_line_s" />
+
+            <LinearLayout
+                android:id="@+id/ll_bu"
+                style="@style/ll">
+
+                <TextView
+                    style="@style/text_left_ll_big"
+                    android:text="财政补贴:" />
+
+                <TextView
+                    android:id="@+id/gov_much"
+                    style="@style/text_right_ll"
+                    android:layout_marginRight="@dimen/size_10"
+                    android:drawableRight="@mipmap/more"
+                    android:text="" />
+            </LinearLayout>
+
+            <include layout="@layout/gray_line_s" />
+            <!--缩放布局-->
+            <LinearLayout
+                android:id="@+id/money_detail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout style="@style/ll">
+
+                    <TextView
+                        style="@style/text_left_ll_big"
+                        android:layout_marginLeft="@dimen/size_10"
+                        android:text="  中央补贴:" />
+
+                    <TextView
+                        android:id="@+id/national_money"
+                        style="@style/text_right_ll"
+                        android:layout_marginRight="@dimen/size_10"
+                        android:background="@null"
+                        android:inputType="numberDecimal"
+                        android:text="0.00" />
+                </LinearLayout>
+
+                <include layout="@layout/gray_line_s" />
+
+                <LinearLayout style="@style/ll">
+
+                    <TextView
+                        style="@style/text_left_ll_big"
+                        android:layout_marginLeft="@dimen/size_10"
+                        android:text="  省级补贴:" />
+
+                    <TextView
+                        android:id="@+id/provice_money"
+                        style="@style/text_right_ll"
+                        android:layout_marginRight="@dimen/size_10"
+                        android:background="@null"
+                        android:inputType="numberDecimal"
+                        android:text="0.00" />
+                </LinearLayout>
+
+                <include layout="@layout/gray_line_s" />
+
+                <LinearLayout style="@style/ll">
+
+                    <TextView
+                        style="@style/text_left_ll_big"
+                        android:layout_marginLeft="@dimen/size_10"
+                        android:text="  市级补贴:" />
+
+                    <TextView
+                        android:id="@+id/city_money"
+                        style="@style/text_right_ll"
+                        android:layout_marginRight="@dimen/size_10"
+                        android:background="@null"
+                        android:inputType="numberDecimal"
+                        android:text="0.00" />
+                </LinearLayout>
+
+                <include layout="@layout/gray_line_s" />
+
+                <LinearLayout style="@style/ll">
+
+                    <TextView
+                        style="@style/text_left_ll_big"
+                        android:layout_marginLeft="@dimen/size_10"
+                        android:text="  县级补贴:" />
+
+                    <TextView
+                        android:id="@+id/country_money"
+                        style="@style/text_right_ll"
+                        android:layout_marginRight="@dimen/size_10"
+                        android:background="@null"
+                        android:inputType="numberDecimal"
+                        android:text="0.00" />
+                </LinearLayout>
+
+                <include layout="@layout/gray_line_s" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <!--缩放布局-->
+                <ImageView
+                    android:id="@+id/iv_qrcode"
+                    android:layout_width="@dimen/size_200"
+                    android:layout_height="@dimen/size_200"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="@dimen/size_4" />
+
+                <TextView
+                    android:id="@+id/tv_share_qrcode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/size_30"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginRight="@dimen/size_6"
+                    android:background="@drawable/bottom_no_conner"
+                    android:gravity="center"
+                    android:paddingLeft="@dimen/size_4"
+                    android:paddingRight="@dimen/size_4"
+                    android:text="分享"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_12sp"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/pay_time"
+                style="@style/text_left_ll_big"
+                android:layout_gravity="center"
+                android:text="" />
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/ll"
+            android:layout_marginTop="@dimen/size_4"
+            android:background="@color/white">
+
+            <TextView
+                style="@style/text_left_ll_big"
+                android:text="到账状态:" />
+
+            <TextView
+                android:id="@+id/pay_statu"
+                style="@style/text_right_ll"
+                android:text="" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_40"
+            android:layout_marginTop="@dimen/size_10"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/show_qrcode"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/size_10"
+                android:layout_marginRight="@dimen/size_10"
+                android:layout_weight="1"
+                android:background="@drawable/small_conner_new"
+                android:text="申请支付"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_14sp" />
+
+            <Button
+                android:id="@+id/show_pay_result"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/size_10"
+                android:layout_marginRight="@dimen/size_10"
+                android:layout_weight="1"
+                android:background="@drawable/small_conner_new"
+                android:text="确定到账状态"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_14sp" />
+
+            <Button
+                android:id="@+id/pay_cancle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/size_10"
+                android:layout_marginRight="@dimen/size_10"
+                android:layout_weight="1"
+                android:background="@drawable/small_conner_new"
+                android:text="注销支付"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_14sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tips"
+            style="@style/text_left_ll_big"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="@dimen/size_8"
+            android:text="注：若要变更支付方式，请先注销支付" />
+    </LinearLayout>
+</ScrollView>

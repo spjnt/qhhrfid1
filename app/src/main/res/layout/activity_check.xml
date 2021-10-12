@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/top_seacrch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/regist_new"
+        android:layout_marginLeft="@dimen/size_10"
+        android:layout_marginTop="@dimen/size_6"
+        android:layout_marginRight="@dimen/size_10">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_40"
+            android:layout_marginRight="@dimen/size_5"
+            android:layout_toLeftOf="@+id/rl_animal_type"
+            android:background="@drawable/bottom_no_conner">
+
+            <ImageView
+                android:layout_width="@dimen/size_20"
+                android:layout_height="@dimen/size_20"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/size_10"
+                android:src="@mipmap/icon_sousuo" />
+
+            <EditText
+                android:id="@+id/et_search"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/size_10"
+                android:background="@null"
+                android:hint="请输入投保人姓名/电话号码"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_14sp" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_search"
+            android:layout_width="@dimen/size_80"
+            android:layout_height="@dimen/size_40"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/size_5"
+            android:background="@drawable/small_conner_new"
+            android:text="查找"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_16sp"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/rl_animal_type"
+            android:layout_width="@dimen/size_80"
+            android:layout_height="@dimen/size_40"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="@dimen/size_6"
+            android:background="@drawable/bottom_no_conner">
+
+            <TextView
+                android:id="@+id/type_choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/size_10"
+                android:gravity="center"
+                android:text="全部"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_14sp" />
+
+            <ImageView
+                android:id="@+id/iv_arrow"
+                android:layout_width="@dimen/size_18"
+                android:layout_height="@dimen/size_18"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/size_2"
+                android:src="@mipmap/arrow_right_gray" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <include layout="@layout/smart_refresh_layout" />
+</LinearLayout>

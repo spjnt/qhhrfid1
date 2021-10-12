@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/size_4"
+            android:background="@drawable/shape_white_5_corner"
+            android:orientation="vertical">
+
+            <LinearLayout style="@style/ll">
+
+                <TextView
+                    style="@style/text_left_ll"
+                    android:text="@string/bill_no" />
+
+                <TextView
+                    android:id="@+id/bill_No"
+                    style="@style/text_right_ll" />
+            </LinearLayout>
+
+            <include layout="@layout/gray_line_s" />
+
+            <LinearLayout style="@style/ll">
+
+                <TextView
+                    style="@style/text_left_ll"
+                    android:text="@string/insurance_method" />
+
+                <TextView
+                    android:id="@+id/insurance_method"
+                    style="@style/text_right_ll"
+                    android:layout_marginEnd="@dimen/size_10"
+                    android:hint="@string/choice_insurance_method"
+                    android:text="@string/self_insure" />
+            </LinearLayout>
+
+            <include layout="@layout/gray_line_s" />
+
+            <LinearLayout style="@style/ll">
+
+                <TextView
+                    style="@style/text_left_ll"
+                    android:text="@string/insurance_date" />
+
+                <TextView
+                    android:id="@+id/insurance_date"
+                    style="@style/text_right_ll"
+                    android:layout_marginEnd="@dimen/size_10"
+                    android:hint="请选择投保日期"
+                    app:drawableRightCompat="@mipmap/arrow_right_small"
+                    tools:ignore="TextContrastCheck" />
+            </LinearLayout>
+
+            <include layout="@layout/gray_line_s" />
+
+            <LinearLayout style="@style/ll">
+
+                <TextView
+                    style="@style/text_left_ll"
+                    android:text="@string/insurance_start_date" />
+
+                <TextView
+                    android:id="@+id/starting_date_of_insurance"
+                    style="@style/text_right_ll"
+                    android:layout_marginEnd="@dimen/size_10"
+                    app:drawableRightCompat="@mipmap/arrow_right_small" />
+            </LinearLayout>
+
+            <include layout="@layout/gray_line_s" />
+
+            <LinearLayout style="@style/ll">
+
+                <TextView
+                    style="@style/text_left_ll"
+                    android:text="@string/insurance_end_start" />
+
+                <TextView
+                    android:id="@+id/ending_date_of_insurance"
+                    style="@style/text_right_ll"
+                    android:layout_marginEnd="@dimen/size_10"
+                    app:drawableRightCompat="@mipmap/arrow_right_small" />
+            </LinearLayout>
+
+            <include layout="@layout/gray_line_s" />
+
+            <LinearLayout style="@style/ll">
+
+                <TextView
+                    style="@style/text_left_ll"
+                    android:text="@string/public_date" />
+
+                <TextView
+                    android:id="@+id/starting_date_of_publicity"
+                    style="@style/text_right_ll"
+                    android:layout_marginEnd="@dimen/size_10"
+                    android:hint="请选择公示起期"
+                    app:drawableRightCompat="@mipmap/arrow_right_small"
+                    tools:ignore="TextContrastCheck" />
+            </LinearLayout>
+
+            <include layout="@layout/gray_line_s" />
+            <LinearLayout style="@style/ll">
+
+                <TextView
+                    style="@style/text_left_ll"
+                    android:drawableLeft="@mipmap/important"
+                    android:text="归属机构:" />
+
+                <TextView
+                    android:id="@+id/insure_dept"
+                    style="@style/text_right_ll"
+                    android:drawableRight="@mipmap/arrow_right_small"
+                    android:hint="请选择归属机构" />
+            </LinearLayout>
+            <include layout="@layout/item_line" />
+            <LinearLayout style="@style/ll">
+
+                <TextView
+                    style="@style/text_left_ll"
+                    android:text="@string/insurance_type" />
+
+                <TextView
+                    android:id="@+id/type_of_insurance"
+                    style="@style/text_right_ll"
+                    android:layout_marginEnd="@dimen/size_10"
+                    android:hint="请选择险种"
+                    app:drawableRightCompat="@mipmap/arrow_right_small"
+                    tools:ignore="TextContrastCheck" />
+            </LinearLayout>
+
+            <include layout="@layout/gray_line_s" />
+
+            <LinearLayout style="@style/ll">
+
+                <TextView
+                    style="@style/text_left_ll"
+                    android:text="机构地址" />
+
+                <TextView
+                    android:id="@+id/address"
+                    style="@style/text_right_ll"
+                    android:background="@null"
+                    android:hint="请输入地址"
+                    tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
+            </LinearLayout>
+            <include layout="@layout/gray_line_s" />
+
+
+            <LinearLayout style="@style/ll">
+
+                <TextView
+
+                    style="@style/text_left_ll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="   村镇地址:" />
+
+                <EditText
+                    android:id="@+id/et_detail_address"
+                    style="@style/text_right_ll"
+                    android:layout_toLeftOf="@+id/iv_choice"
+                    android:layout_toRightOf="@+id/tv_detail_qh"
+                    android:background="@null" />
+
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <include layout="@layout/gray_line_s" />
+
+        <LinearLayout style="@style/ll">
+
+            <TextView
+                style="@style/text_left_ll"
+                android:text="@string/plot_details" />
+
+            <TextView
+                android:id="@+id/dk_detail"
+                style="@style/text_right_ll"
+                android:layout_marginEnd="@dimen/size_10"
+                android:text="点击查看地块详情"
+                app:drawableRightCompat="@mipmap/arrow_right_small" />
+        </LinearLayout>
+
+        <include layout="@layout/gray_line_s" />
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/size_4"
+            android:background="@drawable/shape_white_5_corner"
+            android:orientation="vertical">
+
+            <LinearLayout style="@style/ll">
+
+                <TextView
+                    style="@style/text_left_ll"
+                    android:text="@string/unit_insure_amount" />
+
+                <TextView
+                    android:id="@+id/unit_coverage"
+                    style="@style/text_right_ll"
+                    android:background="@null"
+                    android:hint="@string/input_unit_insure_amount"
+                    android:inputType="numberDecimal"
+                    tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
+            </LinearLayout>
+
+            <include layout="@layout/gray_line_s" />
+
+            <LinearLayout style="@style/ll">
+
+                <TextView
+                    style="@style/text_left_ll"
+                    android:text="@string/premium_amount" />
+
+                <TextView
+                    android:id="@+id/premium_amount"
+                    style="@style/text_right_ll"
+                    android:background="@null"
+                    android:hint="@string/input_premium_amount"
+                    android:inputType="numberDecimal"
+                    tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
+            </LinearLayout>
+
+            <include layout="@layout/gray_line_s" />
+
+            <LinearLayout style="@style/ll">
+
+                <TextView
+                    style="@style/text_left_ll_big"
+                    android:text="@string/amount_financial_subsidy" />
+
+                <TextView
+                    android:id="@+id/financial_subsidies"
+                    style="@style/text_right_ll"
+                    android:layout_marginEnd="@dimen/size_10"
+                    android:background="@null"
+                    android:hint="@string/input_amount_financial_subsidy"
+                    android:inputType="numberDecimal"
+                    app:drawableRightCompat="@mipmap/more"
+                    tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
+            </LinearLayout>
+
+            <include layout="@layout/gray_line_s" />
+            <!--缩放布局-->
+            <LinearLayout
+                android:id="@+id/money_detail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout style="@style/ll">
+
+                    <TextView
+                        style="@style/text_left_ll_big"
+                        android:layout_marginStart="@dimen/size_10"
+                        android:text="@string/central_subsidy" />
+
+                    <TextView
+                        android:id="@+id/national_money"
+                        style="@style/text_right_ll"
+                        android:layout_marginEnd="@dimen/size_10"
+                        android:background="@null"
+                        android:inputType="numberDecimal"
+                        android:text="0.00"
+                        tools:ignore="TouchTargetSizeCheck" />
+                </LinearLayout>
+
+                <include layout="@layout/gray_line_s" />
+
+                <LinearLayout style="@style/ll">
+
+                    <TextView
+                        style="@style/text_left_ll_big"
+                        android:layout_marginStart="@dimen/size_10"
+                        android:text="@string/provincial_subsidies" />
+
+                    <TextView
+                        android:id="@+id/provice_money"
+                        style="@style/text_right_ll"
+                        android:layout_marginEnd="@dimen/size_10"
+                        android:background="@null"
+                        android:inputType="numberDecimal"
+                        android:text="0.00"
+                        tools:ignore="TouchTargetSizeCheck" />
+                </LinearLayout>
+
+                <include layout="@layout/gray_line_s" />
+
+                <LinearLayout style="@style/ll">
+
+                    <TextView
+                        style="@style/text_left_ll_big"
+                        android:layout_marginStart="@dimen/size_10"
+                        android:text="@string/city_subsidy" />
+
+                    <TextView
+                        android:id="@+id/city_money"
+                        style="@style/text_right_ll"
+                        android:layout_marginEnd="@dimen/size_10"
+                        android:background="@null"
+                        android:inputType="numberDecimal"
+                        android:text="0.00"
+                        tools:ignore="TouchTargetSizeCheck" />
+                </LinearLayout>
+
+                <include layout="@layout/gray_line_s" />
+
+                <LinearLayout style="@style/ll">
+
+                    <TextView
+                        style="@style/text_left_ll_big"
+                        android:layout_marginStart="@dimen/size_10"
+                        android:text="@string/country_subsidies" />
+
+                    <TextView
+                        android:id="@+id/country_money"
+                        style="@style/text_right_ll"
+                        android:layout_marginEnd="@dimen/size_10"
+                        android:background="@null"
+                        android:inputType="numberDecimal"
+                        android:text="0.00"
+                        tools:ignore="TouchTargetSizeCheck" />
+                </LinearLayout>
+
+                <include layout="@layout/gray_line_s" />
+            </LinearLayout>
+
+            <!--缩放布局-->
+            <LinearLayout style="@style/ll">
+
+                <TextView
+                    style="@style/text_left_ll_big"
+                    android:text="@string/amount_paid_by_farmers" />
+
+                <TextView
+                    android:id="@+id/self_payment_by_farmers"
+                    style="@style/text_right_ll"
+                    android:background="@null"
+                    android:hint="@string/input_amount_paid_by_farmers"
+                    android:inputType="numberDecimal"
+                    tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
+            </LinearLayout>
+
+            <include layout="@layout/gray_line_s" />
+        </LinearLayout>
+
+        <include
+            layout="@layout/sign_ly"
+         />
+
+
+        <LinearLayout
+            android:id="@+id/ll_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/size_4"
+            android:background="@drawable/shape_white_5_corner"
+            android:orientation="vertical">
+
+            <include layout="@layout/item_line" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/size_10"
+                android:layout_marginBottom="10dp">
+
+                <Button
+                    android:id="@+id/save"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/size_35"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/size_10"
+                    android:layout_marginRight="@dimen/size_10"
+                    android:layout_weight="1"
+                    android:background="@drawable/big_conner_new"
+                    android:text="@string/save"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_14sp" />
+
+                <Button
+                    android:id="@+id/change"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/size_35"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/size_10"
+                    android:layout_marginRight="@dimen/size_10"
+                    android:layout_weight="1"
+                    android:background="@drawable/big_conner_new"
+                    android:text="@string/modify"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_14sp" />
+
+                <Button
+                    android:id="@+id/collective_insurance_confirmation_form"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/size_35"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:background="@drawable/big_conner_new"
+                    android:text="生成集体投保确认单"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_14sp"
+                    android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/submit_for_review"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/size_35"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/size_10"
+                    android:layout_marginRight="@dimen/size_10"
+                    android:layout_weight="1"
+                    android:background="@drawable/big_conner_new"
+                    android:text="去审核"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_14sp" />
+
+                <Button
+                    android:id="@+id/underwriting_publicity"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/size_35"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/size_20"
+                    android:layout_marginRight="@dimen/size_20"
+                    android:layout_weight="1"
+                    android:background="@drawable/big_conner_new"
+                    android:text="承保公示"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_14sp"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/size_4"
+            android:background="@drawable/shape_white_5_corner"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/size_10">
+
+                <Button
+                    android:id="@+id/submit_core_system"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/size_35"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/size_20"
+                    android:layout_marginRight="@dimen/size_20"
+                    android:layout_weight="1"
+                    android:background="@drawable/big_conner_gray"
+                    android:text="提交核心系统"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_14sp" />
+
+                <TextView
+                    android:id="@+id/submit_result"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/size_20"
+                    android:layout_marginRight="@dimen/size_20"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="同步结果：未同步"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_14sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

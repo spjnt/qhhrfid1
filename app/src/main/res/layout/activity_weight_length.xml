@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        style="@style/text_wrap"
+        android:layout_marginTop="@dimen/size_6"
+        android:text="动物体长" />
+
+    <TextView
+        android:id="@+id/et_length"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_40"
+        android:layout_marginLeft="@dimen/size_10"
+        android:background="@null"
+        android:gravity="center_vertical"
+        android:hint="从耳根算起"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_12sp" />
+
+    <include layout="@layout/gray_line" />
+
+
+    <TextView
+        style="@style/text_wrap"
+        android:layout_marginTop="@dimen/size_6"
+        android:text="动物体重" />
+
+    <TextView
+        android:gravity="center_vertical"
+        android:id="@+id/et_weight"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_40"
+        android:layout_marginLeft="@dimen/size_10"
+        android:background="@null"
+        android:hint=""
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_12sp" />
+
+    <include layout="@layout/gray_line" />
+
+    <Button
+        android:id="@+id/camer"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_40"
+        android:layout_margin="@dimen/size_10"
+        android:background="@drawable/small_conner_new"
+        android:text="选  择  照  片"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_14sp" />
+
+    <ImageView
+        android:id="@+id/iv_phpto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/dp_10" />
+</LinearLayout>

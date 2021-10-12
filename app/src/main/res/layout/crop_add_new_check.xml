@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <tramais.hnb.hhrfid.ui.view.OutSideScrollView
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottm_ll"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size_40"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_baoan_name"
+                    android:layout_width="@dimen/size_70"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="right"
+                    android:text="查勘日期:"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/size_14" />
+
+                <TextView
+                    android:id="@+id/tv_standard_insure_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="@dimen/size_10"
+                    android:drawableRight="@mipmap/arrow_right_small"
+                    android:gravity="center"
+                    android:hint="请选择查勘日期"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_14sp" />
+            </LinearLayout>
+
+            <include layout="@layout/item_line" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size_40"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="@dimen/size_70"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="right"
+                    android:text="查勘地点:"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/size_14" />
+
+                <EditText
+                    android:id="@+id/et_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="@dimen/size_10"
+                    android:background="@null"
+                    android:gravity="center"
+                    android:hint="请输入查勘地址"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_14sp" />
+            </LinearLayout>
+
+            <include layout="@layout/item_line" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size_40"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="@dimen/size_70"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="right"
+                    android:text="出险原因:"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_14sp" />
+
+                <TextView
+                    android:id="@+id/risk_reason_unit"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="@dimen/size_10"
+                    android:drawableRight="@mipmap/arrow_right_small"
+                    android:gravity="center"
+                    android:hint="请选择出险原因"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_14sp" />
+            </LinearLayout>
+
+            <include layout="@layout/item_line" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size_40">
+
+                <TextView
+                    android:id="@+id/disaster_area"
+                    android:layout_width="@dimen/size_70"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="right"
+                    android:text="受灾面积:"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_14sp" />
+
+                <EditText
+                    android:id="@+id/et_disaster_area_unit"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="@dimen/size_10"
+                    android:layout_toLeftOf="@+id/disaster_area_unit"
+                    android:layout_toRightOf="@+id/disaster_area"
+                    android:background="@null"
+                    android:gravity="center"
+                    android:hint="请输入受灾面积"
+                    android:inputType="numberDecimal|number"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_14sp" />
+
+                <TextView
+                    android:id="@+id/disaster_area_unit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/size_10"
+                    android:text="亩"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/size_14" />
+            </RelativeLayout>
+
+            <include layout="@layout/item_line" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size_40">
+
+                <TextView
+                    android:id="@+id/loss_area"
+                    android:layout_width="@dimen/size_70"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="right"
+                    android:text="损失面积:"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_14sp" />
+
+                <EditText
+                    android:id="@+id/et_loss_area"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="@dimen/size_10"
+                    android:layout_toLeftOf="@+id/loss_area_unit"
+                    android:layout_toRightOf="@+id/loss_area"
+                    android:background="@null"
+                    android:gravity="center"
+                    android:hint="请输入损失面积"
+                    android:inputType="numberDecimal|number"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_14sp" />
+
+                <TextView
+                    android:id="@+id/loss_area_unit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/size_10"
+                    android:text="亩"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/size_14" />
+            </RelativeLayout>
+
+            <include layout="@layout/item_line" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size_40"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="@dimen/size_70"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="right"
+                    android:text="生长阶段:"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_14sp" />
+
+                <TextView
+                    android:id="@+id/et_grou_jieduan"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="@dimen/size_10"
+                    android:drawableRight="@mipmap/arrow_right_small"
+                    android:gravity="center"
+                    android:hint=""
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_14sp" />
+            </LinearLayout>
+
+            <include layout="@layout/item_line" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size_40">
+
+                <TextView
+                    android:id="@+id/amount_damage"
+                    android:layout_width="@dimen/size_70"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="right"
+                    android:text="估损金额:"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_14sp" />
+
+                <EditText
+                    android:id="@+id/et_amount_damage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="@dimen/size_10"
+                    android:layout_toLeftOf="@+id/amount_damage_unit"
+                    android:layout_toRightOf="@+id/amount_damage"
+                    android:background="@null"
+                    android:gravity="center"
+                    android:hint="请输入损失金额"
+                    android:inputType="numberDecimal|number"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_14sp" />
+
+                <TextView
+                    android:id="@+id/amount_damage_unit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/size_10"
+                    android:text="元"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/size_14" />
+            </RelativeLayout>
+
+            <include layout="@layout/item_line" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/size_10"
+                android:layout_marginTop="@dimen/size_8"
+                android:text="出险经过描述"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_14sp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size_60"
+                android:layout_margin="@dimen/size_6"
+                android:background="@drawable/four_conner_no_stroke_six_gray">
+
+                <EditText
+                    android:id="@+id/et_risk_jingguo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/size_4"
+                    android:background="@null"
+                    android:gravity="top"
+                    android:hint="出险经过描述..."
+                    android:maxLength="500"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_14sp" />
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/size_10"
+                android:layout_marginTop="@dimen/size_8"
+                android:text="查勘意见"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_14sp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size_60"
+                android:layout_margin="@dimen/size_6"
+                android:background="@drawable/four_conner_no_stroke_six_gray">
+
+                <EditText
+                    android:id="@+id/et_chakan_yijian"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/size_4"
+                    android:background="@null"
+                    android:gravity="top"
+                    android:hint="查勘意见..."
+                    android:maxLength="500"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_14sp" />
+            </RelativeLayout>
+
+            <!--  <include layout="@layout/sign_ly" />-->
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/size_10"
+                android:layout_marginTop="@dimen/size_8"
+                android:text="查勘照片"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_14sp" />
+
+            <ImageView
+                android:id="@+id/take_photo"
+                android:layout_width="@dimen/size_60"
+                android:layout_height="@dimen/size_60"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="@dimen/size_10"
+                android:layout_marginTop="@dimen/size_10"
+                android:src="@mipmap/add_photo" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/lv_photos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </tramais.hnb.hhrfid.ui.view.OutSideScrollView>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/bottm_ll"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_40"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="@dimen/size_20"
+        android:layout_marginTop="@dimen/size_10"
+        android:layout_marginRight="@dimen/size_20"
+        android:layout_marginBottom="@dimen/size_10">
+
+        <Button
+            android:id="@+id/detail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:layout_weight="1"
+            android:background="@drawable/big_conner_new"
+            android:text="地块详情"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_14sp"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <Button
+            android:id="@+id/save"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="@dimen/size_10"
+            android:layout_weight="1"
+            android:background="@drawable/big_conner_new"
+            android:text="保存"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_14sp" />
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</RelativeLayout>

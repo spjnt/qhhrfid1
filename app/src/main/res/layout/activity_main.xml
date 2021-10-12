@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/common_background"
+    android:orientation="vertical">
+
+   <!-- <View
+        android:background="@color/white"
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"/>-->
+
+    <FrameLayout
+        android:id="@+id/main_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+
+    <include layout="@layout/gray_line" />
+
+    <tramais.hnb.hhrfid.ui.table.TabLayout
+        android:id="@+id/main_tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:background="@color/common_tab"
+        app:indicator_height="0dp"
+        app:selctTextSize="@dimen/text_size_12sp"
+        app:textSelectColor="@color/common_red"
+        app:textUnselectColor="@color/black"
+        app:textsize="@dimen/text_size_12sp" />
+</LinearLayout>

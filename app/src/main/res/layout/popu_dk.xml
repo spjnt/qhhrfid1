@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:background="@color/white" android:layout_width="match_parent" android:layout_height="wrap_content">
+    <RelativeLayout android:id="@+id/id_pop_layout" android:background="@color/white" android:layout_width="match_parent" android:layout_height="@dimen/size_40">
+        <TextView android:textSize="@dimen/text_size_14sp" android:textColor="@color/black" android:id="@+id/tv_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="@dimen/size_4" android:layout_marginRight="@dimen/size_15" android:text="" android:layout_alignParentLeft="true" android:layout_centerVertical="true"/>
+        <TextView android:textSize="@dimen/text_size_14sp" android:textColor="@color/black" android:id="@+id/tv_confim" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="@dimen/size_15" android:text="取消" android:layout_alignParentRight="true" android:layout_centerVertical="true"/>
+    </RelativeLayout>
+    <include layout="@layout/gray_line"/>
+    <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent">
+        <LinearLayout android:orientation="vertical" android:background="@drawable/shape_white_5_corner" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_margin="@dimen/size_4" android:layout_above="@+id/ll_bottom" android:layout_alignParentTop="true">
+            <LinearLayout style="@style/ll">
+                <TextView android:textSize="@dimen/text_size_14sp" android:textColor="@color/black" android:gravity="center" android:layout_gravity="center" android:layout_width="match_parent" android:layout_height="match_parent" android:text="姓名" android:layout_weight="1"/>
+                <TextView android:textSize="@dimen/text_size_14sp" android:textColor="@color/black" android:gravity="center" android:layout_gravity="center" android:layout_width="match_parent" android:layout_height="match_parent" android:text="地块" android:layout_weight="1"/>
+                <TextView android:textSize="@dimen/text_size_14sp" android:textColor="@color/black" android:gravity="center" android:layout_gravity="center" android:layout_width="match_parent" android:layout_height="match_parent" android:text="耕地(亩)" android:layout_weight="1"/>
+                <TextView android:textSize="@dimen/text_size_14sp" android:textColor="@color/black" android:gravity="center" android:layout_gravity="center" android:layout_width="match_parent" android:layout_height="match_parent" android:text="验标(亩)" android:layout_weight="1"/>
+            </LinearLayout>
+            <include layout="@layout/item_line"/>
+            <ListView android:id="@+id/lv_land_detail" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+            <include layout="@layout/item_line"/>
+        </LinearLayout>
+        <LinearLayout android:id="@+id/ll_bottom" android:layout_alignParentBottom="true" style="@style/ll">
+            <TextView android:textSize="@dimen/text_size_14sp" android:textColor="@color/black" android:gravity="center" android:layout_gravity="center" android:layout_width="match_parent" android:layout_height="match_parent" android:text="面积汇总" android:layout_weight="1"/>
+            <TextView android:textSize="@dimen/text_size_14sp" android:textColor="@color/black" android:gravity="center" android:layout_gravity="center" android:id="@+id/dk_sum" android:layout_width="match_parent" android:layout_height="match_parent" android:text="0" android:layout_weight="1"/>
+            <TextView android:textSize="@dimen/text_size_14sp" android:textColor="@color/black" android:gravity="center" android:layout_gravity="center" android:id="@+id/tv_insure_sum" android:layout_width="match_parent" android:layout_height="match_parent" android:text="0" android:layout_weight="1"/>
+            <TextView android:textSize="@dimen/text_size_14sp" android:textColor="@color/black" android:gravity="center" android:layout_gravity="center" android:id="@+id/tv_check_sum" android:layout_width="match_parent" android:layout_height="match_parent" android:text="0" android:layout_weight="1"/>
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>

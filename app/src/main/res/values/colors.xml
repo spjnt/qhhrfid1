@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="login_button">#436EEE</color>
+    <color name="shadow">#25808080</color>
+    <color name="light_blue">#738ffe</color>
+    <color name="more_black">#99000000</color>
+    <color name="textColorSecondary">#757575</color>
+    <color name="orange">#FFA500</color> <!-- 橙色 -->
+    <!-- 红色 -->
+    <color name="common_background">#f8f8f8</color>
+    <color name="gray">#cccccc</color>
+    <color name="mask_color">#88888888</color>
+    <color name="common_tab">#FFFFFF</color>
+    <color name="color_white_f1f3f4">#f1f3f4</color>
+    <color name="ff999">#ff999999</color>
+    <color name="common_red">#C62230</color>
+    <color name="e6">#ffe6e6e6</color>
+    <color name="f33">#333333</color>
+    <color name="f08c792" tools:ignore="MissingDefaultResource">#08c792</color>
+    <color name="fb588f7" tools:ignore="MissingDefaultResource">#b588f7</color>
+    <color name="f1de5e2" tools:ignore="MissingDefaultResource">#1de5e2</color>
+    <color name="red">#FF0000</color>
+    <color name="yellow">#FFFF00</color>
+    <color name="new_theme">#ff0022</color>
+    <color name="new_theme_light">#334EEE94</color>
+</resources>

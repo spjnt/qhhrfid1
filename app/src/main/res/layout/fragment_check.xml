@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/save"
+        android:layout_alignParentTop="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout style="@style/ll">
+
+                <TextView
+                    android:id="@+id/baoan_info"
+                    style="@style/text_right_ll"
+                    android:layout_weight="1"
+                    android:text="报案信息" />
+
+                <View
+                    android:layout_width="@dimen/size_1"
+                    android:layout_height="match_parent"
+                    android:background="@color/e6" />
+
+                <TextView
+                    android:id="@+id/chengbao_info"
+                    style="@style/text_right_ll"
+                    android:layout_weight="1"
+                    android:text="承保信息" />
+            </LinearLayout>
+
+            <include layout="@layout/item_line" />
+
+            <LinearLayout style="@style/ll">
+
+                <TextView
+                    style="@style/text_left_ll"
+                    android:text="查勘日期:" />
+
+                <TextView
+                    android:id="@+id/check_date"
+                    style="@style/text_right_ll"
+                    android:layout_marginRight="@dimen/size_10"
+                    android:drawableRight="@mipmap/arrow_right_small"
+                    android:hint="请选择查勘时间" />
+            </LinearLayout>
+
+            <include layout="@layout/item_line" />
+
+            <LinearLayout style="@style/ll">
+
+                <TextView
+                    android:id="@+id/tv_baoan_name"
+                    style="@style/text_left_ll"
+                    android:text="出案地点:" />
+
+                <EditText
+                    android:id="@+id/tv_name"
+                    style="@style/text_right_ll"
+                    android:background="@null"
+                    android:hint="请输入出案地点" />
+            </LinearLayout>
+
+            <include layout="@layout/item_line" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/size_10"
+                android:layout_marginTop="@dimen/size_8"
+                android:text="标的损失情况,查勘定损过程描述:"
+                android:textColor="@color/black"
+                android:textSize="@dimen/size_16" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size_100"
+                android:layout_margin="@dimen/size_6"
+                android:background="@drawable/four_conner_no_stroke_six_gray">
+
+                <EditText
+                    android:id="@+id/input_sunshi"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/size_4"
+                    android:background="@null"
+                    android:gravity="top"
+                    android:hint="查勘描述..."
+                    android:maxLength="500"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_14sp" />
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/size_10"
+                android:layout_marginTop="@dimen/size_8"
+                android:text="损失估计"
+                android:textColor="@color/black"
+                android:textSize="@dimen/size_16" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size_100"
+                android:layout_margin="@dimen/size_6"
+                android:background="@drawable/four_conner_no_stroke_six_gray">
+
+                <EditText
+                    android:id="@+id/sunshi_guji"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/size_4"
+                    android:background="@null"
+                    android:gravity="top"
+                    android:hint="损失估计..."
+                    android:maxLength="500"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_14sp" />
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/size_10"
+                android:layout_marginTop="@dimen/size_8"
+                android:text="查勘意见"
+                android:textColor="@color/black"
+                android:textSize="@dimen/size_16" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size_100"
+                android:layout_margin="@dimen/size_6"
+                android:background="@drawable/four_conner_no_stroke_six_gray">
+
+                <EditText
+                    android:id="@+id/check_advice"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/size_4"
+                    android:background="@null"
+                    android:gravity="top"
+                    android:hint="查勘意见..."
+                    android:maxLength="500"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_14sp" />
+            </RelativeLayout>
+
+         <!--   <ImageView
+                android:id="@+id/add"
+                android:layout_width="@dimen/size_50"
+                android:layout_height="@dimen/size_50"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/size_20"
+                android:src="@mipmap/add_photo" />
+
+            <TextView
+                android:layout_marginTop="@dimen/size_2"
+                android:layout_gravity="center_horizontal"
+                style="@style/text_left_ll"
+                android:textSize="@dimen/size_10"
+                android:text="可长按删除照片" />
+            <androidx.recyclerview.widget.RecyclerView
+
+                android:layout_marginTop="@dimen/size_2"
+                android:id="@+id/rv_photos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+-->
+
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/save"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_40"
+        android:layout_alignParentBottom="true"
+
+        android:layout_marginLeft="@dimen/size_20"
+        android:layout_marginTop="@dimen/size_10"
+        android:layout_marginRight="@dimen/size_20"
+        android:layout_marginBottom="@dimen/size_10"
+        android:background="@drawable/big_conner_new"
+        android:text="保存"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_14sp" />
+</RelativeLayout>

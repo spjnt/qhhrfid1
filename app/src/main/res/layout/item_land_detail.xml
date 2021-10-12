@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="@dimen/size_50">
+    <TextView android:textSize="@dimen/text_size_14sp" android:textColor="@color/black" android:gravity="center" android:id="@+id/farmer_name" android:layout_width="match_parent" android:layout_height="match_parent" android:text="" android:layout_weight="1"/>
+    <TextView android:textSize="@dimen/text_size_14sp" android:textColor="@color/black" android:gravity="center" android:id="@+id/dk" android:layout_width="match_parent" android:layout_height="match_parent" android:text="" android:layout_weight="1"/>
+    <TextView android:textSize="@dimen/text_size_14sp" android:textColor="@color/black" android:gravity="center" android:id="@+id/insure_dk" android:layout_width="match_parent" android:layout_height="match_parent" android:text="耕地(亩)" android:layout_weight="1"/>
+    <TextView android:textSize="@dimen/text_size_14sp" android:textColor="@color/black" android:gravity="center" android:id="@+id/check_dk" android:layout_width="match_parent" android:layout_height="match_parent" android:text="验标(亩)" android:layout_weight="1"/>
+</LinearLayout>

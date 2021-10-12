@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_right"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/size_6"
+    android:layout_marginLeft="@dimen/size_4"
+    android:layout_marginRight="@dimen/size_4"
+    android:elevation="@dimen/size_3"
+    android:padding="@dimen/size_2"
+    android:translationZ="@dimen/size_3"
+    app:cardCornerRadius="@dimen/size_8"
+    app:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/size_10"
+            android:padding="@dimen/size_1"
+            android:text=""
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_insure"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_name"
+
+            android:layout_marginLeft="@dimen/size_10"
+
+            android:padding="@dimen/size_1"
+            android:paddingHorizontal="@dimen/size_4"
+            android:text=""
+            android:textColor="@color/textColorSecondary"
+            android:textSize="@dimen/text_size_14sp" />
+
+        <TextView
+            android:id="@+id/tv_insure_sum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_insure"
+            android:layout_marginLeft="@dimen/size_10"
+            android:drawableLeft="@mipmap/item_order"
+            android:padding="@dimen/size_1"
+            android:paddingHorizontal="@dimen/size_4"
+            android:text=""
+            android:textColor="@color/textColorSecondary"
+            android:textSize="@dimen/text_size_14sp" />
+
+        <TextView
+            android:id="@+id/tv_make_deal_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_insure_sum"
+            android:layout_marginLeft="@dimen/size_10"
+            android:drawableLeft="@mipmap/item_time"
+            android:padding="@dimen/size_1"
+            android:paddingHorizontal="@dimen/size_4"
+            android:text=""
+            android:textColor="@color/textColorSecondary"
+            android:textSize="@dimen/text_size_14sp" />
+
+        <TextView
+            android:id="@+id/tv_public_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_make_deal_time"
+            android:layout_marginLeft="@dimen/size_10"
+            android:drawableLeft="@mipmap/item_public_time"
+            android:gravity="center_vertical"
+            android:padding="@dimen/size_1"
+            android:paddingHorizontal="@dimen/size_4"
+            android:text=""
+            android:textColor="@color/textColorSecondary"
+            android:textSize="@dimen/text_size_14sp" />
+
+        <TextView
+            android:id="@+id/tv_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_public_time"
+            android:layout_marginLeft="@dimen/size_7"
+            android:drawableLeft="@mipmap/location_yellow"
+            android:gravity="center_vertical"
+
+            android:paddingHorizontal="@dimen/size_4"
+            android:text=""
+            android:textColor="@color/textColorSecondary"
+            android:textSize="@dimen/text_size_14sp" />
+
+        <TextView
+            android:id="@+id/tv_statu"
+            android:layout_width="@dimen/size_70"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_address"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/size_20"
+            android:layout_marginBottom="@dimen/size_2"
+            android:background="@drawable/bottom_no_conner_deep"
+            android:gravity="center_horizontal"
+            android:padding="@dimen/size_2"
+            android:paddingHorizontal="@dimen/size_4"
+            android:text="状态"
+
+            android:textColor="@color/light_blue"
+            android:textSize="@dimen/text_size_14sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/iv_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/arrow_right_small" />
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

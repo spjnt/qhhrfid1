@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/ll_bottom"
+        android:layout_alignParentTop="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                style="@style/ll"
+                android:layout_marginTop="@dimen/size_4">
+
+                <TextView
+                    style="@style/text_left_ll_big"
+                    android:text="耳  标  号:" />
+
+                <TextView
+                    android:id="@+id/et_earTag"
+                    style="@style/text_right_ll" />
+            </LinearLayout>
+
+            <include layout="@layout/gray_line_s" />
+
+            <RelativeLayout style="@style/ll">
+
+                <TextView
+                    android:id="@+id/tv_animal_total"
+                    style="@style/text_left_ll_big"
+                    android:text="扫描总数:" />
+
+                <TextView
+                    android:id="@+id/scan_total"
+                    style="@style/text_right_ll"
+                    android:layout_toLeftOf="@+id/animal_unit"
+                    android:layout_toRightOf="@+id/tv_animal_total" />
+
+                <TextView
+                    android:id="@+id/animal_unit"
+                    style="@style/text_left_ll_big"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/size_10"
+                    android:text="头" />
+            </RelativeLayout>
+
+            <include layout="@layout/gray_line_s" />
+
+            <LinearLayout style="@style/ll">
+
+                <TextView
+                    style="@style/text_left_ll_big"
+                    android:text="品        种:" />
+
+                <TextView
+                    android:id="@+id/animal_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/size_10"
+                    android:background="@null"
+                    android:gravity="center"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_16sp" />
+            </LinearLayout>
+
+            <include layout="@layout/gray_line_s" />
+
+            <RelativeLayout style="@style/ll">
+
+                <TextView
+                    android:id="@+id/tv_animal_ages"
+                    style="@style/text_left_ll_big"
+                    android:text="畜        龄:" />
+
+                <EditText
+                    android:id="@+id/et_month"
+                    style="@style/text_right_ll"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_toLeftOf="@+id/age_unit"
+                    android:layout_toRightOf="@+id/tv_animal_ages"
+                    android:background="@null"
+                    android:hint="请输入牲畜月龄"
+                    android:inputType="number"
+                    android:text="12" />
+
+                <TextView
+                    android:id="@+id/age_unit"
+                    style="@style/text_left_ll_big"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/size_10"
+                    android:text="月" />
+            </RelativeLayout>
+
+            <include layout="@layout/gray_line_s" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/size_10"
+                android:layout_marginTop="@dimen/size_4"
+                android:gravity="right|center_vertical|center_horizontal|center"
+                android:text="照片"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_18sp"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_photos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/size_6" />
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/ll_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_40"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/size_20"
+        android:orientation="horizontal">
+
+
+        <Button
+            android:id="@+id/scan_drop"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/size_10"
+
+            android:layout_weight="1"
+            android:background="@drawable/big_conner_new"
+            android:text="耳标重验"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_14sp" />
+
+        <Button
+            android:id="@+id/scan_next"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/size_10"
+            android:layout_marginRight="@dimen/size_10"
+            android:layout_weight="1"
+            android:background="@drawable/big_conner_new"
+            android:text="下一头"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_14sp" />
+
+        <Button
+            android:id="@+id/goToUpLoad"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/size_10"
+            android:layout_weight="1"
+            android:background="@drawable/big_conner_new"
+            android:text="去上传"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_14sp"
+            android:visibility="visible" />
+    </LinearLayout>
+</RelativeLayout>

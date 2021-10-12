@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/size_240"
+    android:layout_height="@dimen/size_150"
+    android:background="@drawable/iv_white_both"
+    android:orientation="vertical">
+
+
+    <TextView
+
+        android:id="@+id/tv_ser"
+        android:layout_width="match_parent"
+        android:layout_height="110dp"
+        android:gravity="center"
+        android:text="有缓存数据，是否上传？"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_16sp"
+       />
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_0.5px"
+        android:layout_below="@+id/tv_ser"
+        android:background="@color/gray" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_40"
+        android:layout_below="@id/line"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:id="@+id/cancle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="暂不上传"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_12sp" />
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/tv_phone"
+            android:background="@color/gray" />
+
+        <TextView
+            android:id="@+id/confim"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+
+            android:gravity="center"
+            android:text="去上传"
+            android:textColor="@color/red"
+            android:textSize="@dimen/text_size_12sp" />
+    </LinearLayout>
+
+
+</RelativeLayout>

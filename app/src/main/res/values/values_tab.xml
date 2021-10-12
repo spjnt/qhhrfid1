@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ResourceName">
+    <attr name="divider_color" format="color" />
+    <attr name="divider_padding" format="dimension" />
+    <attr name="divider_width" format="dimension" />
+    <attr name="indicator_anim_duration" format="integer" />
+    <attr name="indicator_anim_enable" format="boolean" />
+    <attr name="indicator_bounce_enable" format="boolean" />
+    <attr name="indicator_color" format="color" />
+    <attr name="indicator_corner_radius" format="dimension" />
+    <attr name="indicator_gravity" format="enum">
+        <enum name="TOP" value="48" />
+        <enum name="BOTTOM" value="80" />
+    </attr>
+    <attr name="indicator_height" format="dimension" />
+    <attr name="indicator_margin_bottom" format="dimension" />
+    <attr name="indicator_margin_left" format="dimension" />
+    <attr name="indicator_margin_right" format="dimension" />
+    <attr name="indicator_margin_top" format="dimension" />
+    <attr name="indicator_style" format="enum">
+        <enum name="NORMAL" value="0" />
+        <enum name="TRIANGLE" value="1" />
+        <enum name="BLOCK" value="2" />
+    </attr>
+    <attr name="indicator_width" format="dimension" />
+    <attr name="indicator_width_equal_title" format="boolean" />
+    <attr name="tab_padding" format="dimension" />
+    <attr name="tab_space_equal" format="boolean" />
+    <attr name="tab_width" format="dimension" />
+    <attr name="tab_background" format="integer" />
+    <attr name="tab_margin" format="dimension" />
+    <attr name="textAllCaps" format="boolean" />
+    <attr name="textBold" format="enum">
+        <enum name="NONE" value="0" />
+        <enum name="SELECT" value="1" />
+        <enum name="BOTH" value="2" />
+    </attr>
+    <attr name="textSelectColor" format="color" />
+    <attr name="textUnselectColor" format="color" />
+    <attr name="textsize" format="dimension" />
+    <attr name="underline_color" format="color" />
+    <attr name="underline_gravity" format="enum">
+        <enum name="TOP" value="48" />
+        <enum name="BOTTOM" value="80" />
+    </attr>
+    <attr name="underline_height" format="dimension" />
+    <attr name="tabIconGravity" format="enum">
+        <enum name="LEFT" value="3" />
+        <enum name="TOP" value="48" />
+        <enum name="RIGHT" value="5" />
+        <enum name="BOTTOM" value="80" />
+    </attr>
+
+    <declare-styleable name="TabLayout">
+        <attr name="indicator_color" />
+        <attr name="indicator_height" />
+        <attr name="indicator_width" />
+        <attr name="indicator_margin_left" />
+        <attr name="indicator_margin_top" />
+        <attr name="indicator_margin_right" />
+        <attr name="indicator_margin_bottom" />
+        <attr name="indicator_corner_radius" />
+        <attr name="indicator_gravity" />
+        <attr name="indicator_style" />
+        <attr name="indicator_anim_enable" />
+        <attr name="indicator_anim_duration" />
+        <attr name="indicator_bounce_enable" />
+        <attr name="underline_color" />
+        <attr name="underline_height" />
+        <attr name="underline_gravity" />
+        <attr name="divider_color" />
+        <attr name="divider_width" />
+        <attr name="divider_padding" />
+        <attr name="tab_padding" />
+        <attr name="tab_space_equal" />
+        <attr name="tab_width" />
+        <attr name="tab_background" />
+        <attr name="tab_margin" />
+        <attr name="textsize" />
+        <attr name="selctTextSize" format="dimension" />
+        <attr name="textSelectColor" />
+        <attr name="textUnselectColor" />
+        <attr name="textBold" />
+        <attr name="textAllCaps" />
+        <attr name="iconWidth" format="dimension" />
+        <attr name="iconHeight" format="dimension" />
+        <attr name="iconVisible" format="boolean" />
+        <attr name="tabIconGravity" />
+        <attr name="iconMargin" format="dimension" />
+    </declare-styleable>
+    <declare-styleable name="MsgView">
+        <attr name="mv_backgroundColor" format="color" />
+        <attr name="mv_cornerRadius" format="dimension" />
+        <attr name="mv_strokeWidth" format="dimension" />
+        <attr name="mv_strokeColor" format="color" />
+        <attr name="mv_isRadiusHalfHeight" format="boolean" />
+        <attr name="mv_isWidthHeightEqual" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="SegmentTabLayout">
+        <attr name="indicator_color" />
+        <attr name="indicator_height" />
+        <attr name="indicator_margin_left" />
+        <attr name="indicator_margin_top" />
+        <attr name="indicator_margin_right" />
+        <attr name="indicator_margin_bottom" />
+        <attr name="indicator_corner_radius" />
+        <attr name="indicator_anim_enable" />
+        <attr name="indicator_anim_duration" />
+        <attr name="indicator_bounce_enable" />
+        <attr name="divider_color" />
+        <attr name="divider_width" />
+        <attr name="divider_padding" />
+        <attr name="tab_padding" />
+        <attr name="tab_space_equal" />
+        <attr name="tab_width" />
+        <attr name="textsize" />
+        <attr name="textSelectColor" />
+        <attr name="textUnselectColor" />
+        <attr name="textBold" />
+        <attr name="textAllCaps" />
+        <attr name="bar_color" format="color" />
+        <attr name="bar_stroke_color" format="color" />
+        <attr name="bar_stroke_width" format="dimension" />
+    </declare-styleable>
+    <declare-styleable name="SlidingTabLayout">
+        <attr name="indicator_color" />
+        <attr name="indicator_height" />
+        <attr name="indicator_width" />
+        <attr name="indicator_margin_left" />
+        <attr name="indicator_margin_top" />
+        <attr name="indicator_margin_right" />
+        <attr name="indicator_margin_bottom" />
+        <attr name="indicator_corner_radius" />
+        <attr name="indicator_gravity" />
+        <attr name="indicator_style" />
+        <attr name="indicator_width_equal_title" />
+        <attr name="underline_color" />
+        <attr name="underline_height" />
+        <attr name="underline_gravity" />
+        <attr name="divider_color" />
+        <attr name="divider_width" />
+        <attr name="divider_padding" />
+        <attr name="tab_padding" />
+        <attr name="tab_space_equal" />
+        <attr name="tab_width" />
+        <attr name="textsize" />
+        <attr name="textSelectColor" />
+        <attr name="textUnselectColor" />
+        <attr name="textBold" />
+        <attr name="textAllCaps" />
+    </declare-styleable>
+</resources>

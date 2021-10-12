@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tramais.hnb.hhrfid.ui.view.OutSideScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_40"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="@dimen/size_80"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="right"
+                android:text="投保单号:"
+                android:textColor="@color/black"
+                android:textSize="@dimen/size_16" />
+
+            <TextView
+                android:id="@+id/banan_num"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:textSize="@dimen/size_16" />
+        </LinearLayout>
+
+        <include layout="@layout/item_line" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_40"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="@dimen/size_60"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text="保险金额"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:layout_width="@dimen/size_70"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="扣除残值"
+                android:textColor="@color/new_theme" />
+
+            <TextView
+                android:layout_width="@dimen/size_80"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="市场价赔付"
+                android:textColor="@color/new_theme" />
+
+            <TextView
+                android:layout_width="@dimen/size_70"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="赔付比例"
+                android:textColor="@color/new_theme" />
+
+            <TextView
+                android:layout_width="@dimen/size_70"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="赔付金额"
+                android:textColor="@color/new_theme" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_40"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="@dimen/size_60"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text="藏系羊300元/只"
+                android:textColor="@color/black" />
+
+            <EditText
+                android:id="@+id/et_sheep_snow"
+                android:layout_width="@dimen/size_70"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:inputType="numberDecimal"
+                android:text=""
+                android:textColor="@color/login_button" />
+
+            <EditText
+                android:id="@+id/et_sheep_ill"
+                android:layout_width="@dimen/size_80"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:inputType="numberDecimal"
+                android:text=""
+                android:textColor="@color/login_button" />
+
+            <EditText
+                android:id="@+id/et_sheep_animal"
+                android:layout_width="@dimen/size_70"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:inputType="numberDecimal"
+                android:text=""
+                android:textColor="@color/login_button" />
+
+            <EditText
+                android:id="@+id/et_sheep_other"
+                android:layout_width="@dimen/size_70"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:inputType="numberDecimal"
+                android:text=""
+                android:textColor="@color/login_button" />
+        </LinearLayout>
+
+        <include layout="@layout/item_line" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_40"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="@dimen/size_60"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text="藏牦2000/头"
+                android:textColor="@color/black" />
+
+            <EditText
+                android:id="@+id/et_cow_snow"
+                android:layout_width="@dimen/size_70"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:inputType="numberDecimal"
+                android:text=""
+                android:textColor="@color/login_button" />
+
+            <EditText
+                android:id="@+id/et_cow_ill"
+                android:layout_width="@dimen/size_80"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:inputType="numberDecimal"
+                android:text=""
+                android:textColor="@color/login_button" />
+
+            <EditText
+                android:id="@+id/et_cow_animal"
+                android:layout_width="@dimen/size_70"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:inputType="numberDecimal"
+                android:text=""
+                android:textColor="@color/login_button" />
+
+            <EditText
+                android:id="@+id/et_cow_other"
+                android:layout_width="@dimen/size_70"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:inputType="numberDecimal"
+                android:text=""
+                android:textColor="@color/login_button" />
+        </LinearLayout>
+
+        <include layout="@layout/item_line" />
+
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_48">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/size_10"
+                android:drawableLeft="@mipmap/important"
+                android:gravity="right"
+                android:text="复核人签字:"
+                android:textColor="@color/black"
+                android:textSize="@dimen/size_16"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/clean_sign"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/size_35"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/size_10"
+                android:background="@drawable/bottom_no_conner"
+                android:text="清除签名"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_16sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_sign"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_200"
+            android:background="@color/e6">
+
+            <tramais.hnb.hhrfid.ui.view.LinePathView
+                android:id="@+id/line_path_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/size_20"
+                android:layout_marginRight="@dimen/size_20"
+                android:background="#ffffff"
+                android:focusableInTouchMode="true"
+                android:visibility="visible" />
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/iv_sign"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_220"
+            android:visibility="gone" />
+
+        <include layout="@layout/item_line" />
+
+        <Button
+            android:id="@+id/save"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_40"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="@dimen/size_20"
+            android:layout_marginTop="@dimen/size_40"
+            android:layout_marginRight="@dimen/size_20"
+            android:layout_marginBottom="@dimen/size_20"
+            android:background="@drawable/big_conner_new"
+            android:text="保存"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_14sp" />
+    </LinearLayout>
+</tramais.hnb.hhrfid.ui.view.OutSideScrollView>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="@dimen/size_200"
+    android:layout_height="@dimen/size_150"
+    android:background="#17000000">
+
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/avi"
+        style="@style/AVLoadingIndicatorView"
+        android:layout_width="@dimen/size_60"
+        android:layout_height="@dimen/size_60"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/size_30"
+        app:indicatorColor="@color/light_blue"
+        app:indicatorName="BallPulseIndicator" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/avi"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/size_6">
+
+        <TextView
+            android:id="@+id/wait_desc"
+            style="@style/textStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="请等待"
+            android:textColor="@color/light_blue"
+            android:textSize="@dimen/text_size_18sp" />
+
+        <tramais.hnb.hhrfid.ui.view.LoadingTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:textColor="@color/light_blue"
+            android:textSize="@dimen/text_size_30sp" />
+    </LinearLayout>
+</RelativeLayout>

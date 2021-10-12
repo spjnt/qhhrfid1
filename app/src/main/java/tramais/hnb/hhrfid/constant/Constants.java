@@ -1,0 +1,81 @@
+package tramais.hnb.hhrfid.constant;
+
+public interface Constants {
+    String For_Sign = "For_Sign";
+    String Role_array = "Role_array";
+    String Type = "Type";
+    String Sign_Path = "Sign_Path";
+    String password = "PASSWORD";
+    String MODULE_NAME = "MODULE_NAME";
+    String SO_WHAT = "SO_WHAT";
+    String json = "json";
+    String risk = "risk";
+    String loss = "loss";
+
+    String Sign_Common = "Sign_Common";
+    String MAIN_HEAG_BG = "MAIN_HEAG_BG";
+    String ROLE = "ROLES";
+    String MAIN_HEAG_PATH = "MAIN_HEAG_PATH";
+    String MAIN_HEAG_BANNER = "MAIN_HEAG_BANNER";
+    String account = "ACCOUNT";
+    String isRemPsw = "ISRemPsw";
+    String login_data = "login_data";
+    String companyNumber = "companyNumber";
+    //FXZCode
+    String FXZCode = "FXZCode";
+    String age_month = "age_month";
+    String userNumber = "UserNumber";
+    String UserName = "UserName";
+    String isLogin = "isLogin";
+    String animal_lable = "animal_lable";
+    String farmer_name = "farmer_name";
+    String ear_tag = "ear_tag";
+    String Ba_num = "Ba_num";
+    String fid = "fid";
+    String FProductCode = "FProductCode";
+    String MaxFid = "MaxFid";
+    String Statu = "Statu";
+    String LandCategory = "LandCategory";
+    String farmer_area = "farmer_area";
+    String farmer_zjCategory = "farmer_zjCategory";
+    String insure_type = "insure_type";
+    String farmer_id_nums = "farmer_id_nums";
+    String farmer_address = "farmer_address";
+    String farmer_sign = "farmer_sign";
+    String farmer_tel = "farmer_tel";
+    String category_name = "category_name";
+    String category = "category";
+    String current_index = "current_index";
+    String animal_type = "animal_type";
+    String animal_type_o = "animal_type_o";
+    String img_list = "img_list";
+    String epc = "epc";
+    String img_total = "img_total";
+    String lon = "lon";
+    String lat = "lat";
+    String cache_time = "cache_time";
+    String c72_power = "c72_power";
+    String sdk_middle_path = "/QNBTramais/Data/承保人信息/";
+    String sdk_first_path = "/UpLoadFile/";
+    String sdk_middle_animal = "/QNBTramais/Data/";
+    String sdk_camer = "/QNBTramais/Photo/";
+    String sdk_banner = "/QNBTramais/Data/Banner";
+    String sdk_qr = "/QNBTramais/Data/Qr/";
+    String sdk_middle_sign = "/QNBTramais/Data/Sign/";
+    String upLoad_desc = "upLoad_desc";
+    String DownLoad_desc = "DownLoad_desc";
+    String upLoad_nameOrLablenum = "nameOrLablenum";
+    String upLoad_zjNumber = "zjNumber";
+    String yyyy_mm_dd = "yyyy-MM-dd";
+    String yyyy = "yyyy";
+    String yyyyMMddHHmmss = "yyyyMMddHHmmsss";
+    String yyyyMMddHHmmss1 = "yyyyMMddHHmmssSSS";
+    String yyyy_MM_ddHHmmss = "yyyy-MM-dd HH:mm:ss";
+    String yyyy__MM__dd = "yyyyMMdd";
+    String hms = "HH-mm-ss";
+    String MMddHHmmss = "MMddHHmmss";
+
+    String camer_insure = "camer_insure";
+    String camer_insure_name = "camer_insure_name";
+
+}

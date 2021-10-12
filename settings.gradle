@@ -1,0 +1,6 @@
+include ':app'
+rootProject.name='qhhrfid'
+include ':biometricprompt'
+
+//include ':nativelib'
+include ':camerakit'
