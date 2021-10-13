@@ -61,7 +61,7 @@ class QhApplication : Application() {
                 .configLevel(LogLevel.TYPE_ERROR)
         //腾讯日志
         val strategy = UserStrategy(context)
-        CrashReport.initCrashReport(context, "ca09bf9a31", true, strategy)
+        CrashReport.initCrashReport(context, "34e5bbeeb2", true, strategy)
     }
 
     fun initNet() {

@@ -134,6 +134,8 @@
         <activity android:name=".ui.crop.ActivityFieldSampling" />
         <activity android:name=".ui.crop.ActtivityCropSearchBy" />
         <activity android:name=".ui.ActivityNumber" />
+        <activity android:name=".ui.ActivityVersion" />
+        <activity android:name=".camerutils.Camer2Activity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

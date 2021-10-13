@@ -110,7 +110,7 @@ class CameraOnlyActivity
     var famername: String? = null
     var earTag: String? = null
     var remark: String? = null
-    var come_in_time: String = ""
+//    var come_in_time: String = ""
     var textList: MutableList<String> = ArrayList()
     var sdk_path: String? = null
     var cdpath: String = ""
@@ -119,13 +119,31 @@ class CameraOnlyActivity
     var riskQty: String? = null
     var insure_type: String? = null
     override fun initData() {
+        if (NetUtil.checkNet(this)) {
+            mLocationClient = LocationClient(applicationContext)
+            BDLoactionUtil.initLoaction(mLocationClient)
+            if (mLocationClient != null) mLocationClient!!.start()
 
+            //声明LocationClient类
+            mLocationClient!!.registerLocationListener(MyLocationListener { lat: Double, log: Double, add: String? ->
+                LogUtils.e("add  $add $lat  $log")
+                if (add.isNullOrEmpty() || add.isNullOrBlank()) {
+                    location_add = "无法定位"
+                } else {
+                    location_add = add
+                }
 
-        come_in_time = TimeUtil.getTime(Constants.MMddHHmmss)
+                latitude = lat
+                longitude = log
+                mLocationClient!!.stop()
+            })
+        }
+
+//        come_in_time = TimeUtil.getTime(Constants.MMddHHmmss)
         val fenpei = intent.getSerializableExtra("fenpei") as FenPei?
 
         photo_num = intent.getIntExtra("photo_num", 0)
-        come_in_time = TimeUtil.getTime(Constants.MMddHHmmss)
+//        come_in_time = TimeUtil.getTime(Constants.MMddHHmmss)
         fenpei?.let { fenpei_ ->
             famername = if (fenpei_.farmerName.isNullOrBlank())
                 "未知投保人"
@@ -139,31 +157,13 @@ class CameraOnlyActivity
             setTitleText("投保人:$famername")
             remark = fenpei_.fRemark
             riskQty = fenpei_.riskQty
-            insure_type = fenpei_.fCoinsFlag //险种
-            location_add = fenpei_.riskAddress
+//            insure_type = fenpei_.fCoinsFlag //险种
+//            location_add = fenpei_.riskAddress
 
-            latitude = fenpei_.lat
-            longitude = fenpei_.log
+//            latitude = fenpei_.lat
+//            longitude = fenpei_.log
             if (remark != "only_photo") {
-                if (NetUtil.checkNet(this)) {
-                    mLocationClient = LocationClient(applicationContext)
-                    BDLoactionUtil.initLoaction(mLocationClient)
-                    if (mLocationClient != null) mLocationClient!!.start()
 
-                    //声明LocationClient类
-                    mLocationClient!!.registerLocationListener(MyLocationListener { lat: Double, log: Double, add: String? ->
-                        LogUtils.e("add  $add $lat  $log")
-                        if (add.isNullOrEmpty() || add.isNullOrBlank()) {
-                            location_add = "无法定位"
-                        } else {
-                            location_add = add
-                        }
-
-                        latitude = lat
-                        longitude = log
-                        mLocationClient!!.stop()
-                    })
-                }
             }
         }
 
@@ -275,13 +275,13 @@ class CameraOnlyActivity
                     var task = WateImagsTask()
                     bitmap = task.addWater(context, textList, getimage)
 
-                    var photo_name = come_in_time + "_" + bitmaps!!.size + ".jpg"
+                    var photo_name = System.currentTimeMillis().toString()+ ".jpg"
                     path = ImageUtils.saveBitmap(this@CameraOnlyActivity, bitmap, cdpath, photo_name)
 
                     withContext(Dispatchers.Main) {
                         imv_pic!!.visibility = View.VISIBLE
                         Glide.with(this@CameraOnlyActivity).load(path).into(imv_pic!!)
-                        if (!bitmaps.contains(path)) bitmaps.add(path)
+                        if (!bitmaps!!.contains(path)) bitmaps!!.add(path)
                         if (remark == "only_photo") {
                             mScanTotal!!.text = "当前第 " + (bitmaps.size) + " 张"
                         } else {
