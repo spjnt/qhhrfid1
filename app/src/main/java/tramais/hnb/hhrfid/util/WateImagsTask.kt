@@ -1,8 +1,8 @@
 package tramais.hnb.hhrfid.util
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Color
+import android.graphics.*
+
 import com.watermark.androidwm_light.WatermarkBuilder
 import com.watermark.androidwm_light.bean.WatermarkImage
 import com.watermark.androidwm_light.bean.WatermarkText
@@ -36,7 +36,7 @@ class WateImagsTask {
                     .setPositionY(0.08 * index)
                     .setTextAlpha(200) // 透明度
                     .setTextColor(Color.GRAY) // 文字水印文字颜色
-                    .setTextSize(DisplayUtil.sp2px(context, 8.0f))//DisplayUtil.sp2px(context,8.0f)
+                    .setTextSize(DisplayUtil.sp2px(context, 2.0f))//DisplayUtil.sp2px(context,8.0f)
                     .setRotation(20.0)
             //  .setTextFont(R.font.myriadroman_1)
             watermarkTexts.add(text)
@@ -49,7 +49,7 @@ class WateImagsTask {
                     .setPositionY(startY + 0.03 * item)
                     .setTextAlpha(255) // 透明度
                     .setTextColor(Color.WHITE) // 文字水印文字颜色
-                    .setTextSize(DisplayUtil.sp2px(context, 12.0f))//DisplayUtil.sp2px(context,10.0f)
+                    .setTextSize(DisplayUtil.sp2px(context, 4f))//DisplayUtil.sp2px(context,10.0f)
             //  .setTextFont(R.font.myriadroman_1)
             if (!watermarkTexts.contains(text))
                 watermarkTexts.add(text)
@@ -59,5 +59,6 @@ class WateImagsTask {
                 .loadWatermarkImage(watermarkImage)
                 .watermark.outputImage
     }
+
 
 }

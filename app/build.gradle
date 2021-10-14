@@ -42,6 +42,10 @@ android {
         abortOnError false
         disable 'MissingTranslation'
     }
+    packagingOptions {
+        exclude 'META-INF/*.kotlin_module'
+    }
+
     android.applicationVariants.all { variant ->
         //判断是release还是debug版本
         def buildType = variant.buildType.name
@@ -127,6 +131,7 @@ dependencies {
     // implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     //水印数字
     implementation 'com.huangyz0918:androidwm-light:0.1.2'
+//    implementation 'com.huangyz0918:androidwm:0.2.3'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0-alpha01'
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1"
     implementation project(':biometricprompt')
@@ -144,7 +149,8 @@ dependencies {
     implementation 'com.github.huangyanbin:SmartTable:2.2.0'
     // implementation 'de.hdodenhof:circleimageview:3.1.0'
     //照片选择已包含 luBan
-   // implementation 'top.zibin:Luban:1.1.8'
+    //implementation 'top.zibin:Luban:1.1.8'
+    implementation 'com.github.forJrking:KLuban:1.1.0'
     implementation project(':camerakit')
 
 //    implementation 'com.camerakit:camerakit:1.0.0-beta3.11'

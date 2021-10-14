@@ -51,7 +51,7 @@ abstract class BaseFragment : ImmersionFragment() /*Fragment()*/{
     fun String?.showStr() {
         if (this?.isNotEmpty() == true) {
 
-            activity!!.runOnUiThread { Toast.makeText(context, this, Toast.LENGTH_SHORT).show() }
+            requireActivity().runOnUiThread { Toast.makeText(context, this, Toast.LENGTH_SHORT).show() }
         }
     }
 
@@ -67,7 +67,7 @@ abstract class BaseFragment : ImmersionFragment() /*Fragment()*/{
     @JvmOverloads
     fun showAvi(str: String? = "") {
         if (dialogAvi == null) {
-            dialogAvi = DialogAvi(context!!, str)
+            dialogAvi = DialogAvi(requireContext(), str)
         }
         if (dialogAvi!!.isShowing) {
             dialogAvi!!.setText(str)

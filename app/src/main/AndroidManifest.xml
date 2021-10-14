@@ -136,6 +136,7 @@
         <activity android:name=".ui.ActivityNumber" />
         <activity android:name=".ui.ActivityVersion" />
         <activity android:name=".camerutils.Camer2Activity" />
+        <activity android:name=".ui.CameraOnlyActivity2" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

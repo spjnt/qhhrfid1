@@ -11,6 +11,7 @@
         <entry key="..\:/qhhrfid/app/src/main/res/drawable/hide_show_pwd.xml" value="0.39384615384615385" />
         <entry key="..\:/qhhrfid/app/src/main/res/drawable/ic_camera.xml" value="0.36822916666666666" />
         <entry key="..\:/qhhrfid/app/src/main/res/drawable/ic_photo.xml" value="0.35989583333333336" />
+        <entry key="..\:/qhhrfid/app/src/main/res/drawable/ic_shutter.xml" value="0.3605128205128205" />
         <entry key="..\:/qhhrfid/app/src/main/res/drawable/iv_border.xml" value="0.39794871794871794" />
         <entry key="..\:/qhhrfid/app/src/main/res/drawable/jiabian.xml" value="0.4041666666666667" />
         <entry key="..\:/qhhrfid/app/src/main/res/drawable/remember_pwd.xml" value="0.4041666666666667" />
@@ -21,6 +22,7 @@
         <entry key="..\:/qhhrfid/app/src/main/res/layout/activity_baoan_fenpei.xml" value="0.35885416666666664" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/activity_base.xml" value="0.3880208333333333" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/activity_camera_new.xml" value="0.3880208333333333" />
+        <entry key="..\:/qhhrfid/app/src/main/res/layout/activity_camera_new2.xml" value="0.346875" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/activity_camera_only.xml" value="0.3880208333333333" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/activity_camera_only2.xml" value="0.4036458333333333" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/activity_camera_tag.xml" value="0.3880208333333333" />
@@ -74,6 +76,7 @@
         <entry key="..\:/qhhrfid/app/src/main/res/layout/fragment_animal_insure.xml" value="0.16927083333333334" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/fragment_basic.xml" value="0.2578125" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/fragment_basic2.xml" value="0.2859375" />
+        <entry key="..\:/qhhrfid/app/src/main/res/layout/fragment_camera.xml" value="0.35" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/fragment_check_sunshi.xml" value="0.3880208333333333" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/fragment_crop_insure.xml" value="0.3880208333333333" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/fragment_home.xml" value="0.3536458333333333" />

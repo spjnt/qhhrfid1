@@ -213,8 +213,10 @@ class MainActivity : BaseActivity() {
         hideAllTitle()
         currentIndex = PreferUtils.getInt(this, Constants.current_index)
         initTab(NetUtil.checkNet(this), currentIndex)
+        Constants.Role_array
         val role_array = PreferUtils.getString(this, Constants.Role_array)
-        roles = JSON.parseArray(role_array, Roles::class.java)
+        if (!role_array.isNullOrEmpty())
+            roles = JSON.parseArray(role_array, Roles::class.java)
 
 
     }
@@ -247,7 +249,6 @@ class MainActivity : BaseActivity() {
         return locationMode != Settings.Secure.LOCATION_MODE_OFF
 
     }
-
 
 
     private fun deal() {

@@ -247,7 +247,7 @@ class CameraActivity : BaseActivity() {
     override fun onPause() {
         super.onPause()
         if (mLocationClient != null) mLocationClient!!.stop()
-        bitmaps?.clear()
+       // bitmaps?.clear()
         if (intent != null) intent = null
         onPauseaMedia()
         cameraKitView!!.onPause()

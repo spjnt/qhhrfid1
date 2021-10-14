@@ -1,9 +1,10 @@
 package tramais.hnb.hhrfid.ui
 
 import android.animation.ObjectAnimator
-import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.*
 import android.text.TextUtils
 import android.text.method.HideReturnsTransformationMethod
@@ -21,10 +22,11 @@ import com.apkfuns.logutils.LogUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.forjrking.lubankt.Luban
 import com.hailong.biometricprompt.fingerprint.FingerprintCallback
 import com.hailong.biometricprompt.fingerprint.FingerprintVerifyManager
 import kotlinx.android.synthetic.main.activity_login.*
-import org.json.JSONObject
+import kotlinx.android.synthetic.main.fragment_camera.*
 import org.litepal.LitePal.findAllAsync
 import tramais.hnb.hhrfid.R
 import tramais.hnb.hhrfid.base.BaseActivity
@@ -43,6 +45,7 @@ import tramais.hnb.hhrfid.util.*
 import tramais.hnb.hhrfid.util.GsonUtil.Companion.instant
 import java.io.File
 import java.util.*
+import kotlin.system.measureTimeMillis
 
 
 class ActivityLogin : BaseActivity() {
@@ -205,11 +208,9 @@ class ActivityLogin : BaseActivity() {
                 showStr("请在联网环境下操作")
                 return@setOnClickListener
             }
-
             Utils.goToNextUI(ActivityForgetPsw::class.java)
             //goToForget("重置密码")
         }
-        // mChangePsw!!.setOnClickListener {    goToForget("忘记密码")}
         mBtnLogin!!.setOnClickListener { view: View? ->
             if (!is_btn_click) {
                 showStr("请不要重复点击")
@@ -427,4 +428,8 @@ class ActivityLogin : BaseActivity() {
             }
         }
     }
+
+    var textList: MutableList<String> = ArrayList()
+
+
 }

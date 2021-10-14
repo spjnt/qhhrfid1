@@ -110,7 +110,8 @@ class CameraOnlyActivity
     var famername: String? = null
     var earTag: String? = null
     var remark: String? = null
-//    var come_in_time: String = ""
+
+    //    var come_in_time: String = ""
     var textList: MutableList<String> = ArrayList()
     var sdk_path: String? = null
     var cdpath: String = ""
@@ -269,28 +270,28 @@ class CameraOnlyActivity
                 val decodeByteArray = BitmapFactory.decodeByteArray(photo, 0, photo!!.size)
 
 
-                val getimage = ImageUtils.getimageOnly(decodeByteArray)
+//                val getimage = ImageUtils.getimageOnly(decodeByteArray)
+//                if (getimage != null)
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        var task = WateImagsTask()
+                        bitmap = task.addWater(context, textList, decodeByteArray)
 
-                lifecycleScope.launch(Dispatchers.IO) {
-                    var task = WateImagsTask()
-                    bitmap = task.addWater(context, textList, getimage)
+                        var photo_name = System.currentTimeMillis().toString() + ".jpg"
+                        path = ImageUtils.saveBitmap(this@CameraOnlyActivity, bitmap, cdpath, photo_name)
 
-                    var photo_name = System.currentTimeMillis().toString()+ ".jpg"
-                    path = ImageUtils.saveBitmap(this@CameraOnlyActivity, bitmap, cdpath, photo_name)
+                        withContext(Dispatchers.Main) {
+                            imv_pic!!.visibility = View.VISIBLE
+                            Glide.with(this@CameraOnlyActivity).load(path).into(imv_pic!!)
+                            if (!bitmaps!!.contains(path)) bitmaps!!.add(path)
+                            if (remark == "only_photo") {
+                                mScanTotal!!.text = "当前第 " + (bitmaps.size) + " 张"
+                            } else {
+                                mScanTotal!!.text = "当前第 " + (bitmaps.size + photo_num) + "/9" + " 张"
+                                if (bitmaps.size + photo_num == 9) goBack()
+                            }
 
-                    withContext(Dispatchers.Main) {
-                        imv_pic!!.visibility = View.VISIBLE
-                        Glide.with(this@CameraOnlyActivity).load(path).into(imv_pic!!)
-                        if (!bitmaps!!.contains(path)) bitmaps!!.add(path)
-                        if (remark == "only_photo") {
-                            mScanTotal!!.text = "当前第 " + (bitmaps.size) + " 张"
-                        } else {
-                            mScanTotal!!.text = "当前第 " + (bitmaps.size + photo_num) + "/9" + " 张"
-                            if (bitmaps.size + photo_num == 9) goBack()
                         }
-
                     }
-                }
             }
 
         })
