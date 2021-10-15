@@ -158,6 +158,7 @@ class MainActivity : BaseActivity() {
         /**直接跳转至位置信息设置界面*/
 
         if (!isLocServiceEnable(this)) {
+            showStr("请打开位置服务")
             var intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
             startActivityForResult(intent, 134)
         }
@@ -195,7 +196,7 @@ class MainActivity : BaseActivity() {
                     object : AcpListener {
                         override fun onGranted() {}
                         override fun onDenied(permissions: List<String>) {
-                            showStr(permissions.toString() + "权限拒绝")
+                            showStr( "相机相册，内存读写，定位权限被拒绝")
                         }
                     })
         }
@@ -213,7 +214,7 @@ class MainActivity : BaseActivity() {
         hideAllTitle()
         currentIndex = PreferUtils.getInt(this, Constants.current_index)
         initTab(NetUtil.checkNet(this), currentIndex)
-        Constants.Role_array
+
         val role_array = PreferUtils.getString(this, Constants.Role_array)
         if (!role_array.isNullOrEmpty())
             roles = JSON.parseArray(role_array, Roles::class.java)

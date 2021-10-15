@@ -48,9 +48,6 @@ class DelegateMultiAdapter(protected var mContext: Context) : BaseDelegateMultiA
 
     init {
 
-
-        //******************************************************************************************
-        // 方式二，实现自己的代理类：
         setMultiTypeDelegate(MyMultiTypeDelegate())
     }
 

@@ -12,10 +12,7 @@ import org.litepal.LitePal.deleteAll
 import tramais.hnb.hhrfid.bean.*
 import tramais.hnb.hhrfid.constant.Config
 import tramais.hnb.hhrfid.constant.Constants
-import tramais.hnb.hhrfid.interfaces.GetBankInfo
-import tramais.hnb.hhrfid.interfaces.GetCommon
-import tramais.hnb.hhrfid.interfaces.GetNature
-import tramais.hnb.hhrfid.interfaces.OkResponseInterface
+import tramais.hnb.hhrfid.interfaces.*
 import tramais.hnb.hhrfid.litePalBean.*
 import tramais.hnb.hhrfid.net.OkhttpUtil
 import tramais.hnb.hhrfid.net.Params
@@ -517,7 +514,7 @@ class DownloadService : Service() {
     private val riskReason: Unit
         private get() {
             deleteAll(RiskReasonCache::class.java)
-            RequestUtil.getInstance(this)!!.getRiskReason("", object : GetCommon<RiskReason> {
+            RequestUtil.getInstance(this)!!.getRiskReason("", object : GetCommonWithError<RiskReason> {
                 override fun getCommon(t: RiskReason) {
                     val data = t.data
 
@@ -534,6 +531,10 @@ class DownloadService : Service() {
                     } else {
                         print("getRiskReason")
                     }
+
+                }
+
+                override fun getError() {
 
                 }
 

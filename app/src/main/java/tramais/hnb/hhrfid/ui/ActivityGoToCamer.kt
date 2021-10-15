@@ -1,16 +1,19 @@
 package tramais.hnb.hhrfid.ui
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.TextView
 import com.apkfuns.logutils.LogUtils
 import com.baidu.location.LocationClient
 import com.bumptech.glide.Glide
+import com.mylhyl.acp.Acp
+import com.mylhyl.acp.AcpListener
+import com.mylhyl.acp.AcpOptions
 import kotlinx.android.synthetic.main.activity_goto_camer.*
 import org.litepal.LitePal
 import tramais.hnb.hhrfid.R
@@ -19,12 +22,11 @@ import tramais.hnb.hhrfid.bean.FenPei
 import tramais.hnb.hhrfid.bean.Region
 import tramais.hnb.hhrfid.bean.RiskReason
 import tramais.hnb.hhrfid.camerutils.Camer2Activity
+import tramais.hnb.hhrfid.camerutils.Camer2Activity2
 import tramais.hnb.hhrfid.constant.Constants
-import tramais.hnb.hhrfid.interfaces.GetCommon
-import tramais.hnb.hhrfid.listener.DetailLocationListener
+import tramais.hnb.hhrfid.interfaces.GetCommonWithError
 import tramais.hnb.hhrfid.litePalBean.RiskReasonCache
 import tramais.hnb.hhrfid.net.RequestUtil
-import tramais.hnb.hhrfid.ui.dialog.DialogChoiceRegion
 import tramais.hnb.hhrfid.ui.popu.PopuChoice
 import tramais.hnb.hhrfid.util.*
 
@@ -56,6 +58,7 @@ class ActivityGoToCamer : BaseActivity() {
     }
 
     override fun initData() {
+
 //        val insure = PreferUtils.getString(this, Constants.camer_insure)
 //        if (!insure.isNullOrEmpty()) {
 //            insurance_type.text = insure
@@ -97,7 +100,7 @@ class ActivityGoToCamer : BaseActivity() {
         riskReason.clear()
         biaodis.clear()
         if (NetUtil.checkNet(this)) {
-            RequestUtil.getInstance(this)!!.getRiskReason("", object : GetCommon<RiskReason> {
+            RequestUtil.getInstance(this)!!.getRiskReason("", object : GetCommonWithError<RiskReason> {
                 override fun getCommon(t: RiskReason) {
                     val data = t.data
                     if (data != null && data.isNotEmpty()) {
@@ -111,29 +114,36 @@ class ActivityGoToCamer : BaseActivity() {
                                     biaodis.add(reasonName)
                                 }
                             }
-
                         }
+                    } else {
+                        getReasonCache()
                     }
                 }
 
+                override fun getError() {
+                    getReasonCache()
+                }
             })
         } else {
-            val findAll = LitePal.findAll(RiskReasonCache::class.java)
-            if (findAll != null && findAll.isNotEmpty()) {
-                for (item in findAll) {
-                    val reasonName = item.reasonName
-                    val fCategory = item.fcategory
-                    if (!reasonName.isNullOrEmpty()) {
-                        if (fCategory == "理赔出险原因" && !riskReason.contains(reasonName)) {
-                            riskReason.add(reasonName)
-                        } else if (fCategory == "理赔标的" && !biaodis.contains(reasonName)) {
-                            biaodis.add(reasonName)
-                        }
+            getReasonCache()
+        }
+    }
+
+    fun getReasonCache() {
+        val findAll = LitePal.findAll(RiskReasonCache::class.java)
+        if (findAll != null && findAll.isNotEmpty()) {
+            for (item in findAll) {
+                val reasonName = item.reasonName
+                val fCategory = item.fcategory
+                if (!reasonName.isNullOrEmpty()) {
+                    if (fCategory == "理赔出险原因" && !riskReason.contains(reasonName)) {
+                        riskReason.add(reasonName)
+                    } else if (fCategory == "理赔标的" && !biaodis.contains(reasonName)) {
+                        biaodis.add(reasonName)
                     }
                 }
             }
         }
-
     }
 
     var chuxian_time = ""
@@ -173,7 +183,8 @@ class ActivityGoToCamer : BaseActivity() {
 //        }
 
         mCamer!!.setOnClickListener {
-            goToCamer()
+            check()
+
         }
         choice_time.setOnClickListener {
             TimeUtil.initTimePicker(this) {
@@ -250,7 +261,7 @@ class ActivityGoToCamer : BaseActivity() {
         fenPei.EarTag = tag
 //        fenPei.lat = latitude
 //        fenPei.log = longitude
-        val intent = Intent(this, Camer2Activity::class.java)
+        val intent = Intent(this, Camer2Activity2::class.java)
         intent.putExtra("fenpei", fenPei)
         intent.putExtra("photo_num", 0)
         startActivityForResult(intent, 124)
@@ -302,6 +313,44 @@ class ActivityGoToCamer : BaseActivity() {
         super.onDestroy()
         if (mLocationClient != null) mLocationClient!!.stop()
 
+
+    }
+
+    private val permissions: MutableList<String> = ArrayList()
+    fun check() {
+        val pm: PackageManager = packageManager
+        val permission_camrer = pm.checkPermission(Manifest.permission.CAMERA, this.packageName)
+
+        val permission_storage = pm.checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, this.packageName)
+
+        val permission_location =pm.checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION, this.packageName)
+        if (permission_camrer != 0) {
+            permissions.add(Manifest.permission.CAMERA)
+        }
+        if (permission_storage != 0) {
+            permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE)
+            permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        }
+        if (permission_location != 0) {
+            permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION)
+            permissions.add(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+        if (permissions.isNullOrEmpty()){
+            goToCamer()
+        }else{
+            Acp.getInstance(this).request(AcpOptions.Builder()
+                    .setPermissions(*permissions.toTypedArray())
+                    .build(),
+                    object : AcpListener {
+                        override fun onGranted() {
+                            goToCamer()
+                        }
+
+                        override fun onDenied(permissions: List<String>) {
+                            showStr( "相机相册，内存读写，定位权限被拒绝")
+                        }
+                    })
+        }
 
     }
 

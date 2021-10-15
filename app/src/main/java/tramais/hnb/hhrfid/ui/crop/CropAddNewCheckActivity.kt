@@ -161,7 +161,7 @@ class CropAddNewCheckActivity : BaseActivity(), ChoicePhoto {
             if (reasons != null) reasons!!.clear()
             if (reason_code != null) reason_code!!.clear()
             if (NetUtil.checkNet(this)) {
-                RequestUtil.getInstance(this)!!.getRiskReason("种植险事故类型", object : GetCommon<RiskReason> {
+                RequestUtil.getInstance(this)!!.getRiskReason("种植险事故类型", object : GetCommonWithError<RiskReason> {
                     override fun getCommon(t: RiskReason) {
                         riskReasons = t.data as MutableList<RiskReason.DataDTO>
                         if (riskReasons != null && riskReasons!!.size > 0)
@@ -170,6 +170,10 @@ class CropAddNewCheckActivity : BaseActivity(), ChoicePhoto {
                                 if (!TextUtils.isEmpty(reasonName) && !reasons!!.contains(reasonName)) reasons!!.add(reasonName.toString())
                                 reason_code!![reasonName.toString()] = item.reasonCode.toString()
                             }
+                    }
+
+                    override fun getError() {
+
                     }
 
                 })

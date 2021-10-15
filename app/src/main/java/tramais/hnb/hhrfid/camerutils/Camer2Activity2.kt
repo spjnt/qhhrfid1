@@ -12,6 +12,7 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.util.Log
 import android.view.*
+import android.widget.RelativeLayout
 import androidx.core.graphics.drawable.toDrawable
 import androidx.exifinterface.media.ExifInterface
 import androidx.lifecycle.lifecycleScope
@@ -20,7 +21,6 @@ import com.baidu.location.LocationClient
 import com.bumptech.glide.Glide
 import com.camerakit.api.camera2.ext.getCameraId
 import com.camerakit.type.CameraFacing
-import com.forjrking.lubankt.Luban
 import kotlinx.android.synthetic.main.fragment_camera.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -33,6 +33,8 @@ import tramais.hnb.hhrfid.constant.Constants
 import tramais.hnb.hhrfid.listener.MyLocationListener
 import tramais.hnb.hhrfid.ui.dialog.DialogImg
 import tramais.hnb.hhrfid.util.*
+import tramais.hnb.hhrfid.waterimage.WaterMaskUtil
+import tramais.hnb.hhrfid.waterimage.WaterMaskView
 import java.io.Closeable
 import java.io.File
 import java.util.*
@@ -44,8 +46,8 @@ import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 import kotlin.math.max
 
-class Camer2Activity : BaseActivity() {
-
+class Camer2Activity2 : BaseActivity() {
+    private var waterMaskView: WaterMaskView? = null
     private var latitude = 0.0
     private var longitude = 0.0
     private val cameraManager: CameraManager by lazy {
@@ -108,7 +110,7 @@ class Camer2Activity : BaseActivity() {
 
             override fun onDisconnected(device: CameraDevice) {
                 Log.w(TAG, "Camera $cameraId has been disconnected")
-                this@Camer2Activity.finish()
+                this@Camer2Activity2.finish()
             }
 
             override fun onError(device: CameraDevice, error: Int) {
@@ -226,8 +228,8 @@ class Camer2Activity : BaseActivity() {
             ImageFormat.JPEG, ImageFormat.DEPTH_JPEG -> {
                 val buffer = result.image.planes[0].buffer
                 val bytes = ByteArray(buffer.remaining()).apply { buffer.get(this) }
-                createFile(this, bytes)
-                //cont.resume(createFile)
+                var path = createFileNew(bytes)
+                //   cont.resume(File(path))
 
 
             }
@@ -267,7 +269,12 @@ class Camer2Activity : BaseActivity() {
             v.translationY = (-insets.systemWindowInsetBottom).toFloat()
             insets.consumeSystemWindowInsets()
         }
-
+        waterMaskView = WaterMaskView(this)
+        val params: RelativeLayout.LayoutParams = RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.MATCH_PARENT
+        )
+        waterMaskView!!.layoutParams = params
         view_finder.holder.addCallback(object : SurfaceHolder.Callback {
             override fun surfaceDestroyed(holder: SurfaceHolder) = Unit
 
@@ -293,7 +300,7 @@ class Camer2Activity : BaseActivity() {
             }
         })
         relativeOrientation = OrientationLiveData(this, characteristics).apply {
-            observe(this@Camer2Activity, { orientation ->
+            observe(this@Camer2Activity2, { orientation ->
                 //  LogUtils.e("Orientation changed: $orientation")
             })
         }
@@ -321,7 +328,7 @@ class Camer2Activity : BaseActivity() {
             if (mLocationClient != null) mLocationClient!!.start()
 
             mLocationClient!!.registerLocationListener(MyLocationListener { lat: Double, log: Double, add: String? ->
-                //  LogUtils.e("add  $add $lat  $log")
+
                 if (add.isNullOrEmpty() || add.isNullOrBlank()) {
                     location_add = "无法定位"
                 } else {
@@ -406,70 +413,10 @@ class Camer2Activity : BaseActivity() {
     }
 
     var ims: ArrayList<String> = ArrayList()
-    private fun createFile(context: Context, bytes: ByteArray) {
-        textList.clear()
-        /*水印顺序：被保险人，标的名称，耳标号，出险原因，出险时间，查勘时间,经纬度，查勘地点，*/
-        if (remark == "only_photo") {
-            sdk_path = FileUtil.getSDPath() + Constants.sdk_camer
-            textList.add("被保险人:$famername")
-            textList.add("耳标号:$earTag")
-//            if (insure_type == "养殖险")
-//                textList.add("耳标号:$earTag")
-            textList.add("标的名称:$riskQty")
-            textList.add("出险原因:$riskReason")
-            textList.add("出险时间:$creatTime")
-            textList.add("查勘时间:" + TimeUtil.getTime(Constants.yyyy_MM_ddHHmmss))
-            textList.add("经度:$longitude 纬度:$latitude")
-            val length = if (location_add.isNullOrEmpty()) {
-                0
-            } else {
-                location_add!!.length
-            }
-            val one_length = 14
-            if (length >= one_length) {
-                val first = location_add!!.substring(0, one_length)
-                val end = location_add!!.substring(one_length, length)
-                textList.add("📍:$first")
-                textList.add(end)
-            } else {
-                textList.add("📍:$location_add")
-            }
-        } else {
-            sdk_path = FileUtil.getSDPath() + Constants.sdk_middle_animal
-            textList.add("被保险人:$famername")
-            textList.add("时间:" + TimeUtil.getTime(Constants.yyyy_MM_ddHHmmss))
-            textList.add("经度:$longitude 纬度:$latitude")
-            val length = if (location_add.isNullOrEmpty()) {
-                0
-            } else {
-                location_add!!.length
-            }
-            val one_length = 14
-            if (length >= one_length) {
-                val first = location_add!!.substring(0, one_length)
-                val end = location_add!!.substring(one_length, length)
-                textList.add("📍:$first")
-                textList.add(end)
-            } else {
-                textList.add("📍:$location_add")
-            }
-        }
-        cdpath = "$sdk_path${TimeUtil.getTime(Constants.yyyy__MM__dd)}/"
-        val decodeByteArray = decodeBitmap(bytes, 0, bytes.size)
 
-        lifecycleScope.launch {
-            withContext(Dispatchers.Main) {
-                val photo_name = System.currentTimeMillis().toString() + ".jpg"
-                if (decodeByteArray != null)
-                    LuBan(context, decodeByteArray, cdpath, photo_name)
-            }
-        }
-
-        playSound(R.raw.camera_click)
-    }
 
     companion object {
-        private val TAG = Camer2Activity::class.java.simpleName
+        private val TAG = Camer2Activity2::class.java.simpleName
         private const val IMAGE_BUFFER_SIZE: Int = 50
         private const val IMAGE_CAPTURE_TIMEOUT_MILLIS: Long = 3000
 
@@ -505,55 +452,69 @@ class Camer2Activity : BaseActivity() {
 
     private val bitmapTransformation: Matrix by lazy { decodeExifOrientation(ExifInterface.ORIENTATION_ROTATE_90) }
 
-    fun LuBan(context: Context, bitMap: Bitmap, path_: String, name_: String) {
-        try {
-            Luban.with(this)               //(可选)Lifecycle,可以不填写内部使用ProcessLifecycleOwner
-                    .load(bitMap)                       //支持 File,Uri,InputStream,String,Bitmap 和以上数据数组和集合
-                    //.setOutPutDir(path_)              //(可选)输出目录文件夹
-                    .concurrent(true)                //(可选)多文件压缩时是否并行,内部优化线程并行数量防止OOM
-                    .useDownSample(true)             //(可选)压缩算法 true采用邻近采样,否则使用双线性采样(纯文字图片效果绝佳)
-                    .format(Bitmap.CompressFormat.JPEG)//(可选)压缩后输出文件格式 支持 JPG,PNG,WEBP
-                    .ignoreBy(1024)                   //(可选)期望大小,大小和图片呈现质量不能均衡所以压缩后不一定小于此值,
-                    .quality(90)                     //(可选)质量压缩系数  0-100
-                    // .rename { name_ }             //(可选)文件重命名
-                    .filter { it != null }             //(可选)过滤器
-                    .compressObserver {
-                        onSuccess = {
-                            if (it != null) {
-                                val task = WateImagsTask()
-                                val Bitmapbm = BitmapFactory.decodeFile(it.absolutePath)
-                                if (it.exists())
-                                    it.delete()
-                                if (Bitmapbm != null) {
-                                    bitmap = task.addWater(context, textList, Bitmapbm)
-                                    if (bitmap != null) {
-                                        path = ImageUtils.saveBitmap(context, bitmap, path_, name_)
-                                        ims.add(path)
-                                        scan_total.bringToFront()
-                                        scan_total.text = "当前第 ${ims.size} 张"
-                                        Glide.with(this@Camer2Activity).load(path).into(imv_pic)
-                                        if (ims.size == 20) {
-                                            showStr("请先点击完成，保存数据")
-                                            capture_button.isEnabled = false
-                                        }
-                                    }
+    private val bitmaps: ArrayList<String?>? = ArrayList()
+    var crators: MutableList<String> = ArrayList()
+    var waterInfos: MutableList<String> = ArrayList()
+    private fun createFileNew(bytes: ByteArray): String {
+        waterInfos.clear()
+        crators.clear()
+        /*水印顺序：被保险人，标的名称，耳标号，出险原因，出险时间，查勘时间,经纬度，查勘地点，*/
+        if (remark == "only_photo") {
+            sdk_path = FileUtil.getSDPath() + Constants.sdk_camer
+            waterInfos.add("被保险人:$famername")
+            waterInfos.add("耳标号:$earTag")
+            waterInfos.add("标的名称:$riskQty")
+            waterInfos.add("出险原因:$riskReason")
+            waterInfos.add("出险时间:$creatTime")
+            waterInfos.add("查勘时间:" + TimeUtil.getTime(Constants.yyyy_MM_ddHHmmss))
+            waterInfos.add("经度:$longitude 纬度:$latitude")
 
-                                }
+            val userName = PreferUtils.getString(this, Constants.UserName)
+            var name = if (userName.isNullOrBlank()) {
+                "未知"
+            } else {
+                userName
+            }
+            for (item in 1..20) {
+                crators.add(name)
+            }
 
-
-                            }
-
-                        }
-                        onStart = {
-
-                        }
-                        onCompletion = { }
-                        onError = { e, _ -> }
-                    }.launch()
-
-        } catch (e: Exception) {
-            LogUtils.e("Exception  ${e.message}  ")
         }
+
+        val decodeByteArray = decodeBitmap(bytes, 0, bytes.size)
+        waterMaskView!!.setBackData(crators, decodeByteArray.height.toFloat(), decodeByteArray.width.toFloat())
+        waterMaskView!!.setLeftData(waterInfos)
+        waterMaskView!!.setLocation(location_add!!)
+        cdpath = "$sdk_path${TimeUtil.getTime(Constants.yyyy__MM__dd)}/"
+
+
+        val photo_name = System.currentTimeMillis().toString() + ".jpg"
+        playSound(R.raw.camera_click)
+        val path = saveWaterMask(waterMaskView, decodeByteArray, cdpath, photo_name)
+        lifecycleScope.launch {
+            withContext(Dispatchers.Main) {
+                Glide.with(this@Camer2Activity2).load(path).into(imv_pic!!)
+                if (!bitmaps!!.contains(path)) bitmaps!!.add(path)
+                if (remark == "only_photo") {
+                    scan_total!!.text = "当前第 " + (bitmaps.size) + " 张"
+                }
+                LogUtils.e("path  $path")
+            }
+        }
+
+        return path
+
+    }
+
+    private fun saveWaterMask(waterMaskView: WaterMaskView?, sourBitmap: Bitmap, path_: String, name_: String): String {
+        try {
+            var waterBitmap = WaterMaskUtil.loadBitmapFromView(waterMaskView)
+            var watermarkBitmap = WaterMaskUtil.createWaterMaskLeftBottom(this, sourBitmap, waterBitmap, 0, 0)
+            return ImageUtils.saveBitmap(this, watermarkBitmap, path_, name_)
+        } catch (e: Exception) {
+            LogUtils.e("e  ${e.message}")
+        }
+        return ""
 
     }
 }

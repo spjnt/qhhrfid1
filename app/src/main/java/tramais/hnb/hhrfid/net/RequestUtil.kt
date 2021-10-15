@@ -546,7 +546,7 @@ class RequestUtil(var context: Context) {
         })
     }
 
-    fun getRiskReason(FCategory: String, getCommon: GetCommon<RiskReason>) {
+    fun getRiskReason(FCategory: String, getCommon: GetCommonWithError<RiskReason>) {
         val params = Params.createParams()
         //        params.add("Ftype", "种植险");
         params.add("Fcategory", FCategory)
@@ -559,7 +559,9 @@ class RequestUtil(var context: Context) {
                 }*/
             }
 
-            override fun onError(e: Exception) {}
+            override fun onError(e: Exception) {
+                getCommon.getError()
+            }
         })
     }
 

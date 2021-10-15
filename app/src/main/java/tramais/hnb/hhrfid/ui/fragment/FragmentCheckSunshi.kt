@@ -29,10 +29,7 @@ import tramais.hnb.hhrfid.bean.FenPei
 import tramais.hnb.hhrfid.bean.InsureLableBean
 import tramais.hnb.hhrfid.bean.RiskReason
 import tramais.hnb.hhrfid.constant.Config
-import tramais.hnb.hhrfid.interfaces.ChoicePhoto
-import tramais.hnb.hhrfid.interfaces.GetBool
-import tramais.hnb.hhrfid.interfaces.GetCommon
-import tramais.hnb.hhrfid.interfaces.GetInsureLable
+import tramais.hnb.hhrfid.interfaces.*
 import tramais.hnb.hhrfid.lv.ExpandedAdapter
 import tramais.hnb.hhrfid.net.RequestUtil
 import tramais.hnb.hhrfid.ui.ActivityFeedCheck
@@ -92,7 +89,7 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
             if (reasons != null) reasons!!.clear()
             if (reason_code != null) reason_code!!.clear()
             if (NetUtil.checkNet(requireContext())) {
-                RequestUtil.getInstance(context)!!.getRiskReason("养殖险事故类型", object : GetCommon<RiskReason> {
+                RequestUtil.getInstance(context)!!.getRiskReason("养殖险事故类型", object : GetCommonWithError<RiskReason> {
                     override fun getCommon(t: RiskReason) {
                         riskReasons = t.data as MutableList<RiskReason.DataDTO>
                         if (riskReasons != null && riskReasons!!.size > 0)
@@ -102,6 +99,10 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
                                     reasons!!.add(reasonName.toString())
                                 reason_code!![reasonName.toString()] = item.reasonCode.toString()
                             }
+                    }
+
+                    override fun getError() {
+
                     }
 
                 })
@@ -633,7 +634,7 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
 
     var quck_list: MutableList<CheckDetail.LiPeiAnimalDataDTO?>? = ArrayList()
     fun getDetail(num: String?) {
-        if (NetUtil.checkNet(context!!)) {
+        if (NetUtil.checkNet(requireContext())) {
             RequestUtil.getInstance(context)!!.getChaKanDetail(num) { detail ->
                 if (detail.code == 0) {
                     detail?.let {
