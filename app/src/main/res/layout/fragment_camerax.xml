@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:id="@+id/activityMain"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.camera.view.PreviewView
+        android:id="@+id/view_finder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <!-- Camera control and gallery buttons -->
+        <ImageButton
+            android:id="@+id/camera_switch_button"
+            android:layout_width="@dimen/size_20"
+            android:layout_height="@dimen/size_20"
+            android:layout_centerVertical="true"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:srcCompat="@drawable/sele_checkbox" />
+
+        <ImageButton
+            android:id="@+id/camera_capture_button"
+            android:layout_width="@dimen/size_50"
+            android:layout_height="@dimen/size_50"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="@mipmap/more_info"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <ImageButton
+            android:id="@+id/photo_view_button"
+            android:layout_width="@dimen/size_80"
+            android:layout_height="@dimen/size_80"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+    </RelativeLayout>
+</RelativeLayout>
+
+
+    <!--
+    <?xml version="1.0" encoding="utf-8"?>&lt;!&ndash;
+      ~ Copyright 2020 The Android Open Source Project
+      ~
+      ~ Licensed under the Apache License, Version 2.0 (the "License");
+      ~ you may not use this file except in compliance with the License.
+      ~ You may obtain a copy of the License at
+      ~
+      ~     https://www.apache.org/licenses/LICENSE-2.0
+      ~
+      ~ Unless required by applicable law or agreed to in writing, software
+      ~ distributed under the License is distributed on an "AS IS" BASIS,
+      ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+      ~ See the License for the specific language governing permissions and
+      ~ limitations under the License.
+      &ndash;&gt;
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <tramais.hnb.hhrfid.camerutils.AutoFitSurfaceView
+            android:id="@+id/view_finder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <View
+            android:id="@+id/overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:foreground="@android:color/transparent" />
+
+        <ImageView
+            android:id="@+id/capture_button"
+            android:layout_width="@dimen/size_60"
+            android:layout_height="@dimen/size_60"
+            android:layout_gravity="bottom|center"
+            android:layout_marginBottom="@dimen/size_10"
+            android:background="@drawable/ic_shutter"
+            android:contentDescription="capture"
+            android:scaleType="fitCenter" />
+
+        <ImageView
+
+            android:id="@+id/imv_pic"
+            android:layout_width="@dimen/size_80"
+            android:layout_height="@dimen/size_80"
+            android:layout_gravity="bottom|right" />
+    </FrameLayout>-->

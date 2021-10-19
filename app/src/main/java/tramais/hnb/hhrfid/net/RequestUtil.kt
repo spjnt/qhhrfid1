@@ -1497,6 +1497,21 @@ class RequestUtil(var context: Context) {
         })
     }
 
+    fun getRegionWithCache(getRegion: GetCommonWithError<Region>) {
+        val params = Params.createParams()
+        params.add("FNumber", PreferUtils.getString(context, Constants.FXZCode))
+        OkhttpUtil.getInstance(context).doPosts(Config.getRegion, params, object : OkResponseInterface {
+            override fun onSuccess(bean: HttpBean, id: Int) {
+                getRegion.getCommon(JSONObject.parseObject(bean.response, Region::class.java))
+                //   getRegion.getRegion(instant!!.getRegion(bean.response))
+            }
+
+            override fun onError(e: Exception) {
+                getRegion.getError()
+            }
+        })
+    }
+
     fun GetGongShiPDFDetail(billno: String?, gongShiPdfBeanIn: GongShiPdfBeanIn) {
         val params = Params.createParams()
         params.add("billno", billno)

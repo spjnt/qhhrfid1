@@ -19,8 +19,10 @@ package tramais.hnb.hhrfid.ui.view;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.util.AttributeSet;
-import android.util.Log;
+import android.util.DisplayMetrics;
 import android.widget.RelativeLayout;
+
+import com.apkfuns.logutils.LogUtils;
 
 /**
  * A layout which handles the preview aspect ratio.
@@ -35,6 +37,7 @@ public class PreviewFrameLayout extends RelativeLayout {
     public PreviewFrameLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
+
     }
 
     public void setAspectRatio(double ratio) {
@@ -55,19 +58,10 @@ public class PreviewFrameLayout extends RelativeLayout {
         int previewWidth = MeasureSpec.getSize(widthSpec);
         int previewHeight = MeasureSpec.getSize(heightSpec);
 
-        Log.d("PreviewFrameLayout", "previewWidth=" + previewWidth
-                + " previewHeight=" + previewHeight);
-
         if (previewWidth < previewHeight) {
             int tmp = previewWidth;
             previewWidth = previewHeight;
             previewHeight = tmp;
-        }
-
-        if (previewWidth > previewHeight * mAspectRatio) {
-            previewWidth = (int) (previewHeight * mAspectRatio + .5);
-        } else {
-            previewHeight = (int) (previewWidth / mAspectRatio + .5);
         }
 
         if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -75,8 +69,7 @@ public class PreviewFrameLayout extends RelativeLayout {
                     MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(
                     previewWidth, MeasureSpec.EXACTLY));
 
-            Log.d("PreviewFrameLayout", "previewWidth2=" + previewWidth
-                    + " previewHeight2=" + previewHeight);
+
         } else {
 
             super.onMeasure(MeasureSpec.makeMeasureSpec(previewWidth,

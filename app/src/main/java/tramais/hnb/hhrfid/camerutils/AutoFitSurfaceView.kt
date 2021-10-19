@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.android.camera.utils
+package tramais.hnb.hhrfid.camerutils
 
 import android.content.Context
 import android.util.AttributeSet
@@ -68,7 +68,7 @@ class AutoFitSurfaceView @JvmOverloads constructor(
                 newHeight = (width / actualRatio).roundToInt()
             }
 
-            Log.d(TAG, "Measured dimensions set: $newWidth x $newHeight")
+            Log.e(TAG, "Measured dimensions set: $newWidth x $newHeight")
             setMeasuredDimension(newWidth, newHeight)
         }
     }

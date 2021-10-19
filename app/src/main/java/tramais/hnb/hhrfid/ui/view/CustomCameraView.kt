@@ -5,20 +5,18 @@ import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Rect
 import android.hardware.Camera
-import android.os.Environment
 import android.os.Handler
 import android.util.AttributeSet
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.*
-import android.view.View.OnTouchListener
 import android.widget.FrameLayout
 import android.widget.Toast
+import com.apkfuns.logutils.LogUtils
 import tramais.hnb.hhrfid.R
 import tramais.hnb.hhrfid.constant.Constants
 import tramais.hnb.hhrfid.util.FileUtil
 import java.io.File
-import java.io.FileOutputStream
 import java.io.IOException
 import java.util.*
 
@@ -49,24 +47,22 @@ class CustomCameraView : FrameLayout, SurfaceHolder.Callback, Camera.AutoFocusCa
         view_focus = findViewById(R.id.view_focus)
         surface_holder = surface_camera!!.holder
         surface_holder!!.addCallback(this)
-        frameLayout!!.setOnTouchListener(object : OnTouchListener {
-            override fun onTouch(v: View?, event: MotionEvent?): Boolean {
 
-                if (event!!.action == MotionEvent.ACTION_DOWN) {
-                    val width = view_focus!!.width
-                    val height = view_focus!!.height
-                    view_focus!!.background = resources.getDrawable(
-                            R.drawable.ic_focus_focusing)
-                    view_focus!!.x = event.x - width / 2
-                    view_focus!!.y = event.y - height / 2
-                } else if (event.action == MotionEvent.ACTION_UP) {
-                    mode = MODE.FOCUSING
-                    focusOnTouch(event)
-                }
-                return true
+
+        frameLayout!!.setOnTouchListener { v, event ->
+            if (event!!.action == MotionEvent.ACTION_DOWN) {
+                val width = view_focus!!.width
+                val height = view_focus!!.height
+                view_focus!!.background = resources.getDrawable(
+                        R.drawable.ic_focus_focusing)
+                view_focus!!.x = event.x - width / 2
+                view_focus!!.y = event.y - height / 2
+            } else if (event.action == MotionEvent.ACTION_UP) {
+                mode = MODE.FOCUSING
+                focusOnTouch(event)
             }
-
-        })
+            true
+        }
         surface_holder!!.setKeepScreenOn(true)
         // CameraTimes =1;
     }
@@ -83,7 +79,6 @@ class CustomCameraView : FrameLayout, SurfaceHolder.Callback, Camera.AutoFocusCa
     override fun surfaceCreated(holder: SurfaceHolder) {
         camera = cameraInstance
         try {
-//            setZoom(camera.getParameters().getMaxZoom());//  setZoom(camera.getParameters().getMaxZoom() / 2);
             if (camera != null && surface_holder != null) camera!!.setPreviewDisplay(surface_holder)
         } catch (e: IOException) {
         }
@@ -94,6 +89,7 @@ class CustomCameraView : FrameLayout, SurfaceHolder.Callback, Camera.AutoFocusCa
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int,
                                 height: Int) {
+
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder) {
@@ -142,14 +138,45 @@ class CustomCameraView : FrameLayout, SurfaceHolder.Callback, Camera.AutoFocusCa
     private fun updateCameraParameters() {
         if (camera != null) {
             val p = camera!!.parameters
-            if (Companion.context!!.resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE) {
+
+            setCameraDisplayOrientation(context!!)
+           /* if (context!!.resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE) {
                 camera!!.setDisplayOrientation(90)
                 p.setRotation(90)
             }
-            camera!!.parameters = p
+            camera!!.parameters = p*/
         }
     }
 
+    //旋转预览角度
+    private fun setCameraDisplayOrientation(context: Context?) {
+        val info = Camera.CameraInfo()
+        Camera.getCameraInfo(0, info)
+        val windowManager = context!!.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val rotation: Int = windowManager.defaultDisplay.rotation * 90
+        var degrees = 0
+        when (rotation) {
+            Surface.ROTATION_0 -> degrees = 0
+            Surface.ROTATION_90 -> degrees = 90
+            Surface.ROTATION_180 -> degrees = 180
+            Surface.ROTATION_270 -> degrees = 270
+        }
+        var result: Int
+        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            result = (info.orientation + degrees) % 360
+            result = (360 - result) % 360 // compensate the mirror
+        } else {  // back-facing
+            result = (info.orientation - degrees) % 360
+        }
+        //Log.e(TAG, "rotation =$result")
+        //旋转预览的角度
+        camera!!.setDisplayOrientation(result)
+        //-----------------------------
+        //旋转生成的照片角度
+        val param = camera!!.parameters
+        param.setRotation(result)
+        camera!!.parameters = param
+    }
     /**
      * 找到最合适的显示分辨率 （防止预览图像变形）
      *
@@ -284,26 +311,34 @@ class CustomCameraView : FrameLayout, SurfaceHolder.Callback, Camera.AutoFocusCa
     fun takePicture() {
         if (camera != null && safeToTakePicture) {
             safeToTakePicture = false
-            camera!!.takePicture(null, null, Camera.PictureCallback { data, camera ->
-                val pictureFile = outputMediaFile ?: return@PictureCallback
-                try {
-                    val fos = FileOutputStream(pictureFile)
-                    fos.write(data) //把拍的照片写入对应文件夹
-                    fos.close()
-                    if (onTakePictureInfo != null) {
-                        onTakePictureInfo!!.onTakePictureInofo(true, pictureFile)
-                    }
-                } catch (e: Exception) {
-                    if (onTakePictureInfo != null) {
-                        mode = MODE.NONE
-                        onTakePictureInfo!!.onTakePictureInofo(false, null)
-                    }
+            camera!!.takePicture(null, null, { data, camera ->
+                if (data != null && data.isNotEmpty()) {
+                    onTakePictureInfo!!.onTakePictureInofo(true, data)
+                } else {
+                    onTakePictureInfo!!.onTakePictureInofo(false, null)
                 }
                 camera.stopPreview()
                 camera.startPreview()
                 safeToTakePicture = true
             })
             mode = MODE.NONE
+        }
+    }
+
+    fun openCloseFlash(isOpen: Boolean) {
+        try {
+          //  val m_Camera = Camera.open()
+
+            val mParameters: Camera.Parameters = camera!!.parameters
+            if (isOpen) {
+                mParameters.flashMode = Camera.Parameters.FLASH_MODE_TORCH
+            } else {
+                mParameters.flashMode = Camera.Parameters.FLASH_MODE_OFF
+            }
+
+            camera!!.parameters = mParameters
+        } catch (ex: java.lang.Exception) {
+            LogUtils.e("ex  ${ex.message}")
         }
     }
 
@@ -336,49 +371,11 @@ class CustomCameraView : FrameLayout, SurfaceHolder.Callback, Camera.AutoFocusCa
     }
 
     interface OnTakePictureInfo {
-        fun onTakePictureInofo(_success: Boolean, _file: File?)
+        fun onTakePictureInofo(_success: Boolean, _file: ByteArray?)
     }
 
     companion object {
-        @JvmField
-        var PHOTO_FILE_NAME =  Constants.sdk_first_path
-
-        @JvmField
-        var cameramode = ""
-
-        @JvmField
-        var lblphotofilename = ""
         private var context: Context? = null
 
-        /**
-         * 获取存储相片的路径
-         *
-         * @return
-         */
-        val outputMediaFile: File?
-            get() {
-                var mediaStorageDir: File? = null
-                try {
-                    mediaStorageDir = File(FileUtil.getSDPath(), PHOTO_FILE_NAME)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-                if (!mediaStorageDir!!.exists()) {
-                    if (!mediaStorageDir.mkdirs()) {
-                        Log.d("CameraActivity",
-                                "failed to create directory, check if you have the WRITE_EXTERNAL_STORAGE permission")
-                        return null
-                    }
-                }
-                // return FileUtil.makeFilePath(FileUtil.getSDPath(), "temp" + ".jpg")
-                val mediaFile: File
-                var photofilename = ""
-                photofilename = ".jpg"
-
-                mediaFile = File(FileUtil.getSDPath(), "temp" + ".jpg")
-
-
-                return File(mediaStorageDir, "temp" + ".jpg")
-            }
     }
 }

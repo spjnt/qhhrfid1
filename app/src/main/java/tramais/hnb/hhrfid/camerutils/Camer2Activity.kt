@@ -11,7 +11,9 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
 import android.util.Log
+import android.util.Size
 import android.view.*
+import android.widget.RelativeLayout
 import androidx.core.graphics.drawable.toDrawable
 import androidx.exifinterface.media.ExifInterface
 import androidx.lifecycle.lifecycleScope
@@ -33,6 +35,8 @@ import tramais.hnb.hhrfid.constant.Constants
 import tramais.hnb.hhrfid.listener.MyLocationListener
 import tramais.hnb.hhrfid.ui.dialog.DialogImg
 import tramais.hnb.hhrfid.util.*
+import tramais.hnb.hhrfid.waterimage.WaterMaskUtil
+import tramais.hnb.hhrfid.waterimage.WaterMaskView
 import java.io.Closeable
 import java.io.File
 import java.util.*
@@ -44,8 +48,9 @@ import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 import kotlin.math.max
 
-class Camer2Activity : BaseActivity() {
 
+class Camer2Activity : BaseActivity() {
+    private var waterMaskView: WaterMaskView? = null
     private var latitude = 0.0
     private var longitude = 0.0
     private val cameraManager: CameraManager by lazy {
@@ -75,18 +80,26 @@ class Camer2Activity : BaseActivity() {
     private lateinit var relativeOrientation: OrientationLiveData
 
 
-    private fun initializeCamera() = lifecycleScope.launch(Dispatchers.Main) {
+    private fun initializeCamera(isFail: Boolean, size: Size) = lifecycleScope.launch(Dispatchers.Main) {
         val cameraId = cameraManager.getCameraId(CameraFacing.BACK)
         if (cameraId.isNullOrEmpty()) {
 
         }
         camera = openCamera(cameraManager, cameraId!!, cameraHandler)
-        val size = characteristics.get(
-                CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP
-        )!!
-                .getOutputSizes(ImageFormat.JPEG).maxByOrNull { it.height * it.width }!!
+//        val size = characteristics.get(
+//                CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP
+//        )!!.getOutputSizes(ImageFormat.JPEG).maxByOrNull { it.height * it.width }!!
+        /*  imageReader = if (!isFail) {
+              ImageReader.newInstance(
+                      size!!.width, size!!.height, ImageFormat.JPEG, IMAGE_BUFFER_SIZE
+              )
+          } else {
+              ImageReader.newInstance(
+                      640, 480, ImageFormat.JPEG, IMAGE_BUFFER_SIZE
+              )
+          }*/
         imageReader = ImageReader.newInstance(
-                size.width, size.height, ImageFormat.JPEG, IMAGE_BUFFER_SIZE
+                size!!.width, size!!.height, ImageFormat.JPEG, IMAGE_BUFFER_SIZE
         )
         val targets = listOf(view_finder.holder.surface, imageReader.surface)
         session = createCaptureSession(camera, targets, cameraHandler)
@@ -120,10 +133,11 @@ class Camer2Activity : BaseActivity() {
                     ERROR_MAX_CAMERAS_IN_USE -> "Maximum cameras in use"
                     else -> "Unknown"
                 }
-                val exc = RuntimeException("Camera $cameraId error: ($error) $msg")
-                Log.e(TAG, exc.message, exc)
-                if (cont.isActive) cont.resumeWithException(exc)
+//                val exc = RuntimeException("Camera $cameraId error: ($error) $msg")
+//                Log.e(TAG, exc.message, exc)
+//                if (cont.isActive) cont.resumeWithException(exc)
             }
+
         }, handler)
     }
 
@@ -136,9 +150,11 @@ class Camer2Activity : BaseActivity() {
             override fun onConfigured(session: CameraCaptureSession) = cont.resume(session)
 
             override fun onConfigureFailed(session: CameraCaptureSession) {
-                val exc = RuntimeException("Camera ${device.id} session configuration failed")
-                Log.e(TAG, exc.message, exc)
-                cont.resumeWithException(exc)
+                LogUtils.e("onConfigureFailed")
+               // initializeCamera(true)
+                // val exc = RuntimeException("Camera ${device.id} session configuration failed")
+                //  Log.e(TAG, exc.message, exc)
+                //   cont.resumeWithException(exc)
             }
         }, handler)
     }
@@ -261,7 +277,15 @@ class Camer2Activity : BaseActivity() {
         if (mLocationClient != null) mLocationClient!!.stop()
     }
 
+    var previewSize: Size? = null
     override fun initView() {
+
+        waterMaskView = WaterMaskView(this)
+        val params: RelativeLayout.LayoutParams = RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.MATCH_PARENT
+        )
+        waterMaskView!!.layoutParams = params
         capture_button.setOnApplyWindowInsetsListener { v, insets ->
             v.translationX = (-insets.systemWindowInsetRight).toFloat()
             v.translationY = (-insets.systemWindowInsetBottom).toFloat()
@@ -279,17 +303,20 @@ class Camer2Activity : BaseActivity() {
             ) = Unit
 
             override fun surfaceCreated(holder: SurfaceHolder) {
-                val previewSize = getPreviewOutputSize(
+                previewSize = getPreviewOutputSize(
                         view_finder.display,
                         characteristics,
                         SurfaceHolder::class.java
                 )
+                previewSize?.let {
+                    view_finder.setAspectRatio(
+                            it.width,
+                            it.height
+                    )
+                    initializeCamera(true, it)
+                }
 
-                view_finder.setAspectRatio(
-                        previewSize.width,
-                        previewSize.height
-                )
-                initializeCamera()
+
             }
         })
         relativeOrientation = OrientationLiveData(this, characteristics).apply {
@@ -405,34 +432,57 @@ class Camer2Activity : BaseActivity() {
         }
     }
 
+    var crators: MutableList<String> = ArrayList()
+    var waterInfos: MutableList<String> = ArrayList()
     var ims: ArrayList<String> = ArrayList()
     private fun createFile(context: Context, bytes: ByteArray) {
         textList.clear()
+        crators.clear()
+        waterInfos.clear()
         /*水印顺序：被保险人，标的名称，耳标号，出险原因，出险时间，查勘时间,经纬度，查勘地点，*/
         if (remark == "only_photo") {
             sdk_path = FileUtil.getSDPath() + Constants.sdk_camer
-            textList.add("被保险人:$famername")
-            textList.add("耳标号:$earTag")
-//            if (insure_type == "养殖险")
-//                textList.add("耳标号:$earTag")
-            textList.add("标的名称:$riskQty")
-            textList.add("出险原因:$riskReason")
-            textList.add("出险时间:$creatTime")
-            textList.add("查勘时间:" + TimeUtil.getTime(Constants.yyyy_MM_ddHHmmss))
-            textList.add("经度:$longitude 纬度:$latitude")
-            val length = if (location_add.isNullOrEmpty()) {
-                0
+            /*  textList.add("被保险人:$famername")
+              textList.add("耳标号:$earTag")
+  //            if (insure_type == "养殖险")
+  //                textList.add("耳标号:$earTag")
+              textList.add("标的名称:$riskQty")
+              textList.add("出险原因:$riskReason")
+              textList.add("出险时间:$creatTime")
+              textList.add("查勘时间:" + TimeUtil.getTime(Constants.yyyy_MM_ddHHmmss))
+              textList.add("经度:$longitude 纬度:$latitude")
+              val length = if (location_add.isNullOrEmpty()) {
+                  0
+              } else {
+                  location_add!!.length
+              }
+              val one_length = 14
+              if (length >= one_length) {
+                  val first = location_add!!.substring(0, one_length)
+                  val end = location_add!!.substring(one_length, length)
+                  textList.add("📍:$first")
+                  textList.add(end)
+              } else {
+                  textList.add("📍:$location_add")
+              }*/
+
+
+            waterInfos.add("被保险人:$famername")
+            waterInfos.add("耳标号:$earTag")
+            waterInfos.add("标的名称:$riskQty")
+            waterInfos.add("出险原因:$riskReason")
+            waterInfos.add("出险时间:$creatTime")
+            waterInfos.add("查勘时间:" + TimeUtil.getTime(Constants.yyyy_MM_ddHHmmss))
+            waterInfos.add("经度:$longitude 纬度:$latitude")
+
+            val userName = PreferUtils.getString(this, Constants.UserName)
+            var name = if (userName.isNullOrBlank()) {
+                "未知"
             } else {
-                location_add!!.length
+                userName
             }
-            val one_length = 14
-            if (length >= one_length) {
-                val first = location_add!!.substring(0, one_length)
-                val end = location_add!!.substring(one_length, length)
-                textList.add("📍:$first")
-                textList.add(end)
-            } else {
-                textList.add("📍:$location_add")
+            for (item in 1..10) {
+                crators.add(name)
             }
         } else {
             sdk_path = FileUtil.getSDPath() + Constants.sdk_middle_animal
@@ -461,7 +511,7 @@ class Camer2Activity : BaseActivity() {
             withContext(Dispatchers.Main) {
                 val photo_name = System.currentTimeMillis().toString() + ".jpg"
                 if (decodeByteArray != null)
-                    LuBan(context, decodeByteArray, cdpath, photo_name)
+                    LuBan(context, decodeByteArray, cdpath, photo_name, crators, waterInfos)
             }
         }
 
@@ -505,7 +555,7 @@ class Camer2Activity : BaseActivity() {
 
     private val bitmapTransformation: Matrix by lazy { decodeExifOrientation(ExifInterface.ORIENTATION_ROTATE_90) }
 
-    fun LuBan(context: Context, bitMap: Bitmap, path_: String, name_: String) {
+    fun LuBan(context: Context, bitMap: Bitmap, path_: String, name_: String, crators: MutableList<String>, waterInfos: MutableList<String>) {
         try {
             Luban.with(this)               //(可选)Lifecycle,可以不填写内部使用ProcessLifecycleOwner
                     .load(bitMap)                       //支持 File,Uri,InputStream,String,Bitmap 和以上数据数组和集合
@@ -522,21 +572,22 @@ class Camer2Activity : BaseActivity() {
                             if (it != null) {
                                 val task = WateImagsTask()
                                 val Bitmapbm = BitmapFactory.decodeFile(it.absolutePath)
-                                if (it.exists())
-                                    it.delete()
+                                waterMaskView!!.setBackData(crators, Bitmapbm.height.toFloat(), Bitmapbm.width.toFloat())
+                             //   waterMaskView!!.setLeftData(waterInfos)
+                                waterMaskView!!.setLocation(location_add!!)
                                 if (Bitmapbm != null) {
-                                    bitmap = task.addWater(context, textList, Bitmapbm)
-                                    if (bitmap != null) {
-                                        path = ImageUtils.saveBitmap(context, bitmap, path_, name_)
-                                        ims.add(path)
-                                        scan_total.bringToFront()
-                                        scan_total.text = "当前第 ${ims.size} 张"
-                                        Glide.with(this@Camer2Activity).load(path).into(imv_pic)
-                                        if (ims.size == 20) {
-                                            showStr("请先点击完成，保存数据")
-                                            capture_button.isEnabled = false
-                                        }
+                                    path = saveWaterMask(waterMaskView, Bitmapbm, cdpath, name_)
+                                    if (it.exists())
+                                        it.delete()
+                                    ims.add(path)
+                                    scan_total.bringToFront()
+                                    scan_total.text = "当前第 ${ims.size} 张"
+                                    Glide.with(this@Camer2Activity).load(path).into(imv_pic)
+                                    if (ims.size == 20) {
+                                        showStr("请先点击完成，保存数据")
+                                        capture_button.isEnabled = false
                                     }
+
 
                                 }
 
@@ -556,4 +607,62 @@ class Camer2Activity : BaseActivity() {
         }
 
     }
+
+    private fun saveWaterMask(waterMaskView: WaterMaskView?, sourBitmap: Bitmap, path_: String, name_: String): String {
+        try {
+            var waterBitmap = WaterMaskUtil.loadBitmapFromView(waterMaskView)
+            var watermarkBitmap = WaterMaskUtil.createWaterMaskLeftBottom(this, sourBitmap, waterBitmap, 0, 0)
+            return ImageUtils.saveBitmap(this, watermarkBitmap!!, path_, name_)
+        } catch (e: Exception) {
+            LogUtils.e("e  ${e.message}")
+        }
+        return ""
+
+    }
+
+    private fun chooseVideoSize(choices: Array<Size?>): Size? {
+        val smallEnough: MutableList<Size> = ArrayList()
+        for (size in choices) {
+            if (size!!.width === size!!.height * 4 / 3 && size!!.width <= 1080) {
+                smallEnough.add(size)
+            }
+        }
+        return if (smallEnough.size > 0) {
+            Collections.max(smallEnough, CompareSizesByArea())
+        } else choices[choices.lastIndex]
+    }
+
+    class CompareSizesByArea : Comparator<Size?> {
+        override fun compare(lhs: Size?, rhs: Size?): Int {
+            val l1 = (lhs?.width!!) * (lhs?.height)
+            val l2 = (rhs?.width!!) * (rhs?.height)
+            return l1 - l2
+        }
+    }
+
+    /* //初始化灯光相关
+     private fun initLight() {
+         val mCamera: Camera = Camera.open()
+         val button = Button(this)
+         addContentView(button, LayoutParams(
+                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+         button.setText("手电筒开关")
+         button.setOnClickListener(object : OnClickListener() {
+             var mode: String = Camera.Parameters.FLASH_MODE_OFF
+             var btn_show = "OFF"
+             fun onClick(v: View?) {
+                 val parameters: Camera.Parameters = mCamera.getParameters()
+                 if (Camera.Parameters.FLASH_MODE_OFF.equals(parameters.getFlashMode())) {
+                     mode = Camera.Parameters.FLASH_MODE_TORCH
+                     btn_show = "OFF"
+                 } else {
+                     mode = Camera.Parameters.FLASH_MODE_OFF
+                     btn_show = "ON"
+                 }
+                 parameters.setFlashMode(mode)
+                 mCamera.setParameters(parameters)
+                 button.setText(btn_show)
+             }
+         })
+     }*/
 }

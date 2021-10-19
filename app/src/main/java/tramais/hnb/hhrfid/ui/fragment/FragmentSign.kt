@@ -327,7 +327,7 @@ class FragmentSign : BaseFragment(), ChoicePhoto {
                         if (getimage != null) {
                             mIvTakeBankPhoto.setImageBitmap(null)
                             mIvTakeBankPhoto.setImageBitmap(getimage)
-                            backCard_path = ImageUtils.saveBitmap(context, getimage, FileUtil.getSDPath() + Constants.sdk_middle_path, fenPei.farmerName + "/" + fenPei.farmerName + "_" + "bankCard" + ".jpg")
+                            backCard_path = ImageUtils.saveBitmap(context!!, getimage, FileUtil.getSDPath() + Constants.sdk_middle_path, fenPei.farmerName + "/" + fenPei.farmerName + "_" + "bankCard" + ".jpg")
                             mDelBank.visibility = View.VISIBLE
                         }
                     }
@@ -353,7 +353,7 @@ class FragmentSign : BaseFragment(), ChoicePhoto {
                         //压缩图片并显示
 
                         if (getimage != null) {
-                            backCard_path = ImageUtils.saveBitmap(context, getimage, FileUtil.getSDPath() + Constants.sdk_middle_path, fenPei.farmerName + "/" + fenPei.farmerName + "_" + "bankCard" + ".jpg")
+                            backCard_path = ImageUtils.saveBitmap(context!!, getimage, FileUtil.getSDPath() + Constants.sdk_middle_path, fenPei.farmerName + "/" + fenPei.farmerName + "_" + "bankCard" + ".jpg")
                             mIvTakeBankPhoto.setImageBitmap(null)
                             mIvTakeBankPhoto.setImageBitmap(getimage)
                             mDelBank.visibility = View.VISIBLE

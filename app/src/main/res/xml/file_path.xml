@@ -9,8 +9,8 @@
         path="cache_image" />
     <!--external-path  相当于 Environment.getExternalStorageDirectory()-->
     <external-path
-        name="hahaha"
-        path="comeOn" />
+        name="external_path"
+        path="." />
     <!--external-files-path  相当于 getExternalFilesDir("") -->
     <external-files-path
         name="paly"

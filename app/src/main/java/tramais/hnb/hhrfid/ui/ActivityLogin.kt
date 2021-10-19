@@ -429,7 +429,7 @@ class ActivityLogin : BaseActivity() {
         }
     }
 
-    var textList: MutableList<String> = ArrayList()
+
 
 
 }

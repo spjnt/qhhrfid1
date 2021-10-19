@@ -484,7 +484,7 @@ class CameraActivity : BaseActivity() {
                         textList.add("📍:$farmer_address")
                     }
 
-                    bitmap = task.addWater(context, textList, getimage)
+                    bitmap = task.addWater(context, textList, getimage!!)
                     path = ImageUtils.saveBitmap(this@CameraActivity, bitmap, FileUtil.getSDPath() + Constants.sdk_middle_animal + id_nums + "/", era_tag + "_" + bitmaps!!.size + ".jpg")
 
                     withContext(Dispatchers.Main) {

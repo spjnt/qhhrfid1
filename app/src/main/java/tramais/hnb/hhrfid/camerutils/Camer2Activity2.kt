@@ -83,10 +83,12 @@ class Camer2Activity2 : BaseActivity() {
 
         }
         camera = openCamera(cameraManager, cameraId!!, cameraHandler)
-        val size = characteristics.get(
+        val map = characteristics.get(
                 CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP
         )!!
-                .getOutputSizes(ImageFormat.JPEG).maxByOrNull { it.height * it.width }!!
+        //  map.getOutputSizes(MediaRecorder::class.java)
+        //    map.getOutputSizes(MediaRecorder::class.java)
+        var size = map.getOutputSizes(ImageFormat.JPEG).maxByOrNull { it.height * it.width }!!
         imageReader = ImageReader.newInstance(
                 size.width, size.height, ImageFormat.JPEG, IMAGE_BUFFER_SIZE
         )
@@ -229,7 +231,7 @@ class Camer2Activity2 : BaseActivity() {
                 val buffer = result.image.planes[0].buffer
                 val bytes = ByteArray(buffer.remaining()).apply { buffer.get(this) }
                 var path = createFileNew(bytes)
-                //   cont.resume(File(path))
+                cont.resume(File(path))
 
 
             }
@@ -455,6 +457,8 @@ class Camer2Activity2 : BaseActivity() {
     private val bitmaps: ArrayList<String?>? = ArrayList()
     var crators: MutableList<String> = ArrayList()
     var waterInfos: MutableList<String> = ArrayList()
+
+    @SuppressLint("ResourceType")
     private fun createFileNew(bytes: ByteArray): String {
         waterInfos.clear()
         crators.clear()
@@ -475,20 +479,24 @@ class Camer2Activity2 : BaseActivity() {
             } else {
                 userName
             }
-            for (item in 1..20) {
+            for (item in 1..10) {
                 crators.add(name)
             }
 
         }
 
         val decodeByteArray = decodeBitmap(bytes, 0, bytes.size)
+
+//        val drawable = resources.openRawResource(R.drawable.select)
+//        val decodeByteArray = BitmapFactory.decodeStream(drawable)
         waterMaskView!!.setBackData(crators, decodeByteArray.height.toFloat(), decodeByteArray.width.toFloat())
-        waterMaskView!!.setLeftData(waterInfos)
+        // waterMaskView!!.setLeftData(waterInfos)
         waterMaskView!!.setLocation(location_add!!)
         cdpath = "$sdk_path${TimeUtil.getTime(Constants.yyyy__MM__dd)}/"
 
 
         val photo_name = System.currentTimeMillis().toString() + ".jpg"
+
         playSound(R.raw.camera_click)
         val path = saveWaterMask(waterMaskView, decodeByteArray, cdpath, photo_name)
         lifecycleScope.launch {
@@ -510,7 +518,7 @@ class Camer2Activity2 : BaseActivity() {
         try {
             var waterBitmap = WaterMaskUtil.loadBitmapFromView(waterMaskView)
             var watermarkBitmap = WaterMaskUtil.createWaterMaskLeftBottom(this, sourBitmap, waterBitmap, 0, 0)
-            return ImageUtils.saveBitmap(this, watermarkBitmap, path_, name_)
+            return ImageUtils.saveBitmap(this, watermarkBitmap!!, path_, name_)
         } catch (e: Exception) {
             LogUtils.e("e  ${e.message}")
         }

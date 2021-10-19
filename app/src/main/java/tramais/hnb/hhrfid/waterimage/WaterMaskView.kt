@@ -3,12 +3,12 @@ package tramais.hnb.hhrfid.waterimage
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.apkfuns.logutils.LogUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import tramais.hnb.hhrfid.R
@@ -24,7 +24,7 @@ class WaterMaskView @JvmOverloads constructor(context: Context, attrs: Attribute
     private val recyleView: RecyclerView
     private var rlLeft: RecyclerView
     private var tvLocation: TextView
-
+    private var llBottom: LinearLayout
 
     /*
     * 操作员
@@ -48,9 +48,9 @@ class WaterMaskView @JvmOverloads constructor(context: Context, attrs: Attribute
     }
 
     private var infos: MutableList<String> = ArrayList()
-    fun setLeftData(infos: MutableList<String>) {
+    fun setLeftData(infos: MutableList<String>, height: Float) {
         this.infos = infos
-        setLeftAdapter()
+        setLeftAdapter(height, infos)
         mLeftAdapter!!.addData(infos)
         mLeftAdapter!!.notifyDataSetChanged()
 
@@ -59,7 +59,7 @@ class WaterMaskView @JvmOverloads constructor(context: Context, attrs: Attribute
     var location_: String = ""
 
     fun setLocation(location: String) {
-        LogUtils.e("add  $location")
+        // LogUtils.e("add  $location")
         this.location_ = location
         if (location_.isNullOrEmpty()) {
             tvLocation.text = "无法定位"
@@ -81,6 +81,7 @@ class WaterMaskView @JvmOverloads constructor(context: Context, attrs: Attribute
         tvLocation = findViewById(R.id.tv_location)
         rlLeft = findViewById(R.id.rl_left)
         recyleView = findViewById(R.id.recyle_view)
+        llBottom = findViewById(R.id.ll_bottom)
         recyleView!!.layoutManager = GridLayoutManager(context, 2)
         rlLeft.layoutManager = LinearLayoutManager(context)
     }
@@ -103,11 +104,17 @@ class WaterMaskView @JvmOverloads constructor(context: Context, attrs: Attribute
 
 
     var mLeftAdapter: BaseQuickAdapter<String?, BaseViewHolder>? = null
-    fun setLeftAdapter() {
+    fun setLeftAdapter(height: Float, infos: MutableList<String>) {
         rlLeft.adapter =
                 object : BaseQuickAdapter<String?, BaseViewHolder>(R.layout.item_text_small) {
                     override fun convert(holder: BaseViewHolder, item: String?) {
                         val view = holder.getView<TextView>(R.id.tv)
+
+//                        val layoutParams = view.layoutParams
+//                        layoutParams.height = (height / (3 * infos.size)).toInt()
+//
+//                        view.layoutParams = layoutParams
+//                        view.textSize = 3f
                         view.text = item
                     }
                 }.also { mLeftAdapter = it }

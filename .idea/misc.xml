@@ -8,6 +8,7 @@
         <entry key="..\:/qhhrfid/app/src/main/res/drawable/bg_border_normal.xml" value="0.2078125" />
         <entry key="..\:/qhhrfid/app/src/main/res/drawable/big_conner_new.xml" value="0.39384615384615385" />
         <entry key="..\:/qhhrfid/app/src/main/res/drawable/bottom_no_conner.xml" value="0.4041666666666667" />
+        <entry key="..\:/qhhrfid/app/src/main/res/drawable/flash_open.xml" value="0.39794871794871794" />
         <entry key="..\:/qhhrfid/app/src/main/res/drawable/hide_show_pwd.xml" value="0.39384615384615385" />
         <entry key="..\:/qhhrfid/app/src/main/res/drawable/ic_camera.xml" value="0.36822916666666666" />
         <entry key="..\:/qhhrfid/app/src/main/res/drawable/ic_photo.xml" value="0.35989583333333336" />
@@ -77,6 +78,7 @@
         <entry key="..\:/qhhrfid/app/src/main/res/layout/fragment_basic.xml" value="0.2578125" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/fragment_basic2.xml" value="0.2859375" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/fragment_camera.xml" value="0.35" />
+        <entry key="..\:/qhhrfid/app/src/main/res/layout/fragment_camerax.xml" value="0.3880208333333333" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/fragment_check_sunshi.xml" value="0.3880208333333333" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/fragment_crop_insure.xml" value="0.3880208333333333" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/fragment_home.xml" value="0.3536458333333333" />
@@ -98,12 +100,16 @@
         <entry key="..\:/qhhrfid/app/src/main/res/layout/item_parent_expand.xml" value="0.4" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/item_parent_expand_crop.xml" value="0.2" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/item_public.xml" value="0.3388888888888889" />
+        <entry key="..\:/qhhrfid/app/src/main/res/layout/item_roat_text.xml" value="0.3880208333333333" />
+        <entry key="..\:/qhhrfid/app/src/main/res/layout/item_text.xml" value="0.2324074074074074" />
+        <entry key="..\:/qhhrfid/app/src/main/res/layout/item_text_small.xml" value="0.3880208333333333" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/item_toubao.xml" value="0.387459807073955" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/layout_title.xml" value="0.36875" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/popu_dk.xml" value="0.4" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/preview_frame.xml" value="0.3614583333333333" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/sign_ly.xml" value="0.4" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/update_dialog.xml" value="0.3614583333333333" />
+        <entry key="..\:/qhhrfid/app/src/main/res/layout/watermask.xml" value="0.3880208333333333" />
         <entry key="..\:/qhhrfid/camerakit/src/main/res/layout/surface_view.xml" value="0.28541666666666665" />
         <entry key="..\:/qhhrfid/nativelib/src/main/res/layout/layout_focus_marker.xml" value="0.3880208333333333" />
         <entry key="..\:/qhhrfid/nativelib/src/main/res/layout/surface_view.xml" value="0.3880208333333333" />

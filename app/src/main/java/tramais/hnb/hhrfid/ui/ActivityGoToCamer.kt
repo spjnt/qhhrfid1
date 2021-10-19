@@ -1,16 +1,15 @@
 package tramais.hnb.hhrfid.ui
 
 import android.Manifest
-import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
-import com.apkfuns.logutils.LogUtils
+import android.widget.TextView
 import com.baidu.location.LocationClient
-import com.bumptech.glide.Glide
 import com.mylhyl.acp.Acp
 import com.mylhyl.acp.AcpListener
 import com.mylhyl.acp.AcpOptions
@@ -21,12 +20,13 @@ import tramais.hnb.hhrfid.base.BaseActivity
 import tramais.hnb.hhrfid.bean.FenPei
 import tramais.hnb.hhrfid.bean.Region
 import tramais.hnb.hhrfid.bean.RiskReason
-import tramais.hnb.hhrfid.camerutils.Camer2Activity
-import tramais.hnb.hhrfid.camerutils.Camer2Activity2
 import tramais.hnb.hhrfid.constant.Constants
+import tramais.hnb.hhrfid.interfaces.GetCommon
 import tramais.hnb.hhrfid.interfaces.GetCommonWithError
+import tramais.hnb.hhrfid.listener.DetailLocationListener
 import tramais.hnb.hhrfid.litePalBean.RiskReasonCache
 import tramais.hnb.hhrfid.net.RequestUtil
+import tramais.hnb.hhrfid.ui.dialog.DialogChoiceRegion
 import tramais.hnb.hhrfid.ui.popu.PopuChoice
 import tramais.hnb.hhrfid.util.*
 
@@ -37,9 +37,9 @@ class ActivityGoToCamer : BaseActivity() {
     private var longitude = 0.0
     private var mEarTag: EditText? = null
     private var mCamer: Button? = null
-//    private var mAddressDetail: TextView? = null
+    private var mAddressDetail: TextView? = null
 
-    //    var location_add: String? = null
+    var location_add: String? = null
     var mLocationClient: LocationClient? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,46 +52,57 @@ class ActivityGoToCamer : BaseActivity() {
         mIv = findViewById(R.id.iv)
         mEarTag = findViewById(R.id.et_ear_tag)
         mCamer = findViewById(R.id.camer)
-//        mAddressDetail = findViewById(R.id.tv_address_detail)
+        mAddressDetail = findViewById(R.id.tv_address_detail)
         chuxian_time = TimeUtil.getTime(Constants.yyyy_mm_dd)
         choice_time.text = chuxian_time
     }
 
     override fun initData() {
 
-//        val insure = PreferUtils.getString(this, Constants.camer_insure)
-//        if (!insure.isNullOrEmpty()) {
-//            insurance_type.text = insure
-//            insure_type = insure
-//        }
-//        val insure_name = PreferUtils.getString(this, Constants.camer_insure_name)
-//        if (!insure_name.isNullOrEmpty()) {
-//            biaodi_name.text = insure_name
-//            biaodi_ = insure_name
-//        }
+        val insure = PreferUtils.getString(this, Constants.camer_insure)
+        if (!insure.isNullOrEmpty()) {
+            insurance_type.text = insure
+            insure_type = insure
+
+            if (insure == "养殖险") {
+                et_ear_tag.isEnabled = true
+                et_ear_tag.setText("")
+                et_ear_tag.hint = "请输入耳标号"
+            } else {
+                et_ear_tag.setText("")
+                et_ear_tag.isEnabled = false
+                et_ear_tag.hint = "种植险/林险无需输入耳标号"
+            }
+        }
+        val insure_name = PreferUtils.getString(this, Constants.camer_insure_name)
+        if (!insure_name.isNullOrEmpty()) {
+            biaodi_name.text = insure_name
+            biaodi_ = insure_name
+        }
         getRiskReason()
         getRegion()
 
-//        if (NetUtil.checkNet(this)) {
-//            mLocationClient = LocationClient(applicationContext)
-//            BDLoactionUtil.initLoaction(mLocationClient)
-//            if (mLocationClient != null) mLocationClient!!.start()
-//
-//            //声明LocationClient类
-//            mLocationClient!!.registerLocationListener(DetailLocationListener { lat: Double, log: Double, add: String? ->
-//                LogUtils.e("add  $add $lat  $log")
-//                if (add.isNullOrEmpty() || add.isNullOrBlank()) {
-////                    location_add = "无法定位"
-//                } else {
-////                    location_add = add
-//                    tv_address_detail.text = add
-//                }
-//
-//                latitude = lat
-//                longitude = log
-//                mLocationClient!!.stop()
-//            })
-//        }
+        if (NetUtil.checkNet(this)) {
+            mLocationClient = LocationClient(applicationContext)
+            BDLoactionUtil.initLoaction(mLocationClient)
+            if (mLocationClient != null) mLocationClient!!.start()
+
+            //声明LocationClient类
+            mLocationClient!!.registerLocationListener(DetailLocationListener { lat: Double, log: Double, add: String? ->
+                // LogUtils.e("add  $add $lat  $log")
+                if (add.isNullOrEmpty() || add.isNullOrBlank()) {
+                    location_add = "无法定位"
+                    latitude = 0.0
+                    longitude = 0.0
+                } else {
+                    location_add = add
+                    tv_address_detail.text = add
+                    latitude = lat
+                    longitude = log
+                }
+                mLocationClient!!.stop()
+            })
+        }
     }
 
     var riskReason: MutableList<String> = ArrayList()
@@ -152,39 +163,40 @@ class ActivityGoToCamer : BaseActivity() {
 
     var insure_type = ""
     override fun initListner() {
-//        insurance_type.setOnClickListener {
-//            PopuChoice(this@ActivityGoToCamer, reason, "请选择险种", mutableListOf("养殖险", "种植险", "林险")) {
-//                insurance_type!!.text = it
-//                insure_type = it
-//                if (it == "养殖险") {
-//                    et_ear_tag.isEnabled = true
-//                    et_ear_tag.setText("")
-//                } else {
-//                    et_ear_tag.isEnabled = false
-//                    et_ear_tag.hint = "种植险/林险无需输入耳标号"
-//                }
-//            }
-//
-//        }
-//        tv_address_detail!!.setOnClickListener { v: View? ->
-//            if (regiondata == null || regiondata!!.isEmpty()) {
-//                showStr("暂无集体户名可选")
-//                return@setOnClickListener
-//            }
-//            val dialogChoiceRegion = DialogChoiceRegion(this, regiondata) { billNumber: String, message: String ->
-//                if (billNumber == "数据异常") {
-//                    showStr(billNumber)
-//                    return@DialogChoiceRegion
-//                }
-//                tv_address_detail!!.text = billNumber + message
-//
-//            }
-//            if (dialogChoiceRegion != null && !dialogChoiceRegion.isShowing) dialogChoiceRegion.show()
-//        }
+        insurance_type.setOnClickListener {
+            PopuChoice(this@ActivityGoToCamer, reason, "请选择险种", mutableListOf("养殖险", "种植险", "林险")) {
+                insurance_type!!.text = it
+                insure_type = it
+                if (it == "养殖险") {
+                    et_ear_tag.isEnabled = true
+                    et_ear_tag.setText("")
+                    et_ear_tag.hint = "请输入耳标号"
+                } else {
+                    et_ear_tag.setText("")
+                    et_ear_tag.isEnabled = false
+                    et_ear_tag.hint = "种植险/林险无需输入耳标号"
+                }
+            }
+
+        }
+        tv_address_detail!!.setOnClickListener { v: View? ->
+            if (regiondata == null || regiondata!!.isEmpty()) {
+                showStr("暂无集体户名可选")
+                return@setOnClickListener
+            }
+            val dialogChoiceRegion = DialogChoiceRegion(this, regiondata) { billNumber: String, message: String ->
+                if (billNumber == "数据异常") {
+                    showStr(billNumber)
+                    return@DialogChoiceRegion
+                }
+                tv_address_detail!!.text = billNumber + message
+
+            }
+            if (dialogChoiceRegion != null && !dialogChoiceRegion.isShowing) dialogChoiceRegion.show()
+        }
 
         mCamer!!.setOnClickListener {
             check()
-
         }
         choice_time.setOnClickListener {
             TimeUtil.initTimePicker(this) {
@@ -215,94 +227,89 @@ class ActivityGoToCamer : BaseActivity() {
     }
 
     fun goToCamer() {
-//        if (insure_type.isNullOrEmpty()) {
-//            showStr("请选择险种")
-//            return
-//        }
+        if (insure_type.isEmpty()) {
+            showStr("请选择险种")
+            return
+        }
         val farmer_name = et_farmer_name.text.toString()
-//        if (farmer_name.isNullOrEmpty()) {
-//            showStr("请输入养殖户姓名")
-//            return
-//        }
+        if (farmer_name.isEmpty()) {
+            showStr("请输入养殖户姓名")
+            return
+        }
 
         val tag = et_ear_tag.text.toString()
-//        if (insure_type == "养殖险" && tag.isNullOrEmpty()) {
-//            showStr("请输入耳标号")
-//            return
-//        }
-        if (chuxian_time.isNullOrEmpty()) {
+        if (insure_type == "养殖险" && tag.isEmpty()) {
+            showStr("请输入耳标号")
+            return
+        }
+        if (chuxian_time.isEmpty()) {
             showStr("请选择出险时间")
             return
         }
-        if (risk_reason.isNullOrEmpty()) {
+        if (risk_reason.isEmpty()) {
             showStr("请选择报案原因")
             return
         }
-        if (biaodi_.isNullOrEmpty()) {
+        if (biaodi_.isEmpty()) {
             showStr("请选择标的名称")
             return
         }
-//        val detail = tv_address_detail.text.toString()
-//        if (detail.isNullOrEmpty()) {
-//            showStr("请选择村镇地址")
-//            return
-//        }
+        val detail = tv_address_detail.text.toString()
+        if (detail.isEmpty()) {
+            showStr("请选择村镇地址")
+            return
+        }
         PreferUtils.putString(this, Constants.camer_insure, insure_type)
         PreferUtils.putString(this, Constants.camer_insure_name, biaodi_)
-        // val m_FarmerName = Utils.getEdit(mFarmerName)
+
         val fenPei = FenPei()
         fenPei.farmerName = farmer_name
         fenPei.fRemark = "only_photo"
         fenPei.createTime = chuxian_time
         fenPei.riskReason = risk_reason
         fenPei.riskQty = biaodi_
-//        fenPei.fCoinsFlag = insure_type
-//        fenPei.riskAddress = tv_address.text.toString() + detail
+        fenPei.fCoinsFlag = insure_type
+        fenPei.riskAddress = tv_address.text.toString() + detail
         fenPei.EarTag = tag
-//        fenPei.lat = latitude
-//        fenPei.log = longitude
-        val intent = Intent(this, Camer2Activity2::class.java)
+        fenPei.lat = latitude
+        fenPei.log = longitude
+        val intent = Intent(this, CameraOnlyActivity2::class.java)
         intent.putExtra("fenpei", fenPei)
         intent.putExtra("photo_num", 0)
-        startActivityForResult(intent, 124)
+        startActivity(intent)
     }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 124 && resultCode == Activity.RESULT_OK) {
-
-            val imgs = data!!.getStringArrayListExtra("imgs")
-            if (imgs != null && imgs.isNotEmpty()) {
-                Glide.with(this).load(imgs[imgs.lastIndex]).into(mIv!!)
-
-            }
-
-        }
-    }
-
 
     private var regiondata: List<Region.DataBean>? = null
     fun getRegion() {
-//        if (NetUtil.checkNet(this))
-//            RequestUtil.getInstance(this)!!.getRegion(object : GetCommon<Region> {
-//                override fun getCommon(t: Region) {
-//                    regiondata = t.data
-//                    tv_address!!.text = t.fProvince + t.fCity + t.fCounty
-//                }
-//            })
-//        else
-//            Utils.getRegions(object : GetCommon<Region> {
-//                override fun getCommon(t: Region) {
-//                    regiondata = t.data
-//                    tv_address!!.text = t.fProvince + t.fCity + t.fCounty
-//                }
-//            })
+        if (NetUtil.checkNet(this)) {
+            RequestUtil.getInstance(this)!!.getRegionWithCache(object : GetCommonWithError<Region> {
+                override fun getCommon(t: Region) {
+                    regiondata = t.data
+                    tv_address!!.text = t.fProvince + t.fCity + t.fCounty
+                }
 
+                override fun getError() {
+                    getRegionCache()
+                }
+            })
+        } else {
+            getReasonCache()
+        }
+
+
+    }
+
+    fun getRegionCache() {
+        Utils.getRegions(object : GetCommon<Region> {
+            override fun getCommon(t: Region) {
+                regiondata = t.data
+                tv_address!!.text = t.fProvince + t.fCity + t.fCounty
+            }
+        })
     }
 
     override fun onPause() {
         super.onPause()
-        LogUtils.e("onPause")
         if (mLocationClient != null) mLocationClient!!.stop()
 
     }
@@ -312,32 +319,26 @@ class ActivityGoToCamer : BaseActivity() {
 
         super.onDestroy()
         if (mLocationClient != null) mLocationClient!!.stop()
-
-
     }
 
+    private val permissions_ = mutableListOf(
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.CAMERA)
     private val permissions: MutableList<String> = ArrayList()
     fun check() {
         val pm: PackageManager = packageManager
-        val permission_camrer = pm.checkPermission(Manifest.permission.CAMERA, this.packageName)
-
-        val permission_storage = pm.checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, this.packageName)
-
-        val permission_location =pm.checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION, this.packageName)
-        if (permission_camrer != 0) {
-            permissions.add(Manifest.permission.CAMERA)
+        for (item in permissions_) {
+            val permission = pm.checkPermission(item, this.packageName)
+            if (permission != 0) {
+                permissions.add(item)
+            }
         }
-        if (permission_storage != 0) {
-            permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE)
-            permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        }
-        if (permission_location != 0) {
-            permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION)
-            permissions.add(Manifest.permission.ACCESS_FINE_LOCATION)
-        }
-        if (permissions.isNullOrEmpty()){
+        if (permissions.isNullOrEmpty()) {
             goToCamer()
-        }else{
+        } else {
             Acp.getInstance(this).request(AcpOptions.Builder()
                     .setPermissions(*permissions.toTypedArray())
                     .build(),
@@ -347,7 +348,7 @@ class ActivityGoToCamer : BaseActivity() {
                         }
 
                         override fun onDenied(permissions: List<String>) {
-                            showStr( "相机相册，内存读写，定位权限被拒绝")
+                            showStr("相机相册，内存读写，定位权限被拒绝")
                         }
                     })
         }

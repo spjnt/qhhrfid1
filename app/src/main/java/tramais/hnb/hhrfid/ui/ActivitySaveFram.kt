@@ -1016,7 +1016,7 @@ class ActivitySaveFram : BaseActivity(), ChoicePhoto {
         openAlbum()
     }
 
-    fun setImage(clickImg: Int, getimage: Bitmap) {
+    fun setImage(clickImg: Int, getimage: Bitmap?) {
         if (getimage == null) return
         when (clickImg) {
             1 -> {
@@ -1026,7 +1026,7 @@ class ActivitySaveFram : BaseActivity(), ChoicePhoto {
                     mIvTakeIdPhoto!!.setBackgroundResource(0)
                     mIvTakeIdPhoto!!.setImageBitmap(getimage)
                     idCard_path = ImageUtils.saveBitmap(mContext, getimage, FileUtil.getSDPath() + Constants.sdk_middle_path, Utils.getEdit(mEtName) + "/" + Utils.getEdit(mEtName) + "_" + "idCard" + ".jpg")
-                    pathImgId = ImageUtils.getStream(idCard_path)
+                    pathImgId = ImageUtils.getStream(idCard_path!!)
                 }
             }
             2 -> {
