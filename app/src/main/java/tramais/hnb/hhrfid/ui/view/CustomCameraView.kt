@@ -2,21 +2,18 @@ package tramais.hnb.hhrfid.ui.view
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.res.Configuration
 import android.graphics.Rect
 import android.hardware.Camera
 import android.os.Handler
 import android.util.AttributeSet
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.*
 import android.widget.FrameLayout
 import android.widget.Toast
 import com.apkfuns.logutils.LogUtils
 import tramais.hnb.hhrfid.R
-import tramais.hnb.hhrfid.constant.Constants
-import tramais.hnb.hhrfid.util.FileUtil
-import java.io.File
+import tramais.hnb.hhrfid.camera.CameraSize
+import tramais.hnb.hhrfid.camera.CameraSizeCalculator
 import java.io.IOException
 import java.util.*
 
@@ -41,6 +38,7 @@ class CustomCameraView : FrameLayout, SurfaceHolder.Callback, Camera.AutoFocusCa
     constructor(context: Context?) : super(context!!) {}
     constructor(context: Context?, attrs: AttributeSet?) : super(context!!, attrs) {
         Companion.context = context
+
         LayoutInflater.from(context).inflate(R.layout.preview_frame, this)
         frameLayout = findViewById<View>(R.id.frame_layout) as PreviewFrameLayout
         surface_camera = findViewById<View>(R.id.camera_preview) as SurfaceView
@@ -107,12 +105,14 @@ class CustomCameraView : FrameLayout, SurfaceHolder.Callback, Camera.AutoFocusCa
     }// attempt to get a Camera instance// get camerainfo
 
     // get cameras number
+    var orientation: Int = 0
     private val cameraInstance: Camera?
         private get() {
             var c: Camera? = null
             try {
                 var cameraCount = 0
                 val cameraInfo = Camera.CameraInfo()
+                orientation = cameraInfo.orientation
                 cameraCount = Camera.getNumberOfCameras() // get cameras number
                 for (camIdx in 0 until cameraCount) {
                     Camera.getCameraInfo(camIdx, cameraInfo) // get camerainfo
@@ -127,10 +127,10 @@ class CustomCameraView : FrameLayout, SurfaceHolder.Callback, Camera.AutoFocusCa
                     c = Camera.open(0) // attempt to get a Camera instance
                 }
             } catch (e: Exception) {
-                Toast.makeText(Companion.context, "摄像头打开失败！", Toast.LENGTH_SHORT)
+                Toast.makeText(context, "摄像头打开失败！", Toast.LENGTH_SHORT)
             }
             if (c == null) {
-                Toast.makeText(Companion.context, "摄像头打开失败！", Toast.LENGTH_SHORT)
+                Toast.makeText(context, "摄像头打开失败！", Toast.LENGTH_SHORT)
             }
             return c
         }
@@ -140,11 +140,6 @@ class CustomCameraView : FrameLayout, SurfaceHolder.Callback, Camera.AutoFocusCa
             val p = camera!!.parameters
 
             setCameraDisplayOrientation(context!!)
-           /* if (context!!.resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE) {
-                camera!!.setDisplayOrientation(90)
-                p.setRotation(90)
-            }
-            camera!!.parameters = p*/
         }
     }
 
@@ -152,31 +147,51 @@ class CustomCameraView : FrameLayout, SurfaceHolder.Callback, Camera.AutoFocusCa
     private fun setCameraDisplayOrientation(context: Context?) {
         val info = Camera.CameraInfo()
         Camera.getCameraInfo(0, info)
+
         val windowManager = context!!.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val rotation: Int = windowManager.defaultDisplay.rotation * 90
         var degrees = 0
+
         when (rotation) {
             Surface.ROTATION_0 -> degrees = 0
             Surface.ROTATION_90 -> degrees = 90
             Surface.ROTATION_180 -> degrees = 180
             Surface.ROTATION_270 -> degrees = 270
         }
-        var result: Int
-        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-            result = (info.orientation + degrees) % 360
-            result = (360 - result) % 360 // compensate the mirror
-        } else {  // back-facing
-            result = (info.orientation - degrees) % 360
-        }
-        //Log.e(TAG, "rotation =$result")
+
+
+        var result = (info.orientation - degrees + 360) % 360
+
         //旋转预览的角度
         camera!!.setDisplayOrientation(result)
+        LogUtils.e("result  $result")
         //-----------------------------
         //旋转生成的照片角度
         val param = camera!!.parameters
         param.setRotation(result)
+        val photoSizes = getPhotoSizes()
+//        val chooseVideoSize = chooseVideoSize(photoSizes)
+//        LogUtils.e("chooseVideoSize  ${chooseVideoSize!!.height}  ${chooseVideoSize!!.width}")
+        val cameraSizeCalculator = CameraSizeCalculator(photoSizes)
+        val target = cameraSizeCalculator.findClosestSizeContainingTarget(when (result % 180 == 0) {
+            true -> CameraSize(width, height)
+            false -> CameraSize(height, width)
+        })
+   //     LogUtils.e("target  ${target.width}  ${target.height}")
+//        for (item in photoSizes) {
+//            LogUtils.e("item  ${item!!.height}  ${item!!.width}")
+//        }
+        param.setPictureSize(target.width, target.height)
         camera!!.parameters = param
     }
+
+
+    fun getPhotoSizes(): Array<CameraSize> {
+        return camera?.parameters?.supportedPictureSizes?.map { CameraSize(it.width, it.height) }
+                ?.toTypedArray()!!
+
+    }
+
     /**
      * 找到最合适的显示分辨率 （防止预览图像变形）
      *
@@ -327,7 +342,7 @@ class CustomCameraView : FrameLayout, SurfaceHolder.Callback, Camera.AutoFocusCa
 
     fun openCloseFlash(isOpen: Boolean) {
         try {
-          //  val m_Camera = Camera.open()
+            //  val m_Camera = Camera.open()
 
             val mParameters: Camera.Parameters = camera!!.parameters
             if (isOpen) {

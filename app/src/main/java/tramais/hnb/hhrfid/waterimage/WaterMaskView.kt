@@ -56,17 +56,17 @@ class WaterMaskView @JvmOverloads constructor(context: Context, attrs: Attribute
 
     }
 
-    var location_: String = ""
+    var location_: String? = null
 
-    fun setLocation(location: String) {
+    fun setLocation(location: String?) {
         // LogUtils.e("add  $location")
         this.location_ = location
         if (location_.isNullOrEmpty()) {
             tvLocation.text = "无法定位"
         } else {
             var one_length = 14
-            var length = location.length
-            if (location.length >= 14) {
+            var length = location?.length
+            if (length!! >= 14) {
                 val first = location!!.substring(0, one_length)
                 val end = location!!.substring(one_length, length)
                 tvLocation.text = ":$first\n$end"

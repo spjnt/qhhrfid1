@@ -63,7 +63,6 @@ class ActivityGoToCamer : BaseActivity() {
         if (!insure.isNullOrEmpty()) {
             insurance_type.text = insure
             insure_type = insure
-
             if (insure == "养殖险") {
                 et_ear_tag.isEnabled = true
                 et_ear_tag.setText("")
@@ -273,7 +272,7 @@ class ActivityGoToCamer : BaseActivity() {
         fenPei.EarTag = tag
         fenPei.lat = latitude
         fenPei.log = longitude
-        val intent = Intent(this, CameraOnlyActivity2::class.java)
+        val intent = Intent(this, CameraOnlyActivity::class.java)
         intent.putExtra("fenpei", fenPei)
         intent.putExtra("photo_num", 0)
         startActivity(intent)
@@ -293,7 +292,7 @@ class ActivityGoToCamer : BaseActivity() {
                 }
             })
         } else {
-            getReasonCache()
+            getRegionCache()
         }
 
 

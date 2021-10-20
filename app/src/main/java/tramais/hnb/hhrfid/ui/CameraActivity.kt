@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -17,7 +18,8 @@ import com.alibaba.fastjson.JSONArray
 import com.apkfuns.logutils.LogUtils
 import com.baidu.location.LocationClient
 import com.bumptech.glide.Glide
-import com.camerakit.CameraKitView
+import com.forjrking.lubankt.Luban
+import kotlinx.android.synthetic.main.activity_camera.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -34,16 +36,20 @@ import tramais.hnb.hhrfid.litePalBean.AnimalSaveCache
 import tramais.hnb.hhrfid.litePalBean.EarTagCache
 import tramais.hnb.hhrfid.net.RequestUtil.Companion.getInstance
 import tramais.hnb.hhrfid.ui.dialog.DialogImg
+import tramais.hnb.hhrfid.ui.view.CustomCameraView
 import tramais.hnb.hhrfid.util.*
 import tramais.hnb.hhrfid.util.GsonUtil.Companion.instant
+import tramais.hnb.hhrfid.waterimage.WaterMaskUtil
+import tramais.hnb.hhrfid.waterimage.WaterMaskView
 import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.math.max
 
 class CameraActivity : BaseActivity() {
     var mLocationClient: LocationClient? = null
 
-    //    private var cameraView: CustomCameraView? = null
+    private var cameraView: CustomCameraView? = null
     private var imv_label: TextView? = null
     private var imv_pic: ImageView? = null
     private var mFilePath: String? = null
@@ -58,7 +64,6 @@ class CameraActivity : BaseActivity() {
     private var id_nums: String? = null
     private var farm_name: String? = null
     private var mBtnAnimalChoice: TextView? = null
-    private var cameraKitView: CameraKitView? = null
 
     //private ImageView mIvArrow;
     private val context: Context = this@CameraActivity
@@ -134,9 +139,10 @@ class CameraActivity : BaseActivity() {
     private var farmer_address_int: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_camera_new)
+        setContentView(R.layout.activity_camera)
     }
 
+    private var waterMaskView: WaterMaskView? = null
     private var cropTypeLists: List<CropTypeList>? = null
     override fun onResume() {
         super.onResume()
@@ -178,7 +184,7 @@ class CameraActivity : BaseActivity() {
             if (!TextUtils.isEmpty(lableNum) && !cache_nums!!.contains(lableNum)) cache_nums!!.add(lableNum)
 
         }
-        cameraKitView!!.onResume()
+
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -247,15 +253,15 @@ class CameraActivity : BaseActivity() {
     override fun onPause() {
         super.onPause()
         if (mLocationClient != null) mLocationClient!!.stop()
-       // bitmaps?.clear()
+        // bitmaps?.clear()
         if (intent != null) intent = null
         onPauseaMedia()
-        cameraKitView!!.onPause()
+
     }
 
     override fun onStart() {
         super.onStart()
-        cameraKitView!!.onStart()
+
         LogUtils.e("onStart")
     }
 
@@ -264,12 +270,19 @@ class CameraActivity : BaseActivity() {
         super.onDestroy()
         if (mLocationClient != null) mLocationClient!!.stop()
         bitmaps?.clear()
-        cameraKitView!!.onStop()
+
     }
 
     override fun initView() {
         hideAllTitle()
-        cameraKitView = findViewById(R.id.cc_camera)
+
+        waterMaskView = WaterMaskView(this)
+        val params: RelativeLayout.LayoutParams = RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.MATCH_PARENT
+        )
+        waterMaskView!!.layoutParams = params
+        cameraView = findViewById(R.id.cc_camera)
 //        content = findViewById(R.id.content)
         btn_showcamera = findViewById(R.id.btn_showcamera)
 //        cameraView = findViewById(R.id.cc_camera)
@@ -442,85 +455,148 @@ class CameraActivity : BaseActivity() {
     /**
      * 调用拍照功能
      */
+    var crators: MutableList<String> = java.util.ArrayList()
+    var waterInfos: MutableList<String> = java.util.ArrayList()
     var path: String = ""
     private fun takePhoto() {
+        crators.clear()
+        waterInfos.clear()
+
+        val userName = PreferUtils.getString(this, Constants.UserName)
+        var name = if (userName.isNullOrBlank()) {
+            "未知"
+        } else {
+            userName
+        }
+        for (item in 1..10) {
+            crators.add(name)
+        }
+
+        var era_tag: String? = ""
+        era_tag = if (ifC72()) {
+            Utils.getText(imv_tips)
+        } else {
+            Utils.getEdit(et_rfid)
+        }
+        waterInfos.add("耳标号:$era_tag")
+        waterInfos.add("被保险人:$farm_name")
+        waterInfos.add("时间:" + TimeUtil.getTime(Constants.yyyy_MM_ddHHmmss))
+        waterInfos.add("经度:$longitude 纬度:$latitude")
 
         playSound(R.raw.camera_click)
-        cameraKitView!!.captureImage(object : CameraKitView.ImageCallback {
-            override fun onImage(view: CameraKitView?, photo: ByteArray?) {
-                era_tag = if (ifC72()) {
-                    Utils.getText(imv_tips)
-                } else {
-                    Utils.getEdit(et_rfid)
+        cameraView!!.takePicture()
+        cameraView!!.setOnTakePictureInfo(object : CustomCameraView.OnTakePictureInfo {
+            override fun onTakePictureInofo(_success: Boolean, _file: ByteArray?) {
+                if (!_success) {
+                    return
                 }
+                var cdpath = FileUtil.getSDPath() + Constants.sdk_middle_animal + id_nums + "/"
+                _file?.let {
+                    var photo_name = era_tag + "_" + bitmaps!!.size + ".jpg"
+                    // cdpath = "$sdk_path${TimeUtil.getTime(Constants.yyyy__MM__dd)}/"
 
-                val decodeByteArray = BitmapFactory.decodeByteArray(photo, 0, photo!!.size);
-                val getimage = ImageUtils.getimageOnly(decodeByteArray)
-                lifecycleScope.launch(Dispatchers.IO) {
-                    var task = WateImagsTask()
-
-                    var textList: MutableList<String> = ArrayList()
-                    textList.clear()
-                    //  textList.add("操作员:" + PreferUtils.getString(context, Constants.UserName))
-                    textList.add("耳标号:$era_tag")
-                    textList.add("被保险人:$farm_name")
-                    textList.add("时间:" + TimeUtil.getTime(Constants.yyyy_MM_ddHHmmss))
-                    textList.add("经度:$longitude 纬度:$latitude")
-                    textList.add("📍" + farmer_address.toString())
-                    val length = if (farmer_address.isNullOrEmpty()) {
-                        0
-                    } else {
-                        farmer_address!!.length
-                    }
-                    var one_length = 14
-                    if (length >= one_length) {
-                        var first = farmer_address!!.substring(0, one_length)
-                        var end = farmer_address!!.substring(one_length, length)
-                        textList.add("📍:$first")
-                        textList.add(end)
-
-                        //  LogUtils.e("location_add  $location_add   $first  $end")
-                    } else {
-                        textList.add("📍:$farmer_address")
-                    }
-
-                    bitmap = task.addWater(context, textList, getimage!!)
-                    path = ImageUtils.saveBitmap(this@CameraActivity, bitmap, FileUtil.getSDPath() + Constants.sdk_middle_animal + id_nums + "/", era_tag + "_" + bitmaps!!.size + ".jpg")
-
-                    withContext(Dispatchers.Main) {
-                        imv_pic!!.visibility = View.VISIBLE
-                        Glide.with(this@CameraActivity).load(path).into(imv_pic!!)
-                        if (!bitmaps.contains(path)) bitmaps.add(path!!)
-                        imv_label!!.text = "当前第 " + bitmaps!!.size + "/" + image_total + " 张"
-                        if (bitmaps!!.size >= 2) mTvFeiQi!!.text = "重拍"
-                        //  updatePhotos(_file)
-                        if (bitmaps.size == 1) mSacnEarTag!!.text = "按扫描键拍摄照片"
-                        if (bitmaps.size == image_total) {
-                            gotoSaveAnimal()
-                            mSacnEarTag!!.text = "按扫描键扫描电子耳标"
-                        }
-                        isSuccess_ = true
-
-                    }
-
+                    val decodeByteArray = decodeBitmap(it, 0, it.size)
+                    if (decodeByteArray != null)
+                        LuBan(decodeByteArray, cdpath, photo_name, crators, waterInfos)
                 }
             }
 
         })
 
+
     }
 
-    /**
-     * 发送广播，图库更新照片
-     *
-     * @param file 新增的图片
-     */
-    private fun updatePhotos(file: File?) {
-        val intent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
-        val uri = Uri.fromFile(file)
-        intent.data = uri
-        sendBroadcast(intent)
+    fun LuBan(bitMap: Bitmap, path_: String, photo_name: String, crators: MutableList<String>, waterInfos: MutableList<String>) {
+        try {
+            Luban.with(this)               //(可选)Lifecycle,可以不填写内部使用ProcessLifecycleOwner
+                    .load(bitMap)                       //支持 File,Uri,InputStream,String,Bitmap 和以上数据数组和集合
+                    //.setOutPutDir(path_)              //(可选)输出目录文件夹
+                    .concurrent(true)                //(可选)多文件压缩时是否并行,内部优化线程并行数量防止OOM
+                    .useDownSample(true)             //(可选)压缩算法 true采用邻近采样,否则使用双线性采样(纯文字图片效果绝佳)
+                    .format(Bitmap.CompressFormat.JPEG)//(可选)压缩后输出文件格式 支持 JPG,PNG,WEBP
+                    .ignoreBy(1024)                   //(可选)期望大小,大小和图片呈现质量不能均衡所以压缩后不一定小于此值,
+                    .quality(90)                     //(可选)质量压缩系数  0-100
+                    // .rename { name_ }             //(可选)文件重命名
+                    .filter { it != null }             //(可选)过滤器
+                    .compressObserver {
+                        onSuccess = {
+                            if (it != null) {
+                                val Bitmapbm = BitmapFactory.decodeFile(it.absolutePath)
+                                if (Bitmapbm != null && waterMaskView != null) {
+                                    waterMaskView!!.setBackData(crators, Bitmapbm.height.toFloat(), Bitmapbm.width.toFloat())
+                                    waterMaskView!!.setLeftData(waterInfos, Bitmapbm.height.toFloat())
+                                    waterMaskView!!.setLocation(farmer_address)
+
+                                    path = saveWaterMask(waterMaskView, Bitmapbm, path_, photo_name)
+                                    if (it.exists())
+                                        it.delete()
+                                    lifecycleScope.launch {
+                                        withContext(Dispatchers.Main) {
+                                            bitmaps!!.add(path)
+                                            scan_total.bringToFront()
+                                            scan_total.text = "当前第 ${bitmaps.size} 张"
+                                            imv_pic!!.visibility = View.VISIBLE
+                                            Glide.with(context).load(path).into(imv_pic!!)
+
+                                            if (bitmaps!!.size >= 2) mTvFeiQi!!.text = "重拍"
+                                            //  updatePhotos(_file)
+                                            if (bitmaps.size == 1) mSacnEarTag!!.text = "按扫描键拍摄照片"
+                                            if (bitmaps.size == image_total) {
+                                                gotoSaveAnimal()
+                                                mSacnEarTag!!.text = "按扫描键扫描电子耳标"
+                                            }
+                                            isSuccess_ = true
+                                        }
+                                    }
+
+                                }
+                            }
+
+                        }
+                        onStart = {
+
+                        }
+                        onCompletion = { }
+                        onError = { e, _ -> }
+                    }.launch()
+
+        } catch (e: Exception) {
+            LogUtils.e("Exception  ${e.message}  ")
+        }
+
     }
+
+    private fun saveWaterMask(waterMaskView: WaterMaskView?, sourBitmap: Bitmap, path_: String, name_: String): String {
+        try {
+            var waterBitmap = WaterMaskUtil.loadBitmapFromView(waterMaskView)
+            var watermarkBitmap = WaterMaskUtil.createWaterMaskLeftBottom(this, sourBitmap, waterBitmap, 0, 0)
+            return ImageUtils.saveBitmap(this, watermarkBitmap, path_, name_)
+        } catch (e: Exception) {
+        }
+        return ""
+
+    }
+
+    private val bitmapOptions = BitmapFactory.Options().apply {
+        inJustDecodeBounds = false
+        if (max(outHeight, outWidth) > 1024) {
+            val scaleFactorX = outWidth / 1024 + 1
+            val scaleFactorY = outHeight / 1024 + 1
+            inSampleSize = max(scaleFactorX, scaleFactorY)
+        }
+    }
+
+    private fun decodeBitmap(buffer: ByteArray, start: Int, length: Int): Bitmap {
+        val bitmap = BitmapFactory.decodeByteArray(buffer, start, length, bitmapOptions)
+        var matrix = Matrix()
+        if (bitmap.width > bitmap.height) {
+            matrix.postRotate(90f)
+        }
+        return Bitmap.createBitmap(
+                bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+    }
+
+
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
         if (keyCode == 139 || keyCode == 280 || keyCode == 293) {

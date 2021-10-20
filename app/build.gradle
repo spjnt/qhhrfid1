@@ -130,7 +130,7 @@ dependencies {
     //手势缩放控件
     // implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     //水印数字
-    implementation 'com.huangyz0918:androidwm-light:0.1.2'
+  //  implementation 'com.huangyz0918:androidwm-light:0.1.2'
 //    implementation 'com.huangyz0918:androidwm:0.2.3'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0-alpha01'
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1"
@@ -151,7 +151,7 @@ dependencies {
     //照片选择已包含 luBan
     //implementation 'top.zibin:Luban:1.1.8'
     implementation 'com.github.forJrking:KLuban:1.1.0'
-    implementation project(':camerakit')
+   // implementation project(':camerakit')
 
 //    implementation 'com.camerakit:camerakit:1.0.0-beta3.11'
 //    implementation 'com.camerakit:jpegkit:0.2.2'

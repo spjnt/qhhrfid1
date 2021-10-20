@@ -138,7 +138,7 @@
             android:layout_marginLeft="@dimen/size_10"
             android:gravity="center_vertical"
 
-            android:hint="请输入耳标号"
+            android:hint="请选择机构地址"
             android:textColor="@color/black"
             android:textSize="@dimen/text_size_12sp" />
 

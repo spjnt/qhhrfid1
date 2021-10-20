@@ -26,7 +26,6 @@ import com.forjrking.lubankt.Luban
 import com.hailong.biometricprompt.fingerprint.FingerprintCallback
 import com.hailong.biometricprompt.fingerprint.FingerprintVerifyManager
 import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.android.synthetic.main.fragment_camera.*
 import org.litepal.LitePal.findAllAsync
 import tramais.hnb.hhrfid.R
 import tramais.hnb.hhrfid.base.BaseActivity

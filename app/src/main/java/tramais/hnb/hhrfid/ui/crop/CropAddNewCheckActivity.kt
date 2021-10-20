@@ -330,7 +330,7 @@ class CropAddNewCheckActivity : BaseActivity(), ChoicePhoto {
         val intent = Intent(this, CameraOnlyActivity::class.java)
         var fenPei = FenPei()
         fenPei.farmerName = farmer_name
-
+        fenPei.fRemark = "add_new"
         intent.putExtra("fenpei", fenPei)
         intent.putExtra("photo_num", pic.size)
         startActivityForResult(intent, 124)

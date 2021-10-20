@@ -241,35 +241,20 @@ class HomeFragment : BaseFragment() {
         RequestUtil.getInstance(context)!!.getBillCount(object : GetBillCount {
             override fun getBillCount(bean: BillCount?) {
                 activity!!.runOnUiThread {
-                    showAnimal(tv_yangzhi_first, bean?.insurebillCou ?: "0")
-                    showAnimal(tv_yangzhi_second, bean?.lipeibaoanCou ?: "0")
-                    showAnimal(tv_yangzhi_third, bean?.lipeichakanCou ?: "0")
-                    showAnimal(tv_yangzhi_fourth, bean?.animalsendbill_cou ?: "0")
-                    showAnimal(tv_zhongzhi_first, bean?.landbillCou ?: "0")
-                    showAnimal(tv_zhongzhi_second, bean?.landbaoanCou ?: "0")
-                    showAnimal(tv_zhongzhi_third, bean?.landchakanCou ?: "0")
-                    showAnimal(tv_zhongzhi_fourth, bean?.landsendbill_cou ?: "0")
+                    if (bean!=null){
+                        showAnimal(tv_yangzhi_first, bean?.insurebillCou ?: "0")
+                        showAnimal(tv_yangzhi_second, bean?.lipeibaoanCou ?: "0")
+                        showAnimal(tv_yangzhi_third, bean?.lipeichakanCou ?: "0")
+                        showAnimal(tv_yangzhi_fourth, bean?.animalsendbill_cou ?: "0")
+                        showAnimal(tv_zhongzhi_first, bean?.landbillCou ?: "0")
+                        showAnimal(tv_zhongzhi_second, bean?.landbaoanCou ?: "0")
+                        showAnimal(tv_zhongzhi_third, bean?.landchakanCou ?: "0")
+                        showAnimal(tv_zhongzhi_fourth, bean?.landsendbill_cou ?: "0")
+                    }
                 }
             }
         })
     }
-
-//    private var mAdapter: QuickAdapter? = null
-
-    /* class QuickAdapter : BaseQuickAdapter<NewsList?, BaseViewHolder>(R.layout.item_home_news_with_img) {
-         override fun convert(holder: BaseViewHolder, item: NewsList?) {
-             item?.let { new_ ->
-                 val news_iv = holder.getView<ImageView>(R.id.news_iv)
-                 val news_title = holder.getView<TextView>(R.id.news_title)
-                 val news_time = holder.getView<TextView>(R.id.news_time)
-                 Glide.with(context)
-                         .load(item!!.pictureurl)
-                         .into(news_iv)
-                 news_title.text = item.title
-                 news_time.text = item.updatetime
-             }
-         }
-     }*/
 
     fun getBannerData(newsLists: List<NewsList>?) {
         if (list_pic != null) list_pic!!.clear()

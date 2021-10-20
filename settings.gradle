@@ -3,4 +3,4 @@ rootProject.name='qhhrfid'
 include ':biometricprompt'
 
 //include ':nativelib'
-include ':camerakit'
+//include ':camerakit'

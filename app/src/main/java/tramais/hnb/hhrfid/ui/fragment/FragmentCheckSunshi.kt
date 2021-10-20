@@ -675,6 +675,7 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
         var intent = Intent(context, CameraOnlyActivity::class.java)
         var fenPei_ = FenPei()
         fenPei_.farmerName = fenPei!!.farmerName + "(" + "序号:${click_position + 1}" + ")"
+        fenPei_.fRemark = "sunshi"
         intent.putExtra("fenpei", fenPei_)
         intent.putExtra("photo_num", current_pics.size)
         startActivityForResult(intent, 124)

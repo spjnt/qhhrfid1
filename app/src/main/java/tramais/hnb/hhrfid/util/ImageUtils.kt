@@ -309,7 +309,7 @@ object ImageUtils {
         try {
             val exifInterface = ExifInterface(path!!)
             val orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
-            LogUtils.e("原图被旋转角度： ========== $orientation")
+
             if (orientation == ExifInterface.ORIENTATION_ROTATE_90) {
                 degree = 90
             } else if (orientation == ExifInterface.ORIENTATION_ROTATE_180) {
