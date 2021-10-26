@@ -60,7 +60,7 @@ class ExpandedAdapter(context: Context?) : ExpandableAdapter<ExpandableAdapter.V
                 var tagInfo = if (data.fEarNumber.isNullOrBlank())
                     position + 1
                 else (position + 1).toString() + " -- " + data.fEarNumber
-                mTvEarTag.text = "序号: $tagInfo"
+                mTvEarTag.text = "标的: $tagInfo"
                 mIvStatus.isSelected = data.isExpanded
                 mTvComTotal.text = "保险金额:  ${data.fLossAmount ?: "0.0"}"
                 mTvComRate.text = "保险比例:  ${data.fRiskPre ?: "0.0"} " + "%"

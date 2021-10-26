@@ -1,14 +1,17 @@
 package tramais.hnb.hhrfid.waterimage
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.apkfuns.logutils.LogUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import tramais.hnb.hhrfid.R
@@ -24,7 +27,9 @@ class WaterMaskView @JvmOverloads constructor(context: Context, attrs: Attribute
     private val recyleView: RecyclerView
     private var rlLeft: RecyclerView
     private var tvLocation: TextView
+    private var ivLocation: ImageView
     private var llBottom: LinearLayout
+    private var ivPicc: ImageView
 
     /*
     * 操作员
@@ -35,6 +40,9 @@ class WaterMaskView @JvmOverloads constructor(context: Context, attrs: Attribute
     /**
      * 背景水印
      */
+    private var max_width: Float = 1080f
+    private var middle_width: Float = 860f
+    private var min_width: Float = 640f
     private var height_: Float = 0f
     private var width_: Float = 0f
     fun setBackData(crrators: MutableList<String>, height: Float, width: Float) {
@@ -43,45 +51,86 @@ class WaterMaskView @JvmOverloads constructor(context: Context, attrs: Attribute
         this.width_ = width
         setBackAdapter(height, width_)
         mAdapter!!.addData(crrators)
-        mAdapter!!.notifyDataSetChanged()
+        // mAdapter!!.notifyDataSetChanged()
+        //  LogUtils.e("width  $width")
+
+        if (width >= max_width) { //>=1080
+            tvLocation.textSize = 16.0f
+            setPiccLoggo(400)
+            setLocation(50)
+        } else if (width < max_width && width >= middle_width) {//  >=860 <1080
+            setPiccLoggo(300)
+            setLocation(40)
+            tvLocation.textSize = 12.0f
+        } else if (width < middle_width && width >= min_width) { // >=640 <860
+            setPiccLoggo(200)
+            setLocation(30)
+            tvLocation.textSize = 8.0f
+        } else {  //<640
+            setPiccLoggo(100)
+            setLocation(20)
+            tvLocation.textSize = 6.0f
+        }
 
     }
 
+    private fun setPiccLoggo(width: Int) {
+        val picc_layoutParams = ivPicc.layoutParams
+        picc_layoutParams.width = width
+        picc_layoutParams.height = width / 4
+        ivPicc.layoutParams = picc_layoutParams
+    }
+
+    private fun setLocation(width: Int) {
+        val layoutParams = ivLocation.layoutParams
+        layoutParams.width = width
+        layoutParams.height = width
+        ivLocation.layoutParams = layoutParams
+    }
+
+
     private var infos: MutableList<String> = ArrayList()
-    fun setLeftData(infos: MutableList<String>, height: Float) {
+    fun setLeftData(infos: MutableList<String>, width: Float) {
         this.infos = infos
-        setLeftAdapter(height, infos)
+        setLeftAdapter(width)
         mLeftAdapter!!.addData(infos)
-        mLeftAdapter!!.notifyDataSetChanged()
+        //   mLeftAdapter!!.notifyDataSetChanged()
 
     }
 
     var location_: String? = null
 
+    @SuppressLint("SetTextI18n")
     fun setLocation(location: String?) {
-        // LogUtils.e("add  $location")
         this.location_ = location
         if (location_.isNullOrEmpty()) {
             tvLocation.text = "无法定位"
         } else {
-            var one_length = 14
-            var length = location?.length
-            if (length!! >= 14) {
-                val first = location!!.substring(0, one_length)
-                val end = location!!.substring(one_length, length)
-                tvLocation.text = ":$first\n$end"
+            val rep_len = 15
+            val loc_buff = StringBuffer(location_!!)
+            val len = location_!!.length
+            var insert: StringBuffer? = null
+            if (len > rep_len) {
+                for (item in 1..(len / rep_len)) {
+                    insert = loc_buff.insert(rep_len * item, "\n")
+                }
             } else {
-                tvLocation.text = ":$location_"
+                insert = StringBuffer()
+                insert.append(location_)
             }
+            tvLocation.text = ":${insert.toString()}"
         }
+
     }
 
     init {
         LayoutInflater.from(context).inflate(R.layout.watermask, this, true)
+        ivPicc = findViewById(R.id.iv_picc)
         tvLocation = findViewById(R.id.tv_location)
         rlLeft = findViewById(R.id.rl_left)
         recyleView = findViewById(R.id.recyle_view)
         llBottom = findViewById(R.id.ll_bottom)
+        ivLocation = findViewById(R.id.iv_location)
         recyleView!!.layoutManager = GridLayoutManager(context, 2)
         rlLeft.layoutManager = LinearLayoutManager(context)
     }
@@ -96,6 +145,16 @@ class WaterMaskView @JvmOverloads constructor(context: Context, attrs: Attribute
                         val layoutParams = view.layoutParams
                         layoutParams.height = (height / 5).toInt()
                         layoutParams.width = (width / 2).toInt()
+                        //  LogUtils.e("width  $width")
+                        if (width >= max_width) { //>1080
+                            view.textSize = 12.0f
+                        } else if (width < max_width && width >= middle_width) {//  >860 <1080
+                            view.textSize = 10.0f
+                        } else if (width < middle_width && width >= min_width) { // >640 <860
+                            view.textSize = 8.0f
+                        } else {  //<640
+                            view.textSize = 4.0f
+                        }
                         view.layoutParams = layoutParams
                         view.text = "操作员：$item"
                     }
@@ -104,17 +163,19 @@ class WaterMaskView @JvmOverloads constructor(context: Context, attrs: Attribute
 
 
     var mLeftAdapter: BaseQuickAdapter<String?, BaseViewHolder>? = null
-    fun setLeftAdapter(height: Float, infos: MutableList<String>) {
-        rlLeft.adapter =
-                object : BaseQuickAdapter<String?, BaseViewHolder>(R.layout.item_text_small) {
+    fun setLeftAdapter(width: Float) {
+        rlLeft.adapter =object : BaseQuickAdapter<String?, BaseViewHolder>(R.layout.item_text_small) {
                     override fun convert(holder: BaseViewHolder, item: String?) {
                         val view = holder.getView<TextView>(R.id.tv)
-
-//                        val layoutParams = view.layoutParams
-//                        layoutParams.height = (height / (3 * infos.size)).toInt()
-//
-//                        view.layoutParams = layoutParams
-//                        view.textSize = 3f
+                        if (width >= max_width) { //>1080
+                            view.textSize = 16.0f
+                        } else if (width <= max_width && width > middle_width) {//  >860 <1080
+                            view.textSize = 12.0f
+                        } else if (width <= middle_width && width > min_width) { // >640 <860
+                            view.textSize = 8.0f
+                        } else {
+                            view.textSize = 6.0f
+                        }
                         view.text = item
                     }
                 }.also { mLeftAdapter = it }

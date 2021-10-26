@@ -147,29 +147,27 @@ class CustomCameraView : FrameLayout, SurfaceHolder.Callback, Camera.AutoFocusCa
     private fun setCameraDisplayOrientation(context: Context?) {
         val info = Camera.CameraInfo()
         Camera.getCameraInfo(0, info)
-
         val windowManager = context!!.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val rotation: Int = windowManager.defaultDisplay.rotation * 90
         var degrees = 0
-
         when (rotation) {
             Surface.ROTATION_0 -> degrees = 0
             Surface.ROTATION_90 -> degrees = 90
             Surface.ROTATION_180 -> degrees = 180
             Surface.ROTATION_270 -> degrees = 270
         }
-
-
-        var result = (info.orientation - degrees + 360) % 360
-
+        val result = (info.orientation - degrees + 360) % 360
         //旋转预览的角度
         camera!!.setDisplayOrientation(result)
-        LogUtils.e("result  $result")
+        //    LogUtils.e("result  $result")
         //-----------------------------
         //旋转生成的照片角度
         val param = camera!!.parameters
         param.setRotation(result)
         val photoSizes = getPhotoSizes()
+//        for (item in photoSizes){
+//            LogUtils.e("${item!!.width}   ${item!!.height}")
+//        }
 //        val chooseVideoSize = chooseVideoSize(photoSizes)
 //        LogUtils.e("chooseVideoSize  ${chooseVideoSize!!.height}  ${chooseVideoSize!!.width}")
         val cameraSizeCalculator = CameraSizeCalculator(photoSizes)
@@ -177,10 +175,6 @@ class CustomCameraView : FrameLayout, SurfaceHolder.Callback, Camera.AutoFocusCa
             true -> CameraSize(width, height)
             false -> CameraSize(height, width)
         })
-   //     LogUtils.e("target  ${target.width}  ${target.height}")
-//        for (item in photoSizes) {
-//            LogUtils.e("item  ${item!!.height}  ${item!!.width}")
-//        }
         param.setPictureSize(target.width, target.height)
         camera!!.parameters = param
     }

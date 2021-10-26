@@ -674,7 +674,7 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
     override fun actionCamera() {
         var intent = Intent(context, CameraOnlyActivity::class.java)
         var fenPei_ = FenPei()
-        fenPei_.farmerName = fenPei!!.farmerName + "(" + "序号:${click_position + 1}" + ")"
+        fenPei_.farmerName = fenPei!!.farmerName + "(" + "标的:${click_position + 1}" + ")"
         fenPei_.fRemark = "sunshi"
         intent.putExtra("fenpei", fenPei_)
         intent.putExtra("photo_num", current_pics.size)
@@ -687,6 +687,7 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
         if (requestCode == 124 && resultCode == Activity.RESULT_OK) {
 
             val stringArrayListExtra = data!!.getStringArrayListExtra("imgs")
+            LogUtils.e("stringArrayListExtra  $stringArrayListExtra")
             if (stringArrayListExtra != null) {
                 current_pics!!.addAll(stringArrayListExtra)
             }

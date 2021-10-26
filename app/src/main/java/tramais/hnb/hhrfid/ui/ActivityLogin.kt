@@ -3,8 +3,6 @@ package tramais.hnb.hhrfid.ui
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.*
 import android.text.TextUtils
 import android.text.method.HideReturnsTransformationMethod
@@ -22,7 +20,6 @@ import com.apkfuns.logutils.LogUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
-import com.forjrking.lubankt.Luban
 import com.hailong.biometricprompt.fingerprint.FingerprintCallback
 import com.hailong.biometricprompt.fingerprint.FingerprintVerifyManager
 import kotlinx.android.synthetic.main.activity_login.*
@@ -44,7 +41,6 @@ import tramais.hnb.hhrfid.util.*
 import tramais.hnb.hhrfid.util.GsonUtil.Companion.instant
 import java.io.File
 import java.util.*
-import kotlin.system.measureTimeMillis
 
 
 class ActivityLogin : BaseActivity() {
@@ -427,8 +423,6 @@ class ActivityLogin : BaseActivity() {
             }
         }
     }
-
-
 
 
 }

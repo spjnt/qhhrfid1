@@ -264,9 +264,6 @@ class HomeFragment : BaseFragment() {
                 list_pic!!.add(pictureurl)
             }
         }
-
-        // 设置数据
-        // 设置数据
         banner!!.setIndicatorRes(R.drawable.dot_unselect, R.drawable.dot_select)
         banner!!.setPages(list_pic as List<String?>?) { BannerViewHolder() }
         banner!!.start()

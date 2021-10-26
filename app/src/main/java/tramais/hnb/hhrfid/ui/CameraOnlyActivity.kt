@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
 import android.widget.*
-import androidx.exifinterface.media.ExifInterface
 import androidx.lifecycle.lifecycleScope
 import com.apkfuns.logutils.LogUtils
 import com.baidu.location.LocationClient
@@ -154,6 +153,7 @@ class CameraOnlyActivity : BaseActivity() {
             latitude = fenpei_.lat
             longitude = fenpei_.log
         }
+        LogUtils.e("remark  $remark")
         if (remark != "only_photo") {
             if (NetUtil.checkNet(this)) {
                 mLocationClient = LocationClient(applicationContext)
@@ -174,7 +174,13 @@ class CameraOnlyActivity : BaseActivity() {
 
     override fun initListner() {
         btn_showcamera!!.setOnClickListener { view: View? -> takePhoto() }
-        mImvGallery!!.setOnClickListener { v: View? -> goBack() }
+        mImvGallery!!.setOnClickListener { v: View? ->
+            if (remark == "only_photo") {
+                finish()
+            } else {
+                goBack()
+            }
+        }
         if (imv_pic != null) {
             imv_pic!!.setOnClickListener { v: View? ->
                 if (path.isNullOrEmpty()) return@setOnClickListener
@@ -277,7 +283,6 @@ class CameraOnlyActivity : BaseActivity() {
     }
 
 
-
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
         if (keyCode == 139 || keyCode == 280 || keyCode == 293) {
             takePhoto()
@@ -309,7 +314,7 @@ class CameraOnlyActivity : BaseActivity() {
                                 val Bitmapbm = BitmapFactory.decodeFile(it.absolutePath)
                                 if (Bitmapbm != null) {
                                     waterMaskView!!.setBackData(crators, Bitmapbm.height.toFloat(), Bitmapbm.width.toFloat())
-                                    waterMaskView!!.setLeftData(waterInfos, Bitmapbm.height.toFloat())
+                                    waterMaskView!!.setLeftData(waterInfos, Bitmapbm.width.toFloat())
                                     waterMaskView!!.setLocation(location_add)
 
                                     path = saveWaterMask(waterMaskView, Bitmapbm, path_, photo_name)

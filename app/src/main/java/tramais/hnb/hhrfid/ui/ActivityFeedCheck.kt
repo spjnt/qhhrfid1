@@ -86,10 +86,10 @@ class ActivityFeedCheck : BaseActivity() {
         }
       //  titleList.add("报案信息")
       //  titleList.add("承保信息")
-        titleList.add("查勘信息")
+        titleList.add("1-查勘信息")
         //  titleList.add("耳标查询")
-        titleList.add("银行卡及签名")
-        titleList.add("损失定损")
+        titleList.add("2-银行卡及签名")
+        titleList.add("3-损失确定")
 
         val commonNavigator = CommonNavigator(context)
         val adapter = NavigatorAdapter(titleList, this, mViewPage)

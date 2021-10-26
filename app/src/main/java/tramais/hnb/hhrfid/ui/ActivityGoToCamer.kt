@@ -89,7 +89,7 @@ class ActivityGoToCamer : BaseActivity() {
             //声明LocationClient类
             mLocationClient!!.registerLocationListener(DetailLocationListener { lat: Double, log: Double, add: String? ->
                 // LogUtils.e("add  $add $lat  $log")
-                if (add.isNullOrEmpty() || add.isNullOrBlank()) {
+                if (add.isNullOrEmpty() || add.isNullOrBlank() || add.contains("null")) {
                     location_add = "无法定位"
                     latitude = 0.0
                     longitude = 0.0
@@ -237,10 +237,10 @@ class ActivityGoToCamer : BaseActivity() {
         }
 
         val tag = et_ear_tag.text.toString()
-        if (insure_type == "养殖险" && tag.isEmpty()) {
-            showStr("请输入耳标号")
-            return
-        }
+        /* if (insure_type == "养殖险" && tag.isEmpty()) {
+             showStr("请输入耳标号")
+             return
+         }*/
         if (chuxian_time.isEmpty()) {
             showStr("请选择出险时间")
             return
@@ -269,7 +269,12 @@ class ActivityGoToCamer : BaseActivity() {
         fenPei.riskQty = biaodi_
         fenPei.fCoinsFlag = insure_type
         fenPei.riskAddress = tv_address.text.toString() + detail
-        fenPei.EarTag = tag
+        var tag_ = if (tag.isNullOrBlank()) {
+            "未知耳标号"
+        } else {
+            tag
+        }
+        fenPei.EarTag = tag_
         fenPei.lat = latitude
         fenPei.log = longitude
         val intent = Intent(this, CameraOnlyActivity::class.java)
@@ -283,8 +288,13 @@ class ActivityGoToCamer : BaseActivity() {
         if (NetUtil.checkNet(this)) {
             RequestUtil.getInstance(this)!!.getRegionWithCache(object : GetCommonWithError<Region> {
                 override fun getCommon(t: Region) {
-                    regiondata = t.data
-                    tv_address!!.text = t.fProvince + t.fCity + t.fCounty
+                    if (t == null || t.data.isNullOrEmpty()) {
+                        getReasonCache()
+                    } else {
+                        regiondata = t.data
+                        tv_address!!.text = t.fProvince + t.fCity + t.fCounty
+                    }
+
                 }
 
                 override fun getError() {

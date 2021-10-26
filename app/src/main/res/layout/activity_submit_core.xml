@@ -45,7 +45,7 @@
     <TextView
         style="@style/text_wrap"
         android:layout_marginTop="@dimen/size_6"
-        android:text="核保人" />
+        android:text="核赔人" />
 
     <TextView
         android:id="@+id/et_checker"
@@ -56,7 +56,7 @@
         android:background="@null"
         android:drawableRight="@mipmap/arrow_right_small"
         android:gravity="center_vertical"
-        android:hint="点击选择核保人"
+        android:hint="点击选择核赔人"
         android:textColor="@color/black"
         android:textSize="@dimen/text_size_12sp" />
 

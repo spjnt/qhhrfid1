@@ -367,9 +367,6 @@ object WaterMaskUtil {
         LogUtils.e("view.measuredWidth  ${view.measuredWidth}   ${view.measuredHeight}")
         view.buildDrawingCache()
         return view.drawingCache
-
-
-
     }
     fun loadBitmapFromView(v: View?): Bitmap? {
         if (v == null) {
@@ -380,7 +377,6 @@ object WaterMaskUtil {
         v.measure(intw, inth)
         val bitmap = Bitmap.createBitmap(v.measuredWidth, v.measuredHeight, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
-
         v.layout(0, 0, v.measuredWidth, v.measuredHeight)
         v.draw(canvas)
         return bitmap

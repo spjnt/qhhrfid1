@@ -52,7 +52,7 @@
 
                 <TextView
                     style="@style/text_left_ll_big"
-                    android:text="灾害类型:" />
+                    android:text="事故类型:" />
 
                 <TextView
                     android:id="@+id/huarm_type"

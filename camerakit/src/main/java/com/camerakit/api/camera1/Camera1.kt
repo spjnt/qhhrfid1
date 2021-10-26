@@ -135,11 +135,9 @@ class Camera1(eventsDelegate: CameraEvents) :
     @Synchronized
     override fun capturePhoto(callback: (jpeg: ByteArray) -> Unit) {
         val camera = camera
-        if (camera != null) {
-            camera.takePicture(null, null) { data, _ ->
-                callback(data)
-                camera.startPreview()
-            }
+        camera?.takePicture(null, null) { data, _ ->
+            callback(data)
+            camera.startPreview()
         }
     }
 
