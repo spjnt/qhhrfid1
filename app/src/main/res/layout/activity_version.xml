@@ -8,11 +8,10 @@
         android:id="@+id/logo_img"
         android:layout_width="@dimen/size_80"
         android:layout_height="@dimen/size_80"
-        android:padding="@dimen/size_2"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/size_20"
-        android:src="@mipmap/new_logo"
-       />
+        android:padding="@dimen/size_2"
+        android:src="@mipmap/new_logo" />
 
 
     <WebView

@@ -115,10 +115,11 @@ class CameraOnlyActivity : BaseActivity() {
 
     private fun saveWaterMask(waterMaskView: WaterMaskView?, sourBitmap: Bitmap, path_: String, name_: String): String {
         try {
-            var waterBitmap = WaterMaskUtil.loadBitmapFromView(waterMaskView)
-            var watermarkBitmap = WaterMaskUtil.createWaterMaskLeftBottom(this, sourBitmap, waterBitmap, 0, 0)
+            val waterBitmap = WaterMaskUtil.loadBitmapFromView(waterMaskView)
+            val watermarkBitmap = WaterMaskUtil.createWaterMaskLeftBottom(this, sourBitmap, waterBitmap, 0, 0)
             return ImageUtils.saveBitmap(this, watermarkBitmap, path_, name_)
         } catch (e: Exception) {
+            LogUtils.e("e  ${e.message}")
         }
         return ""
 
@@ -130,6 +131,7 @@ class CameraOnlyActivity : BaseActivity() {
     var remark: String? = null
     var textList: MutableList<String> = ArrayList()
     var sdk_path: String? = null
+
     override fun initData() {
 
         val fenpei_ = intent.getSerializableExtra("fenpei")
@@ -153,7 +155,7 @@ class CameraOnlyActivity : BaseActivity() {
             latitude = fenpei_.lat
             longitude = fenpei_.log
         }
-        LogUtils.e("remark  $remark")
+
         if (remark != "only_photo") {
             if (NetUtil.checkNet(this)) {
                 mLocationClient = LocationClient(applicationContext)
@@ -217,7 +219,7 @@ class CameraOnlyActivity : BaseActivity() {
         waterInfos.clear()
         textList.clear()
         val userName = PreferUtils.getString(this, Constants.UserName)
-        var name = if (userName.isNullOrBlank()) {
+        val name = if (userName.isNullOrBlank()) {
             "未知"
         } else {
             userName
@@ -225,6 +227,7 @@ class CameraOnlyActivity : BaseActivity() {
         for (item in 1..10) {
             crators.add(name)
         }
+
         /*水印顺序：被保险人，标的名称，耳标号，出险原因，出险时间，查勘时间,经纬度，查勘地点，*/
         if (remark == "only_photo") {
             sdk_path = FileUtil.getSDPath() + Constants.sdk_camer
@@ -237,6 +240,7 @@ class CameraOnlyActivity : BaseActivity() {
             waterInfos.add("查勘时间:" + TimeUtil.getTime(Constants.yyyy_MM_ddHHmmss))
             waterInfos.add("经度:$longitude 纬度:$latitude")
         } else {
+
             sdk_path = FileUtil.getSDPath() + Constants.sdk_middle_animal
             waterInfos.add("被保险人:$famername")
             waterInfos.add("时间:" + TimeUtil.getTime(Constants.yyyy_MM_ddHHmmss))
@@ -311,6 +315,7 @@ class CameraOnlyActivity : BaseActivity() {
                     .compressObserver {
                         onSuccess = {
                             if (it != null) {
+                                LogUtils.e("it.absolutePath   ${it.absolutePath}")
                                 val Bitmapbm = BitmapFactory.decodeFile(it.absolutePath)
                                 if (Bitmapbm != null) {
                                     waterMaskView!!.setBackData(crators, Bitmapbm.height.toFloat(), Bitmapbm.width.toFloat())
@@ -318,19 +323,29 @@ class CameraOnlyActivity : BaseActivity() {
                                     waterMaskView!!.setLocation(location_add)
 
                                     path = saveWaterMask(waterMaskView, Bitmapbm, path_, photo_name)
-                                    if (it.exists())
-                                        it.delete()
-                                    lifecycleScope.launch {
-                                        withContext(Dispatchers.Main) {
-                                            bitmaps!!.add(path)
-                                            scan_total.bringToFront()
-                                            scan_total.text = "当前第 ${bitmaps.size} 张"
-                                            imv_pic!!.visibility = View.VISIBLE
-                                            Glide.with(this@CameraOnlyActivity).load(path).into(imv_pic!!)
+                                    if (!path.isNullOrEmpty() && File(path).exists()) {
+                                        if (it.exists())
+                                            it.delete()
+                                        lifecycleScope.launch {
+                                            withContext(Dispatchers.Main) {
+                                                bitmaps!!.add(path)
+                                                LogUtils.e("path  $path")
+                                                scan_total.bringToFront()
+                                                scan_total.text = "当前第 ${bitmaps.size} 张"
+                                                imv_pic!!.visibility = View.VISIBLE
+                                                Glide.with(this@CameraOnlyActivity).load(path).into(imv_pic!!)
+                                            }
                                         }
+                                    } else {
+                                        LogUtils.e("come in")
                                     }
 
+
+                                } else {
+                                    LogUtils.e("come11111 in")
                                 }
+                            } else {
+                                LogUtils.e("come222222 in")
                             }
 
                         }

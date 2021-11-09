@@ -41,6 +41,41 @@
 
     <include layout="@layout/gray_line" />
 
+    <TextView
+        style="@style/text_wrap"
+        android:layout_marginTop="@dimen/size_6"
+        android:text="计算书号" />
+
+    <TextView
+        android:id="@+id/tv_com_num"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_40"
+        android:layout_marginLeft="@dimen/size_16"
+        android:background="@null"
+        android:gravity="center_vertical"
+        android:hint="待提交"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_12sp" />
+
+    <include layout="@layout/gray_line" />
+
+    <TextView
+        style="@style/text_wrap"
+        android:layout_marginTop="@dimen/size_6"
+        android:text="立案号" />
+
+    <TextView
+        android:id="@+id/tv_claim_no"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_40"
+        android:layout_marginLeft="@dimen/size_16"
+        android:background="@null"
+        android:gravity="center_vertical"
+        android:hint="待提交"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_12sp" />
+
+    <include layout="@layout/gray_line" />
 
     <TextView
         style="@style/text_wrap"

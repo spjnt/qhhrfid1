@@ -47,4 +47,6 @@ class FenPei : Serializable {
     var FHandleInfoDetail: String? = null
     var lat: Double = 0.0
     var log: Double = 0.0
+    var FClaimNo: String? = null
+    var FCompensateNo: String? = null
 }

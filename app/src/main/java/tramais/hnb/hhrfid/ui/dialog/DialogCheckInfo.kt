@@ -16,12 +16,9 @@ import tramais.hnb.hhrfid.R
 import tramais.hnb.hhrfid.bean.FenPei
 import tramais.hnb.hhrfid.bean.FidDetail
 import tramais.hnb.hhrfid.bean.InsureBillDetail
-import tramais.hnb.hhrfid.constant.Constants
 import tramais.hnb.hhrfid.interfaces.GetCommon
 import tramais.hnb.hhrfid.interfaces.GetInsureBillDetail
 import tramais.hnb.hhrfid.net.RequestUtil
-import tramais.hnb.hhrfid.ui.ActivityFarmList
-import tramais.hnb.hhrfid.util.TimeUtil
 
 class DialogCheckInfo(context_: Context, private val module_type: String, private val fenPei: FenPei) : Dialog(context_, R.style.dialog) {
     private var mIvImg: RecyclerView? = null
@@ -47,7 +44,7 @@ class DialogCheckInfo(context_: Context, private val module_type: String, privat
                 infos.add("报案号:   ${fenPei.number ?: ""}")
                 infos.add("报案人姓名:   ${fenPei.farmerName ?: ""}")
                 infos.add("报案人电话:   ${fenPei.mobile ?: ""}")
-                infos.add("报案号:   ${fenPei.number ?: ""}")
+                infos.add("保单号:   ${fenPei.insureNumber ?: ""}")
                 infos.add("出险地址:   ${fenPei.riskAddress ?: ""}")
                 infos.add("标的名称:   ${fenPei.fItemDetailList ?: ""}")
                 infos.add("出险时间:   ${fenPei.riskDate ?: ""}")
@@ -101,7 +98,7 @@ class DialogCheckInfo(context_: Context, private val module_type: String, privat
                 }
             }
         } else if (module_type == "查勘信息") {
-            RequestUtil.getInstance(context)!!.getLandChaKanFidDetail(fenPei.number, "",object : GetCommon<FidDetail> {
+            RequestUtil.getInstance(context)!!.getLandChaKanFidDetail(fenPei.number, "", object : GetCommon<FidDetail> {
                 override fun getCommon(t: FidDetail) {
                     infos.add("被保险人:   ${fenPei.farmerName}")
                     infos.add("报案号:   ${fenPei.number}")

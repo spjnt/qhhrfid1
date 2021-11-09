@@ -164,7 +164,12 @@ class ActivityCheck : BaseActivity() {
                     if (position >= it.data.size) return@setOnItemClickListener
                     val fenPei = it.getItem(position) as FenPei
                     var intent = Intent()
+
                     fenPei.Tag = module_name
+
+                 /*   fen_.FClaimNo = fenPei.FClaimNo
+                    fen_.FCompensateNo = fenPei.FCompensateNo
+                    fen_.status = fenPei.status*/
                     intent.putExtra("FenPei", fenPei)
                     if (module_name.equals("养殖险")) {
                         when (module_type) {
@@ -417,15 +422,19 @@ class ActivityCheck : BaseActivity() {
                             tv_unupload!!.setTextColor(mContext.resources.getColor(R.color.red))
                         }
                     } else if (module_type == "提交核心") {
-                        if (status == "公示") {
-                            tv_unupload!!.text = "待同步"
-                            tv_unupload!!.setTextColor(mContext.resources.getColor(R.color.orange))
-                        } else if (status == "同步") {
-                            tv_unupload!!.text = "已同步"
-                            tv_unupload!!.setTextColor(mContext.resources.getColor(R.color.black))
-                        } else {
-                            tv_unupload!!.text = "未知状态"
-                            tv_unupload!!.setTextColor(mContext.resources.getColor(R.color.red))
+                        when (status) {
+                            "公示" -> {
+                                tv_unupload!!.text = "待同步"
+                                tv_unupload!!.setTextColor(mContext.resources.getColor(R.color.orange))
+                            }
+                            "同步" -> {
+                                tv_unupload!!.text = "已同步"
+                                tv_unupload!!.setTextColor(mContext.resources.getColor(R.color.black))
+                            }
+                            else -> {
+                                tv_unupload!!.text = "未知状态"
+                                tv_unupload!!.setTextColor(mContext.resources.getColor(R.color.red))
+                            }
                         }
                     }
 

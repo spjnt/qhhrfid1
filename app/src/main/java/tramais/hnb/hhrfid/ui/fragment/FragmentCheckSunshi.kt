@@ -674,8 +674,9 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
     override fun actionCamera() {
         var intent = Intent(context, CameraOnlyActivity::class.java)
         var fenPei_ = FenPei()
-        fenPei_.farmerName = fenPei!!.farmerName + "(" + "标的:${click_position + 1}" + ")"
+        fenPei_.farmerName = fenPei!!.farmerName
         fenPei_.fRemark = "sunshi"
+
         intent.putExtra("fenpei", fenPei_)
         intent.putExtra("photo_num", current_pics.size)
         startActivityForResult(intent, 124)
@@ -728,11 +729,7 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
             eratag?.let { dto ->
                 val liPeiAnimalPicData: MutableList<CheckDetail.LiPeiAnimalDataDTO.LiPeiAnimalPicDataDTO> = ArrayList()
                 liPeiAnimalPicData.clear()
-                /*  for (item in result) {
-                      var dto = CheckDetail.LiPeiAnimalDataDTO.LiPeiAnimalPicDataDTO()
-                      dto.picUrl = item.realPath
-                      liPeiAnimalPicData.add(dto)
-                  }*/
+
                 if (result != null && result.isNotEmpty())
                     for (item_current in result) {
                         var dto = CheckDetail.LiPeiAnimalDataDTO.LiPeiAnimalPicDataDTO()
