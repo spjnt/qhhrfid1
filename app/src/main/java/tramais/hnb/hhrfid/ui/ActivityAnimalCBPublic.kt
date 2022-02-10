@@ -81,8 +81,6 @@ class ActivityAnimalCBPublic : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_animal_pay)
-
-        // initView()
     }
 
     var module_name: String? = null
@@ -195,8 +193,6 @@ class ActivityAnimalCBPublic : BaseActivity() {
                 it.finishLoadMoreWithNoMoreData()
             }
         }
-
-
     }
 
     var currnet_status: String = "7"
@@ -222,7 +218,6 @@ class ActivityAnimalCBPublic : BaseActivity() {
         } else {
             url = Config.GetLandBaoAn
             statu_ = when (statu) {
-
                 "全部" ->
                     "9"
                 "清单分享" ->
@@ -233,12 +228,7 @@ class ActivityAnimalCBPublic : BaseActivity() {
                     "9"
             }
         }
-
-
-
         currnet_status = statu_
-        //     LogUtils.e("statu_  $statu  $statu_")
-
         RequestUtil.getInstance(this)!!.getBill(url, statu_, input, 20, pageIndex, module_name.toString())
         { rtnCode: Int, message: String?, totalNums: Int, datas: JSONArray? ->
             total = totalNums

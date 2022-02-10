@@ -9,7 +9,10 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
-import android.widget.*
+import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
 import com.apkfuns.logutils.LogUtils
 import com.baidu.location.LocationClient
@@ -30,7 +33,7 @@ import tramais.hnb.hhrfid.util.*
 import tramais.hnb.hhrfid.waterimage.WaterMaskUtil
 import tramais.hnb.hhrfid.waterimage.WaterMaskView
 import java.io.File
-import java.util.*
+import java.lang.NullPointerException
 import kotlin.math.max
 
 
@@ -97,7 +100,7 @@ class CameraOnlyActivity : BaseActivity() {
 
         }
         iv_floder.setOnClickListener {
-            if (cdpath.isNullOrEmpty()) {
+            if (cdpath.isEmpty()) {
                 return@setOnClickListener
             }
             val file = File(cdpath)
@@ -109,7 +112,6 @@ class CameraOnlyActivity : BaseActivity() {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             intent.setDataAndType(Uri.fromFile(file), "file/*")
             startActivity(intent)
-
         }
     }
 
@@ -122,7 +124,6 @@ class CameraOnlyActivity : BaseActivity() {
             LogUtils.e("e  ${e.message}")
         }
         return ""
-
     }
 
     var location_add: String? = "无法定位"
@@ -171,12 +172,11 @@ class CameraOnlyActivity : BaseActivity() {
                 })
             }
         }
-
     }
 
     override fun initListner() {
-        btn_showcamera!!.setOnClickListener { view: View? -> takePhoto() }
-        mImvGallery!!.setOnClickListener { v: View? ->
+        btn_showcamera!!.setOnClickListener { takePhoto() }
+        mImvGallery!!.setOnClickListener {
             if (remark == "only_photo") {
                 finish()
             } else {
@@ -185,9 +185,9 @@ class CameraOnlyActivity : BaseActivity() {
         }
         if (imv_pic != null) {
             imv_pic!!.setOnClickListener { v: View? ->
-                if (path.isNullOrEmpty()) return@setOnClickListener
+                if (path.isEmpty()) return@setOnClickListener
                 val dialogImg = DialogImg(this, path)
-                if (dialogImg != null && !isFinishing) dialogImg.show()
+                if (!isFinishing) dialogImg.show()
             }
         }
 
@@ -240,7 +240,6 @@ class CameraOnlyActivity : BaseActivity() {
             waterInfos.add("查勘时间:" + TimeUtil.getTime(Constants.yyyy_MM_ddHHmmss))
             waterInfos.add("经度:$longitude 纬度:$latitude")
         } else {
-
             sdk_path = FileUtil.getSDPath() + Constants.sdk_middle_animal
             waterInfos.add("被保险人:$famername")
             waterInfos.add("时间:" + TimeUtil.getTime(Constants.yyyy_MM_ddHHmmss))
@@ -258,27 +257,30 @@ class CameraOnlyActivity : BaseActivity() {
                     cdpath = "$sdk_path${TimeUtil.getTime(Constants.yyyy__MM__dd)}/"
                     val photo_name = famername + "_" + System.currentTimeMillis().toString() + ".jpg"
                     val decodeByteArray = decodeBitmap(it, 0, it.size)
-                    if (decodeByteArray != null)
-                        LuBan(decodeByteArray, cdpath, photo_name, crators, waterInfos)
+                    LuBan(decodeByteArray, cdpath, photo_name, crators, waterInfos)
                 }
             }
-
         })
-
     }
 
     private val bitmapOptions = BitmapFactory.Options().apply {
         inJustDecodeBounds = false
-        if (max(outHeight, outWidth) > 1024) {
-            val scaleFactorX = outWidth / 1024 + 1
-            val scaleFactorY = outHeight / 1024 + 1
-            inSampleSize = max(scaleFactorX, scaleFactorY)
+        try {
+            val max = max(outHeight, outWidth)
+            if (max > 1024) {
+                val scaleFactorX = outWidth / 1024 + 1
+                val scaleFactorY = outHeight / 1024 + 1
+                inSampleSize = max(scaleFactorX, scaleFactorY)
+            }
+        }catch (e:NullPointerException){
+            e.printStackTrace()
         }
+
     }
 
     private fun decodeBitmap(buffer: ByteArray, start: Int, length: Int): Bitmap {
         val bitmap = BitmapFactory.decodeByteArray(buffer, start, length, bitmapOptions)
-        var matrix = Matrix()
+        val matrix = Matrix()
         if (bitmap.width > bitmap.height) {
             matrix.postRotate(90f)
         }
@@ -308,46 +310,35 @@ class CameraOnlyActivity : BaseActivity() {
                     .concurrent(true)                //(可选)多文件压缩时是否并行,内部优化线程并行数量防止OOM
                     .useDownSample(true)             //(可选)压缩算法 true采用邻近采样,否则使用双线性采样(纯文字图片效果绝佳)
                     .format(Bitmap.CompressFormat.JPEG)//(可选)压缩后输出文件格式 支持 JPG,PNG,WEBP
-                    .ignoreBy(1024)                   //(可选)期望大小,大小和图片呈现质量不能均衡所以压缩后不一定小于此值,
+                    .ignoreBy(2048)                   //(可选)期望大小,大小和图片呈现质量不能均衡所以压缩后不一定小于此值,
                     .quality(90)                     //(可选)质量压缩系数  0-100
                     // .rename { name_ }             //(可选)文件重命名
-                    .filter { it != null }             //(可选)过滤器
+                    .filter { true }             //(可选)过滤器
                     .compressObserver {
                         onSuccess = {
-                            if (it != null) {
-                                LogUtils.e("it.absolutePath   ${it.absolutePath}")
-                                val Bitmapbm = BitmapFactory.decodeFile(it.absolutePath)
-                                if (Bitmapbm != null) {
-                                    waterMaskView!!.setBackData(crators, Bitmapbm.height.toFloat(), Bitmapbm.width.toFloat())
-                                    waterMaskView!!.setLeftData(waterInfos, Bitmapbm.width.toFloat())
-                                    waterMaskView!!.setLocation(location_add)
+                            LogUtils.e("it.absolutePath   ${it.absolutePath}")
+                            val Bitmapbm = BitmapFactory.decodeFile(it.absolutePath)
+                            if (Bitmapbm != null) {
+                                waterMaskView!!.setBackData(crators, Bitmapbm.height.toFloat(), Bitmapbm.width.toFloat())
+                                waterMaskView!!.setLeftData(waterInfos, Bitmapbm.width.toFloat())
+                                waterMaskView!!.setLocation(location_add, Bitmapbm.width)
 
-                                    path = saveWaterMask(waterMaskView, Bitmapbm, path_, photo_name)
-                                    if (!path.isNullOrEmpty() && File(path).exists()) {
-                                        if (it.exists())
-                                            it.delete()
-                                        lifecycleScope.launch {
-                                            withContext(Dispatchers.Main) {
-                                                bitmaps!!.add(path)
-                                                LogUtils.e("path  $path")
-                                                scan_total.bringToFront()
-                                                scan_total.text = "当前第 ${bitmaps.size} 张"
-                                                imv_pic!!.visibility = View.VISIBLE
-                                                Glide.with(this@CameraOnlyActivity).load(path).into(imv_pic!!)
-                                            }
+                                path = saveWaterMask(waterMaskView, Bitmapbm, path_, photo_name)
+                                if (!path.isEmpty() && File(path).exists()) {
+                                    if (it.exists())
+                                        it.delete()
+                                    lifecycleScope.launch {
+                                        withContext(Dispatchers.Main) {
+                                            bitmaps!!.add(path)
+                                            LogUtils.e("path  $path")
+                                            scan_total.bringToFront()
+                                            scan_total.text = "当前第 ${bitmaps.size} 张"
+                                            imv_pic!!.visibility = View.VISIBLE
+                                            Glide.with(this@CameraOnlyActivity).load(path).into(imv_pic!!)
                                         }
-                                    } else {
-                                        LogUtils.e("come in")
                                     }
-
-
-                                } else {
-                                    LogUtils.e("come11111 in")
                                 }
-                            } else {
-                                LogUtils.e("come222222 in")
                             }
-
                         }
                         onStart = {
 

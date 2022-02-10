@@ -7,6 +7,6 @@
     android:gravity="center"
     android:textColor="@color/mask_color"
     android:text=""
-    android:textSize="@dimen/text_size_8sp">
-
+   >
+<!-- android:textSize="@dimen/text_size_8sp"-->
 </TextView>

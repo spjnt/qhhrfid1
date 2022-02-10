@@ -196,48 +196,52 @@ class UpLoadSercie : Service() {
         }
     }
 
+    var j = 0
+    fun upLoadLableOneByOne(uploadS: MutableList<AnimalSaveCache>,
+                            i: Int, getOneString: GetOneString
+    ) {
+        val img_path: MutableList<String?> = ArrayList()
+        val saveCache = uploadS[i]
+        img_path.clear()
+        val lableNum: String? = saveCache.lableNum
+        if (saveCache.img1 != null)
+            img_path.add(saveCache.img1)
+        if (saveCache.img2 != null)
+            img_path.add(saveCache.img2)
+        if (saveCache.img3 != null)
+            img_path.add(saveCache.img3)
+        if (saveCache.img4 != null)
+            img_path.add(saveCache.img4)
+        upLoadFile(this, "耳标照片", lableNum, img_path, GetList { list_lable ->
+            if (list_lable.size == img_path.size)
+                RequestUtil.getInstance(this)!!.saveAnimal(
+                        saveCache.lableNum, saveCache.farmID, list_lable, saveCache.animalType, saveCache.ageMonth, saveCache.latitude, saveCache.longitude, saveCache.employeeNumber, saveCache.comPanyNumber,
+                ) { rtnCode: Int, message: String ->
+                    if (rtnCode >= 0) {
+                        val cache = AnimalSaveCache()
+                        cache.isUpLoad = "1"
+                        cache.statu = "在保"
+                        getOneString.getString("耳标信息:${lableNum}上传成功")
+                        cache.updateAll("LableNum =? ", lableNum)
+                    } else {
+                        getOneString.getString("耳标信息:${lableNum}上传失败")
+                    }
+                     j+= 1
+                    if (j < uploadS.size)
+                        upLoadLableOneByOne(uploadS, j, getOneString)
+                    else {
+                        getOneString.getString("耳标信息上传完成")
+                    }
+                }
+        })
+    }
 
     /*耳标信息*/
     private fun upLoadLable(getOneString: GetOneString) {
         LitePal.where("isUpLoad =?", "0").findAsync(AnimalSaveCache::class.java).listen { uploadS ->
             if (uploadS != null && uploadS.size > 0) {
-                var img_path: MutableList<String?> = ArrayList()
+                upLoadLableOneByOne(uploadS, 0, getOneString)
 
-
-                for (item_ in 0 until uploadS.size) {
-                    img_path.clear()
-                    var saveCache = uploadS[item_]
-                    val lableNum: String? = saveCache.lableNum
-                    if (saveCache.img1 != null)
-                        img_path.add(saveCache.img1)
-                    if (saveCache.img2 != null)
-                        img_path.add(saveCache.img2)
-                    if (saveCache.img3 != null)
-                        img_path.add(saveCache.img3)
-                    if (saveCache.img4 != null)
-                        img_path.add(saveCache.img4)
-                    upLoadFile(this, "耳标照片", lableNum, img_path, GetList { list_lable ->
-                        if (list_lable.size == img_path.size)
-                            RequestUtil.getInstance(this)!!.saveAnimal(
-                                    saveCache.lableNum, saveCache.farmID, list_lable, saveCache.animalType, saveCache.ageMonth, saveCache.latitude, saveCache.longitude, saveCache.employeeNumber, saveCache.comPanyNumber,
-                            ) { rtnCode: Int, message: String ->
-                                if (rtnCode >= 0) {
-                                    var cache = AnimalSaveCache()
-                                    cache.isUpLoad = "1"
-                                    cache.statu = "在保"
-                                    getOneString.getString("耳标信息:${lableNum}上传成功")
-                                    cache.updateAll("LableNum =? ", lableNum)
-                                } else {
-                                    getOneString.getString("耳标信息:${lableNum}上传失败")
-                                }
-
-                                if (item_ + 1 == uploadS.size) {
-                                    getOneString.getString("耳标信息上传完成")
-                                }
-
-                            }
-                    })
-                }
             } else {
                 getOneString.getString("耳标信息上传完成")
             }

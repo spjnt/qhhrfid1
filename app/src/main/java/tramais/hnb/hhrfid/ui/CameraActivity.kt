@@ -5,7 +5,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
@@ -41,7 +40,6 @@ import tramais.hnb.hhrfid.util.*
 import tramais.hnb.hhrfid.util.GsonUtil.Companion.instant
 import tramais.hnb.hhrfid.waterimage.WaterMaskUtil
 import tramais.hnb.hhrfid.waterimage.WaterMaskView
-import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.max
@@ -103,7 +101,7 @@ class CameraActivity : BaseActivity() {
                 GET_EPC_C72 -> {
                     epc = msg.obj as String
 
-                    if (!TextUtils.isEmpty(epc)) {
+                    if (!TextUtils.isEmpty(epc) && epc != "停止扫描,请重新按键") {
                         if (cache_nums != null && cache_nums!!.size > 0) {
                             if (cache_nums.contains(epc)) {
 
@@ -525,7 +523,7 @@ class CameraActivity : BaseActivity() {
                                 if (Bitmapbm != null && waterMaskView != null) {
                                     waterMaskView!!.setBackData(crators, Bitmapbm.height.toFloat(), Bitmapbm.width.toFloat())
                                     waterMaskView!!.setLeftData(waterInfos, Bitmapbm.height.toFloat())
-                                    waterMaskView!!.setLocation(farmer_address)
+                                    waterMaskView!!.setLocation(farmer_address,Bitmapbm.width)
 
                                     path = saveWaterMask(waterMaskView, Bitmapbm, path_, photo_name)
                                     if (it.exists())
@@ -597,12 +595,11 @@ class CameraActivity : BaseActivity() {
     }
 
 
-
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
         if (keyCode == 139 || keyCode == 280 || keyCode == 293) {
             if (Utils.getText(mBtnAnimalChoice) != "畜种选择" && Utils.getText(mBtnAnimalChoice) != "全部") {
                 val text = Utils.getText(imv_tips)
-                if (!TextUtils.isEmpty(text)) {
+                if (!TextUtils.isEmpty(text) && !text.contains("已扫码") && !text.contains("正在扫描电子耳标...") && !text.contains("停止扫描,请重新按键")) {
                     if (isSuccess_) {
                         isSuccess_ = false
                         takePhoto()

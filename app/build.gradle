@@ -62,11 +62,7 @@ android {
                     fileName = "qh_v${defaultConfig.versionName}_${createTime}.apk"
                     it.outputFileName = fileName
                 }
-
-            }/*else{
-                fileName = "qh_测试_v${defaultConfig.versionName}_${createTime}.apk"
-                it.outputFileName = fileName
-            }*/
+            }
         }
     }
     packagingOptions {

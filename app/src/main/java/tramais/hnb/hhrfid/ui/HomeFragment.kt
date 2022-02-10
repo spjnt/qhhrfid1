@@ -5,14 +5,13 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
-import android.widget.*
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.fastjson.JSONArray
 import com.blankj.utilcode.util.BarUtils
-import com.bumptech.glide.Glide
-import com.chad.library.adapter.base.BaseQuickAdapter
-import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.example.liangmutian.randomtextviewlibrary.RandomTextView
 import com.gyf.immersionbar.ktx.immersionBar
 import com.zhouwei.mzbanner.MZBannerView
@@ -30,7 +29,6 @@ import tramais.hnb.hhrfid.net.RequestUtil
 import tramais.hnb.hhrfid.ui.crop.CropBaoAnChoiceActivity
 import tramais.hnb.hhrfid.ui.view.RecyleViewForScrollView
 import tramais.hnb.hhrfid.util.GsonUtil
-import tramais.hnb.hhrfid.util.StatusBarUtil
 import tramais.hnb.hhrfid.util.Utils
 import java.util.*
 
@@ -138,7 +136,7 @@ class HomeFragment : BaseFragment() {
     override fun initData() {
 
         //根据状态栏颜色来决定状态栏文字用黑色还是白色
-      //  activity?.let { StatusBarUtil.setStatusBarMode(it, true, R.color.red) }
+        //  activity?.let { StatusBarUtil.setStatusBarMode(it, true, R.color.red) }
 
         if (haveRoles("养殖险", "承保", "新建投保单")) {
             ivYzNew!!.setBackgroundResource(R.mipmap.a_new)
@@ -181,7 +179,7 @@ class HomeFragment : BaseFragment() {
              startActivity(intent)
          }*/
         news
-       // getInfo()
+        // getInfo()
 
 
         llYzNew!!.setOnClickListener { v ->
@@ -215,6 +213,7 @@ class HomeFragment : BaseFragment() {
         }
 
     }
+
     fun goToFenPei(module_name: String) {
         var intent = Intent(context, ActivityFenPei::class.java)
         intent.putExtra(Constants.MODULE_NAME, module_name)
@@ -236,27 +235,27 @@ class HomeFragment : BaseFragment() {
         }
 
 
-    fun getInfo() {
+    private fun getInfo() {
 
         RequestUtil.getInstance(context)!!.getBillCount(object : GetBillCount {
             override fun getBillCount(bean: BillCount?) {
-                activity!!.runOnUiThread {
-                    if (bean!=null){
-                        showAnimal(tv_yangzhi_first, bean?.insurebillCou ?: "0")
-                        showAnimal(tv_yangzhi_second, bean?.lipeibaoanCou ?: "0")
-                        showAnimal(tv_yangzhi_third, bean?.lipeichakanCou ?: "0")
-                        showAnimal(tv_yangzhi_fourth, bean?.animalsendbill_cou ?: "0")
-                        showAnimal(tv_zhongzhi_first, bean?.landbillCou ?: "0")
-                        showAnimal(tv_zhongzhi_second, bean?.landbaoanCou ?: "0")
-                        showAnimal(tv_zhongzhi_third, bean?.landchakanCou ?: "0")
-                        showAnimal(tv_zhongzhi_fourth, bean?.landsendbill_cou ?: "0")
-                    }
+                //  requireActivity().runOnUiThread {
+                if (bean != null) {
+                    showAnimal(tv_yangzhi_first, bean.insurebillCou ?: "0")
+                    showAnimal(tv_yangzhi_second, bean.lipeibaoanCou ?: "0")
+                    showAnimal(tv_yangzhi_third, bean.lipeichakanCou ?: "0")
+                    showAnimal(tv_yangzhi_fourth, bean.animalsendbill_cou ?: "0")
+                    showAnimal(tv_zhongzhi_first, bean.landbillCou ?: "0")
+                    showAnimal(tv_zhongzhi_second, bean.landbaoanCou ?: "0")
+                    showAnimal(tv_zhongzhi_third, bean.landchakanCou ?: "0")
+                    showAnimal(tv_zhongzhi_fourth, bean.landsendbill_cou ?: "0")
+                    //  }
                 }
             }
         })
     }
 
-    fun getBannerData(newsLists: List<NewsList>?) {
+    private fun getBannerData(newsLists: List<NewsList>?) {
         if (list_pic != null) list_pic!!.clear()
         for (item in newsLists!!) {
             val pictureurl = item.pictureurl

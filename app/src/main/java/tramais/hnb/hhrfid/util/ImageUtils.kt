@@ -310,12 +310,16 @@ object ImageUtils {
             val exifInterface = ExifInterface(path!!)
             val orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
 
-            if (orientation == ExifInterface.ORIENTATION_ROTATE_90) {
-                degree = 90
-            } else if (orientation == ExifInterface.ORIENTATION_ROTATE_180) {
-                degree = 180
-            } else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
-                degree = 270
+            when (orientation) {
+                ExifInterface.ORIENTATION_ROTATE_90 -> {
+                    degree = 90
+                }
+                ExifInterface.ORIENTATION_ROTATE_180 -> {
+                    degree = 180
+                }
+                ExifInterface.ORIENTATION_ROTATE_270 -> {
+                    degree = 270
+                }
             }
         } catch (e: IOException) {
             e.printStackTrace()

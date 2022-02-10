@@ -48,9 +48,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/size_2"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_12sp"
-                android:textStyle="bold" />
+                android:textColor="@color/red"
+
+               />
         </LinearLayout>
 
     </LinearLayout>

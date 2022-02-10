@@ -138,7 +138,7 @@ class ActivityLogin : BaseActivity() {
         timer_?.cancel()
     }
 
-
+//"Username":"19924940597","Password":"picc2021!"
     fun addFinger() {
 
         val builder = FingerprintVerifyManager.Builder(this@ActivityLogin)

@@ -3,10 +3,8 @@
     android:id="@+id/tv"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-
-    android:gravity="center_horizontal"
+    android:gravity="left"
     android:padding="@dimen/size_0.5px"
-    android:textStyle="bold"
     android:text=""
-    android:textColor="@color/white"
-    android:textSize="@dimen/text_size_12sp" />
+    android:textColor="@color/red"
+    />
