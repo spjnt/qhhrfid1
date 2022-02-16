@@ -127,7 +127,7 @@
         <activity android:name=".ui.ActivityAnimalPayDetail" />
         <activity android:name=".ui.ActivityForgetPsw" />
      <!--   <activity android:name=".ui.ActivityBaoAnDetailInfo" />-->
-        <activity android:name=".ui.ActivityGoToCamer" />
+        <activity android:name=".ui.ActivityGoToCamera" />
         <activity android:name=".ui.ActivitySubmitScore" />
         <activity android:name=".ui.crop.ActivitySaveBankInfo" />
         <activity android:name=".ui.ActivitySubmitCore" />

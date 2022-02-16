@@ -20,7 +20,7 @@ class ActivitySubmitCore : BaseActivity() {
     private var mFarmer: TextView? = null
     private var mChecker: TextView? = null
     private var mSumitResult: TextView? = null
-
+    private var mLlchecker: LinearLayout? = null
     private var mComNumber: TextView? = null
     private var mClaimNum: TextView? = null
     private var msubmit: Button? = null
@@ -37,6 +37,7 @@ class ActivitySubmitCore : BaseActivity() {
         module_type = fenPei?.Tag ?: ""
         setTitleText("提交核心")
         status = fenPei?.status
+        mLlchecker= findViewById(R.id.ll_checker)
         mSumitResult = findViewById(R.id.submit_result)
         mChecker = findViewById(R.id.et_checker)
         mFarmer = findViewById(R.id.et_farmer)
@@ -49,7 +50,7 @@ class ActivitySubmitCore : BaseActivity() {
         mComNumber?.text = fenPei?.FCompensateNo ?: "待提交"
         mClaimNum?.text = fenPei?.FClaimNo ?: "待提交"
         if (status == "同步") {
-            mChecker!!.visibility = View.GONE
+            mLlchecker!!.visibility = View.GONE
             msubmit!!.visibility = View.GONE
             mSumitResult!!.visibility = View.GONE
         }
@@ -102,7 +103,6 @@ class ActivitySubmitCore : BaseActivity() {
                         userNumber = it.employeeNo.toString()
                         runOnUiThread { mChecker!!.text = userName_ }
                     }
-
                 }
             })
             if (!dialogChoiceEmployee.isShowing && !isFinishing) dialogChoiceEmployee.show()
@@ -119,7 +119,6 @@ class ActivitySubmitCore : BaseActivity() {
                     if (it.data != null && it.data!!.isNotEmpty()) {
                         employeeListBeans!!.addAll(it.data!!)
                     }
-
                 }
             }
         })

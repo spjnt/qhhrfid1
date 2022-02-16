@@ -1,7 +1,6 @@
 package tramais.hnb.hhrfid.ui
 
 import android.content.Context
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -10,18 +9,18 @@ import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.View
-import android.widget.*
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.fastjson.JSONArray
-import com.apkfuns.logutils.LogUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
-import kotlinx.android.synthetic.main.activity_base.*
 import org.litepal.FluentQuery
 import org.litepal.LitePal
 import tramais.hnb.hhrfid.R
@@ -33,14 +32,11 @@ import tramais.hnb.hhrfid.constant.Constants
 import tramais.hnb.hhrfid.interfaces.GetEmployee
 import tramais.hnb.hhrfid.interfaces.GetEmployeeList
 import tramais.hnb.hhrfid.litePalBean.BaoAnListCache
-import tramais.hnb.hhrfid.litePalBean.EmployeeCache
 import tramais.hnb.hhrfid.net.RequestUtil
 import tramais.hnb.hhrfid.ui.dialog.DialogCheckInfo
 import tramais.hnb.hhrfid.ui.dialog.DialogChoiceEmployee
-import tramais.hnb.hhrfid.ui.popu.PopuChoice
 import tramais.hnb.hhrfid.util.*
 import tramais.hnb.hhrfid.util.Utils.callPhone
-import java.util.HashMap
 
 class ActivityFenPei : BaseActivity() {
     private var mListview: RecyclerView? = null
@@ -128,6 +124,7 @@ class ActivityFenPei : BaseActivity() {
     private val delayRun = Runnable {
         isLoadMore = false
         currentPage = 1
+        touBaoBeans?.clear()
         getBill(Utils.getEdit(mEtSearch), Utils.getText(mTypeChoice), "", "", currentPage)
 
     }
@@ -191,7 +188,7 @@ class ActivityFenPei : BaseActivity() {
                 "3"
 
         }
-        var req_url = if (module_name == "养殖险") {
+        val req_url = if (module_name == "养殖险") {
             Config.GetBaoAn
         } else {
             Config.GetLandBaoAn
@@ -201,11 +198,9 @@ class ActivityFenPei : BaseActivity() {
             if (datas != null && datas.size > 0)
                 touBaoBeans = GsonUtil.instant!!.parseCommonUseArr(datas, FenPei::class.java)
             else {
-                touBaoBeans!!.clear()
                 showStr(message)
+                return@getBill
             }
-
-
             val msg = Message()
             msg.obj = touBaoBeans
             msg.what = 3
@@ -217,22 +212,22 @@ class ActivityFenPei : BaseActivity() {
         val farmListCaches: MutableList<BaoAnListCache> = java.util.ArrayList()
         farmListCaches.clear()
         var array: Array<String>? = null
-        if (TextUtils.isEmpty(input)) {
-            array = null
+        array = if (TextUtils.isEmpty(input)) {
+            null
         } else {
             val numeric = Utils.isNumeric(input)
             if (!numeric) {
-                array = arrayOf("farmerName like ?", "%$input%")
+                arrayOf("farmerName like ?", "%$input%")
             } else {
-                array = arrayOf("number like ?  ", "%$input%")
+                arrayOf("number like ?  ", "%$input%")
             }
         }
-        var fluentQuery: FluentQuery?
+        val fluentQuery: FluentQuery?
 
-        if (array != null) {
-            fluentQuery = LitePal.where(*array).order("number desc").limit(20)
+        fluentQuery = if (array != null) {
+            LitePal.where(*array).order("number desc").limit(20)
         } else {
-            fluentQuery = LitePal.where(null).order("number desc").limit(20)
+            LitePal.where(null).order("number desc").limit(20)
         }
         fluentQuery.findAsync(BaoAnListCache::class.java).listen { list: List<BaoAnListCache> ->
             if (list.isNotEmpty()) {
@@ -244,18 +239,18 @@ class ActivityFenPei : BaseActivity() {
         }
     }
 
-    fun cacheToLine(list: MutableList<BaoAnListCache>, statu: String) {
-        if (list == null || list.size == 0) return
+    private fun cacheToLine(list: MutableList<BaoAnListCache>, statu: String) {
+        if (list.size == 0) return
         touBaoBeans?.clear()
         list.forEach {
             var statu_: Boolean = false
-            if (statu.equals("全部")) {
-                statu_ = it.status.equals("新建") || it.status.equals("已分配")
+            statu_ = if (statu == "全部") {
+                it.status.equals("新建") || it.status.equals("已分配")
             } else {
-                statu_ = it.status.equals(statu)
+                it.status.equals(statu)
             }
             if (statu_) {
-                var fenPei = FenPei()
+                val fenPei = FenPei()
                 fenPei.riskAddress = it.riskAddress
                 fenPei.riskDate = it.riskDate
                 fenPei.baoAnDate = it.baoAnDate
@@ -295,11 +290,8 @@ class ActivityFenPei : BaseActivity() {
         mAdapter?.let {
             it.setOnItemClickListener { adapter, view, position ->
                 val fenPei = it.getItem(position) as FenPei
-
-                fenPei?.let {
-                    DialogCheckInfo(context!!, "报案信息", it).show()
-
-
+                fenPei.let {
+                    DialogCheckInfo(context, "报案信息", it).show()
                 }
             }
         }
@@ -313,7 +305,7 @@ class ActivityFenPei : BaseActivity() {
                 return@setOnClickListener
             }
 
-            if (selected == null || selected.isEmpty()) {
+            if (selected.isEmpty()) {
                 showStr("请选择分配任务")
                 return@setOnClickListener
             }
@@ -323,7 +315,7 @@ class ActivityFenPei : BaseActivity() {
                     numbers.add(number.toString())
                 }
             }
-            if (numbers == null || numbers.isEmpty()) {
+            if (numbers.isEmpty()) {
                 showStr("请选择分配任务")
                 return@setOnClickListener
             }
@@ -345,7 +337,8 @@ class ActivityFenPei : BaseActivity() {
                                 numbers.clear()
                                 selected.clear()
                                 if (str.contains("成功")) {
-                                    getBill(Utils.getEdit(mEtSearch), Utils.getText(mTypeChoice), "", "", currentPage)
+                                    touBaoBeans?.clear()
+                                    getBill(Utils.getEdit(mEtSearch), Utils.getText(mTypeChoice), "", "", 1)
                                 }
                             }
                         }/* else {
@@ -374,7 +367,7 @@ class ActivityFenPei : BaseActivity() {
 
             if (mAdapter == null) return@setOnClickListener
 
-            if (selected == null || selected.isEmpty()) {
+            if (selected.isEmpty()) {
                 showStr("请选择分配任务")
                 return@setOnClickListener
             }
@@ -385,7 +378,7 @@ class ActivityFenPei : BaseActivity() {
                     numbers.add(number.toString())
                 }
             }
-            if (numbers == null || numbers.isEmpty()) {
+            if (numbers.isEmpty()) {
                 showStr("请选择分配任务")
                 return@setOnClickListener
             }
@@ -395,7 +388,8 @@ class ActivityFenPei : BaseActivity() {
                     numbers.clear()
                     selected.clear()
                     if (str.contains("成功")) {
-                        getBill(Utils.getEdit(mEtSearch), Utils.getText(mTypeChoice), "", "", currentPage)
+                        touBaoBeans?.clear()
+                        getBill(Utils.getEdit(mEtSearch), Utils.getText(mTypeChoice), "", "", 1)
                     }
                 }
             } /*else {
@@ -407,24 +401,22 @@ class ActivityFenPei : BaseActivity() {
         mRlAnimalType.setOnClickListener {
             isLoadMore = false
             mIvArrow.animate().setDuration(100).rotation(90f).start()
-
             PopuUtils(this).initChoicePop(mRlAnimalType, choice_type) { str: String? ->
                 PreferUtils.putString(context, Constants.animal_type_o, str)
                 mTypeChoice.text = str
                 mIvArrow.animate().setDuration(100).rotation(0f).start()
                 if (NetUtil.checkNet(this)) {
-                    getBill(Utils.getEdit(mEtSearch), Utils.getText(mTypeChoice), "", "", currentPage)
-                } /*else {
-                    getBillCache(Utils.getText(mEtSearch), Utils.getText(mTypeChoice))
-                }*/
+                    touBaoBeans?.clear()
+                    getBill(Utils.getEdit(mEtSearch), Utils.getText(mTypeChoice), "", "", 1)
+                }
             }
         }
     }
 
     fun upDateInfo(numbers: MutableList<String?>, userNo: String, employeeName: String) {
-        if (numbers == null || numbers.size == 0) return
+        if (numbers.size == 0) return
         numbers.forEach {
-            var banAnInfo = BaoAnListCache()
+            val banAnInfo = BaoAnListCache()
             banAnInfo.status = "已分配"
             banAnInfo.employeeNo = userNo
             banAnInfo.employeeName = employeeName
@@ -439,9 +431,7 @@ class ActivityFenPei : BaseActivity() {
     var total = 0
     private var isLoadMore = false
     private fun initRefresh() {
-
         mRefreshLayout!!.setOnLoadMoreListener {
-
             if (total == 20) {
                 currentPage += 1
                 isLoadMore = true
@@ -461,47 +451,43 @@ class ActivityFenPei : BaseActivity() {
             @RequiresApi(Build.VERSION_CODES.M)
             override fun convert(holder: BaseViewHolder, item: FenPei) {
                 var ll_right = holder.getView<CardView>(R.id.ll_right)
-                var tv_first = holder.getView<TextView>(R.id.tv_first)
-                var tv_middle = holder.getView<TextView>(R.id.tv_second)
-                var tv_third = holder.getView<TextView>(R.id.tv_third)
-                var tv_unupload = holder.getView<TextView>(R.id.tv_unupload)
-                var tv_fourth = holder.getView<TextView>(R.id.tv_fourth)
-                var tv_five = holder.getView<TextView>(R.id.tv_five)
-                var mItemBag = holder.getView<ImageView>(R.id.item_bag)
-                item?.let { fileInfo ->
+                val tv_first = holder.getView<TextView>(R.id.tv_first)
+                val tv_middle = holder.getView<TextView>(R.id.tv_second)
+                val tv_third = holder.getView<TextView>(R.id.tv_third)
+                val tv_unupload = holder.getView<TextView>(R.id.tv_unupload)
+                val tv_fourth = holder.getView<TextView>(R.id.tv_fourth)
+                val tv_five = holder.getView<TextView>(R.id.tv_five)
+                val mItemBag = holder.getView<ImageView>(R.id.item_bag)
+                item.let { fileInfo ->
                     val status = fileInfo.status
                     if (status == "分配") {
-                        tv_unupload!!.text = "已分配"
-                        tv_unupload!!.setTextColor(mContext.resources.getColor(R.color.black))
+                        tv_unupload.text = "已分配"
+                        tv_unupload.setTextColor(mContext.resources.getColor(R.color.black))
                     } else if (status == "新建") {
-                        tv_unupload!!.text = "待分配"
-                        tv_unupload!!.setTextColor(mContext.resources.getColor(R.color.orange))
+                        tv_unupload.text = "待分配"
+                        tv_unupload.setTextColor(mContext.resources.getColor(R.color.orange))
                     }
-
-                    tv_first!!.text = "投保人: ${fileInfo.farmerName}"
-                    tv_middle!!.text = fileInfo.number
-                    tv_third!!.text = fileInfo.mobile
+                    tv_first.text = "投保人: ${fileInfo.farmerName}"
+                    tv_middle.text = fileInfo.number
+                    tv_third.text = fileInfo.mobile
                     val fHandleInfoDetail = fileInfo.FHandleInfoDetail
-                    tv_fourth!!.text = if (fHandleInfoDetail!!.isNotEmpty()) {
+                    tv_fourth.text = if (fHandleInfoDetail!!.isNotEmpty()) {
                         fileInfo.fItemDetailList + "\n" + fileInfo.FHandleInfoDetail
                     } else {
                         fileInfo.fItemDetailList
                     }
-
-                    tv_five!!.text = fileInfo.riskAddress
-                    mItemBag!!.isSelected = selected.containsKey(fileInfo)
-                    mItemBag!!.isSelected = fileInfo.isCheck
-
-                    mItemBag!!.setOnClickListener { v: View? ->
+                    tv_five.text = fileInfo.riskAddress
+                    mItemBag.isSelected = selected.containsKey(fileInfo)
+                    mItemBag.isSelected = fileInfo.isCheck
+                    mItemBag.setOnClickListener { v: View? ->
                         fileInfo.isCheck = !fileInfo.isCheck
-                        mItemBag!!.isSelected = !fileInfo.isCheck
+                        mItemBag.isSelected = !fileInfo.isCheck
                         selected[fileInfo] = fileInfo.isCheck
                         if (!fileInfo.isCheck)
                             selected.remove(fileInfo)
-
                         notifyDataSetChanged()
                     }
-                    tv_third!!.setOnClickListener { v: View? ->
+                    tv_third.setOnClickListener { v: View? ->
                         if (TextUtils.isEmpty(fileInfo.mobile)) {
                             return@setOnClickListener
                         }

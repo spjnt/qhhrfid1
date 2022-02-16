@@ -33,7 +33,6 @@ import tramais.hnb.hhrfid.util.*
 import tramais.hnb.hhrfid.waterimage.WaterMaskUtil
 import tramais.hnb.hhrfid.waterimage.WaterMaskView
 import java.io.File
-import java.lang.NullPointerException
 import kotlin.math.max
 
 
@@ -245,7 +244,6 @@ class CameraOnlyActivity : BaseActivity() {
             waterInfos.add("时间:" + TimeUtil.getTime(Constants.yyyy_MM_ddHHmmss))
             waterInfos.add("经度:$longitude 纬度:$latitude")
         }
-
         playSound(R.raw.camera_click)
         mCameraPreview!!.takePicture()
         mCameraPreview!!.setOnTakePictureInfo(object : CustomCameraView.OnTakePictureInfo {
@@ -256,7 +254,7 @@ class CameraOnlyActivity : BaseActivity() {
                 _file?.let {
                     cdpath = "$sdk_path${TimeUtil.getTime(Constants.yyyy__MM__dd)}/"
                     val photo_name = famername + "_" + System.currentTimeMillis().toString() + ".jpg"
-                    val decodeByteArray = decodeBitmap(it, 0, it.size)
+                    val decodeByteArray = decodeBitmap(it, it.size)
                     LuBan(decodeByteArray, cdpath, photo_name, crators, waterInfos)
                 }
             }
@@ -272,22 +270,19 @@ class CameraOnlyActivity : BaseActivity() {
                 val scaleFactorY = outHeight / 1024 + 1
                 inSampleSize = max(scaleFactorX, scaleFactorY)
             }
-        }catch (e:NullPointerException){
+        } catch (e: NullPointerException) {
             e.printStackTrace()
         }
-
     }
 
-    private fun decodeBitmap(buffer: ByteArray, start: Int, length: Int): Bitmap {
-        val bitmap = BitmapFactory.decodeByteArray(buffer, start, length, bitmapOptions)
+    private fun decodeBitmap(buffer: ByteArray, length: Int): Bitmap {
+        val bitmap = BitmapFactory.decodeByteArray(buffer, 0, length, bitmapOptions)
         val matrix = Matrix()
         if (bitmap.width > bitmap.height) {
             matrix.postRotate(90f)
         }
-        return Bitmap.createBitmap(
-                bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
     }
-
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
         if (keyCode == 139 || keyCode == 280 || keyCode == 293) {
@@ -296,10 +291,8 @@ class CameraOnlyActivity : BaseActivity() {
         return super.onKeyDown(keyCode, event)
     }
 
-
     protected override fun onResume() {
         super.onResume()
-
     }
 
     fun LuBan(bitMap: Bitmap, path_: String, photo_name: String, crators: MutableList<String>, waterInfos: MutableList<String>) {
@@ -311,12 +304,12 @@ class CameraOnlyActivity : BaseActivity() {
                     .useDownSample(true)             //(可选)压缩算法 true采用邻近采样,否则使用双线性采样(纯文字图片效果绝佳)
                     .format(Bitmap.CompressFormat.JPEG)//(可选)压缩后输出文件格式 支持 JPG,PNG,WEBP
                     .ignoreBy(2048)                   //(可选)期望大小,大小和图片呈现质量不能均衡所以压缩后不一定小于此值,
-                    .quality(90)                     //(可选)质量压缩系数  0-100
+                    .quality(98)                     //(可选)质量压缩系数  0-100
                     // .rename { name_ }             //(可选)文件重命名
                     .filter { true }             //(可选)过滤器
                     .compressObserver {
                         onSuccess = {
-                            LogUtils.e("it.absolutePath   ${it.absolutePath}")
+                           // LogUtils.e("it.absolutePath   ${it.absolutePath}")
                             val Bitmapbm = BitmapFactory.decodeFile(it.absolutePath)
                             if (Bitmapbm != null) {
                                 waterMaskView!!.setBackData(crators, Bitmapbm.height.toFloat(), Bitmapbm.width.toFloat())
@@ -324,13 +317,13 @@ class CameraOnlyActivity : BaseActivity() {
                                 waterMaskView!!.setLocation(location_add, Bitmapbm.width)
 
                                 path = saveWaterMask(waterMaskView, Bitmapbm, path_, photo_name)
-                                if (!path.isEmpty() && File(path).exists()) {
+                                if (path.isNotEmpty() && File(path).exists()) {
                                     if (it.exists())
                                         it.delete()
                                     lifecycleScope.launch {
                                         withContext(Dispatchers.Main) {
                                             bitmaps!!.add(path)
-                                            LogUtils.e("path  $path")
+                                           // LogUtils.e("path  $path")
                                             scan_total.bringToFront()
                                             scan_total.text = "当前第 ${bitmaps.size} 张"
                                             imv_pic!!.visibility = View.VISIBLE
@@ -340,9 +333,7 @@ class CameraOnlyActivity : BaseActivity() {
                                 }
                             }
                         }
-                        onStart = {
-
-                        }
+                        onStart = { }
                         onCompletion = { }
                         onError = { e, _ -> }
                     }.launch()

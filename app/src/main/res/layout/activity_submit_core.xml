@@ -76,7 +76,11 @@
         android:textSize="@dimen/text_size_12sp" />
 
     <include layout="@layout/gray_line" />
-
+<LinearLayout
+    android:id="@+id/ll_checker"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
     <TextView
         style="@style/text_wrap"
         android:layout_marginTop="@dimen/size_6"
@@ -96,6 +100,8 @@
         android:textSize="@dimen/text_size_12sp" />
 
     <include layout="@layout/gray_line" />
+</LinearLayout>
+
 
     <TextView
         android:id="@+id/submit_result"

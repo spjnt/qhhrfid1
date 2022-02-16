@@ -118,18 +118,17 @@ class HomeFragment : BaseFragment() {
             it.setPianyilian(RandomTextView.FIRSTF_LAST)
             it.start()
         }
-
     }
 
     override fun initListener() {
         llNumber!!.setOnClickListener {
             //  Utils.goToNextUI(ActivityNumber::class.java)
-            var intent = Intent(context, ActivityFarmList::class.java)
+            val intent = Intent(context, ActivityFarmList::class.java)
             intent.putExtra(Constants.MODULE_NAME, "智能点数")
             startActivity(intent)
         }
         llLiPei!!.setOnClickListener {
-            Utils.goToNextUI(ActivityGoToCamer::class.java)
+            Utils.goToNextUI(ActivityGoToCamera::class.java)
         }
     }
 

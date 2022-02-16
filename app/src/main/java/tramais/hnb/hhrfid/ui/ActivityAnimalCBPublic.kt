@@ -1,13 +1,14 @@
 package tramais.hnb.hhrfid.ui
 
 import android.content.Context
-import android.content.Intent
 import android.os.*
 import android.text.Editable
-import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.View
-import android.widget.*
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,7 +17,10 @@ import com.apkfuns.logutils.LogUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.itextpdf.awt.AsianFontMapper
-import com.itextpdf.text.*
+import com.itextpdf.text.DocumentException
+import com.itextpdf.text.Font
+import com.itextpdf.text.Image
+import com.itextpdf.text.Rectangle
 import com.itextpdf.text.pdf.BadPdfFormatException
 import com.itextpdf.text.pdf.BaseFont
 import com.itextpdf.text.pdf.PdfReader
@@ -24,7 +28,9 @@ import com.itextpdf.text.pdf.PdfStamper
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import tramais.hnb.hhrfid.R
 import tramais.hnb.hhrfid.base.BaseActivity
-import tramais.hnb.hhrfid.bean.*
+import tramais.hnb.hhrfid.bean.AnimalLiPeiPdfBean
+import tramais.hnb.hhrfid.bean.FenPei
+import tramais.hnb.hhrfid.bean.ResultBean
 import tramais.hnb.hhrfid.constant.Config
 import tramais.hnb.hhrfid.constant.Constants
 import tramais.hnb.hhrfid.interfaces.GetCommon
@@ -37,7 +43,6 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.util.*
 
 class ActivityAnimalCBPublic : BaseActivity() {
     var pageIndex = 1
@@ -115,7 +120,7 @@ class ActivityAnimalCBPublic : BaseActivity() {
             isLoadMore = false
             currentIndex = 1
             getBill(Utils.getEdit(etSearch), "7", currentIndex)
-        }else{
+        } else {
             netTips()
         }
     }
@@ -155,9 +160,8 @@ class ActivityAnimalCBPublic : BaseActivity() {
             isLoadMore = false
             mIvArrow!!.animate().setDuration(100).rotation(90f).start()//缴费状态：未同步 传f5 ，未缴费  传f7 ，已缴费  传f9
             PopuUtils(this).initChoicePop(rlPayType, choice_type) { str: String? ->
-//未初审  传f1，未公示  传f3 ，已公示  传f5
+                //未初审  传f1，未公示  传f3 ，已公示  传f5
                 mTypeChoice!!.text = str
-
                 mIvArrow!!.animate().setDuration(100).rotation(0f).start()
                 getBill(Utils.getEdit(etSearch), str!!, pageIndex)
             }
@@ -204,7 +208,6 @@ class ActivityAnimalCBPublic : BaseActivity() {
         if (module_name == "养殖险") {
             url = Config.GetBaoAn
             statu_ = when (statu) {
-
                 "全部" ->
                     "7"
                 "清单分享" ->
@@ -314,19 +317,19 @@ class ActivityAnimalCBPublic : BaseActivity() {
     }
 
     fun getAnimalLiPeiPdf(fNumber: String?) {
-       /* RequestUtil.getInstance(mContext)!!.GetAnimalLipeiPDF(
-                fNumber
-        ) { data ->
+        /* RequestUtil.getInstance(mContext)!!.GetAnimalLipeiPDF(
+                 fNumber
+         ) { data ->
 
-            if (data != null) {
-                handler.sendEmptyMessage(PDF_SAVE_START)
-                fillPdfTemplate(data)
-            } else {
-                hideAvi()
-                showStr("暂无数据")
-            }
-        }*/
-        RequestUtil.getInstance(mContext)!!.GetAnimalLipeiPDF(fNumber,object :GetCommon<AnimalLiPeiPdfBean>{
+             if (data != null) {
+                 handler.sendEmptyMessage(PDF_SAVE_START)
+                 fillPdfTemplate(data)
+             } else {
+                 hideAvi()
+                 showStr("暂无数据")
+             }
+         }*/
+        RequestUtil.getInstance(mContext)!!.GetAnimalLipeiPDF(fNumber, object : GetCommon<AnimalLiPeiPdfBean> {
             override fun getCommon(t: AnimalLiPeiPdfBean) {
                 if (t != null) {
                     handler.sendEmptyMessage(PDF_SAVE_START)
@@ -390,11 +393,11 @@ class ActivityAnimalCBPublic : BaseActivity() {
                         array_table.add(dataBean.fEarNumber ?: "")
                         array_table.add(dataBean.fRiskDate ?: "")
                         array_table.add(dataBean.fReasonName ?: "")
-                        array_table.add(dataBean?.fAnimalAge ?: "")
-                        array_table.add(dataBean?.fAnimalWeight ?: "")
-                        array_table.add(dataBean?.fUnitAmount ?: "")
-                        array_table.add(dataBean?.fLossAmount ?: "")
-                        array_sign.add(dataBean?.fSignPicture ?: "")
+                        array_table.add(dataBean.fAnimalAge ?: "")
+                        array_table.add(dataBean.fAnimalWeight ?: "")
+                        array_table.add(dataBean.fUnitAmount ?: "")
+                        array_table.add(dataBean.fLossAmount ?: "")
+                        array_sign.add(dataBean.fSignPicture ?: "")
                     }
                 }
                 //头部

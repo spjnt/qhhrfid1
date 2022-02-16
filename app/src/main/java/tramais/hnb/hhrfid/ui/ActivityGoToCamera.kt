@@ -30,7 +30,7 @@ import tramais.hnb.hhrfid.ui.dialog.DialogChoiceRegion
 import tramais.hnb.hhrfid.ui.popu.PopuChoice
 import tramais.hnb.hhrfid.util.*
 
-class ActivityGoToCamer : BaseActivity() {
+class ActivityGoToCamera : BaseActivity() {
     private var mFarmerName: EditText? = null
     private var mIv: ImageView? = null
     private var latitude = 0.0
@@ -163,7 +163,7 @@ class ActivityGoToCamer : BaseActivity() {
     var insure_type = ""
     override fun initListner() {
         insurance_type.setOnClickListener {
-            PopuChoice(this@ActivityGoToCamer, reason, "请选择险种", mutableListOf("养殖险", "种植险", "林险")) {
+            PopuChoice(this@ActivityGoToCamera, reason, "请选择险种", mutableListOf("养殖险", "种植险", "林险")) {
                 insurance_type!!.text = it
                 insure_type = it
                 if (it == "养殖险") {
@@ -208,7 +208,7 @@ class ActivityGoToCamer : BaseActivity() {
                 showStr("暂无出险原因选择")
                 return@setOnClickListener
             }
-            PopuChoice(this@ActivityGoToCamer, reason, "请选择出险原因", riskReason) {
+            PopuChoice(this@ActivityGoToCamera, reason, "请选择出险原因", riskReason) {
                 reason!!.text = it
                 risk_reason = it
             }
@@ -218,7 +218,7 @@ class ActivityGoToCamer : BaseActivity() {
                 showStr("暂无标的名称选择")
                 return@setOnClickListener
             }
-            PopuChoice(this@ActivityGoToCamer, biaodi_name, "请选择标的名称", biaodis) {
+            PopuChoice(this@ActivityGoToCamera, biaodi_name, "请选择标的名称", biaodis) {
                 biaodi_name!!.text = it
                 biaodi_ = it
             }
@@ -232,7 +232,7 @@ class ActivityGoToCamer : BaseActivity() {
         }
         val farmer_name = et_farmer_name.text.toString()
         if (farmer_name.isEmpty()) {
-            showStr("请输入养殖户姓名")
+            showStr("请输入被保险人姓名")
             return
         }
 

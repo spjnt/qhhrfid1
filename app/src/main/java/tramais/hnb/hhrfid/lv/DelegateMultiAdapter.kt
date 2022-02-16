@@ -11,7 +11,7 @@ import tramais.hnb.hhrfid.bean.NewsList
 
 class DelegateMultiAdapter(protected var mContext: Context) : BaseDelegateMultiAdapter<NewsList?, BaseViewHolder>() {
      override fun convert(helper: BaseViewHolder, item: NewsList?) {
-        when (helper?.itemViewType) {
+        when (helper.itemViewType) {
             NewsList.TEXT -> {
                 helper.setText(R.id.news_title, item?.title)
                 helper.setText(R.id.news_time, item?.updatetime)

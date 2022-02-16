@@ -22,7 +22,6 @@ import tramais.hnb.hhrfid.R
  */
 class WaterMaskView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
         RelativeLayout(context, attrs) {
-
     private val recyleView: RecyclerView
     private var rlLeft: RecyclerView
     private var tvLocation: TextView
@@ -44,29 +43,29 @@ class WaterMaskView @JvmOverloads constructor(context: Context, attrs: Attribute
     private var min_width: Float = 640f
     private var height_: Float = 0f
     private var width_: Float = 0f
-    fun setBackData(crrators: MutableList<String>, height: Float, width: Float) {
-        this.crrators = crrators
+    fun setBackData(creators: MutableList<String>, height: Float, width: Float) {
+        this.crrators = creators
         this.height_ = height
         this.width_ = width
         setBackAdapter(height, width_)
-        mAdapter!!.addData(crrators)
+        mAdapter!!.addData(creators)
         // mAdapter!!.notifyDataSetChanged()
         //  LogUtils.e("width  $width")
 
         if (width >= max_width) { //>=1080
             //  tvLocation.textSize = 16.0f
-            setPiccLoggo(400)
+            setPicLogo(400)
             setLocation(50)
         } else if (width < max_width && width >= middle_width) {//  >=860 <1080
-            setPiccLoggo(300)
+            setPicLogo(300)
             setLocation(40)
             // tvLocation.textSize = 12.0f
         } else if (width < middle_width && width >= min_width) { // >=640 <860
-            setPiccLoggo(200)
+            setPicLogo(200)
             setLocation(30)
             // tvLocation.textSize = 8.0f
         } else {  //<640
-            setPiccLoggo(100)
+            setPicLogo(100)
             setLocation(20)
             // tvLocation.textSize = 6.0f
         }
@@ -74,7 +73,7 @@ class WaterMaskView @JvmOverloads constructor(context: Context, attrs: Attribute
     }
 
     /*PICClogo大小设置*/
-    private fun setPiccLoggo(width: Int) {
+    private fun setPicLogo(width: Int) {
         val picc_layoutParams = ivPicc.layoutParams
         picc_layoutParams.width = width
         picc_layoutParams.height = width / 4
@@ -84,8 +83,8 @@ class WaterMaskView @JvmOverloads constructor(context: Context, attrs: Attribute
     /*定位图片设置*/
     private fun setLocation(width: Int) {
         val layoutParams = ivLocation.layoutParams
-        layoutParams.width = width
-        layoutParams.height = width
+        layoutParams.width = (width*0.6).toInt()
+        layoutParams.height = (width*0.6).toInt()
         ivLocation.layoutParams = layoutParams
     }
 
@@ -107,7 +106,7 @@ class WaterMaskView @JvmOverloads constructor(context: Context, attrs: Attribute
         } else {
             tvLocation.text = ":${location.toString()}"
             val layoutParams = tvLocation.layoutParams
-            layoutParams.width = (width*0.8).toInt()
+            layoutParams.width = (width*0.95).toInt()
             tvLocation.layoutParams = layoutParams
             /*  val rep_len = 15
               val loc_buff = StringBuffer(location_!!)
@@ -134,13 +133,13 @@ class WaterMaskView @JvmOverloads constructor(context: Context, attrs: Attribute
         recyleView = findViewById(R.id.recyle_view)
         llBottom = findViewById(R.id.ll_bottom)
         ivLocation = findViewById(R.id.iv_location)
-        recyleView!!.layoutManager = GridLayoutManager(context, 2)
+        recyleView.layoutManager = GridLayoutManager(context, 2)
         rlLeft.layoutManager = LinearLayoutManager(context)
     }
 
 
     var mAdapter: BaseQuickAdapter<String?, BaseViewHolder>? = null
-    fun setBackAdapter(height: Float, width: Float) {
+    private fun setBackAdapter(height: Float, width: Float) {
         recyleView.adapter =
                 object : BaseQuickAdapter<String?, BaseViewHolder>(R.layout.item_roat_text) {
                     override fun convert(holder: BaseViewHolder, item: String?) {
@@ -149,15 +148,15 @@ class WaterMaskView @JvmOverloads constructor(context: Context, attrs: Attribute
                         layoutParams.height = (height / 5).toInt()
                         layoutParams.width = (width / 2).toInt()
                         //  LogUtils.e("width  $width")
-                      /*  if (width >= max_width) { //>1080
-                            view.textSize = 12.0f
-                        } else if (width < max_width && width >= middle_width) {//  >860 <1080
-                            view.textSize = 10.0f
-                        } else if (width < middle_width && width >= min_width) { // >640 <860
-                            view.textSize = 8.0f
-                        } else {  //<640
-                            view.textSize = 4.0f
-                        }*/
+                        // if (width >= max_width) { //>1080
+                        // view.textSize = 12.0f
+                        // } else if (width < max_width && width >= middle_width) {//  >860 <1080
+                        // view.textSize = 10.0f
+                        // } else if (width < middle_width && width >= min_width) { // >640 <860
+                        // view.textSize = 8.0f
+                        // } else {  //<640
+                        // view.textSize = 4.0f
+                        // }
                         view.layoutParams = layoutParams
                         view.text = "操作员：$item"
                     }
@@ -168,7 +167,7 @@ class WaterMaskView @JvmOverloads constructor(context: Context, attrs: Attribute
     var mLeftAdapter: BaseQuickAdapter<String?, BaseViewHolder>? = null
     fun setLeftAdapter(width: Float) {
         val layoutParams = rlLeft.layoutParams
-        layoutParams.width = (width*0.8).toInt()
+        layoutParams.width = (width*0.95).toInt()
         rlLeft.layoutParams = layoutParams
         rlLeft.adapter = object : BaseQuickAdapter<String?, BaseViewHolder>(R.layout.item_text_small) {
             override fun convert(holder: BaseViewHolder, item: String?) {

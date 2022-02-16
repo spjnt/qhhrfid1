@@ -158,7 +158,7 @@ class AnimalInsureFragment : BaseFragment() {
                          Utils.goToNextUI(ActivityWeightBody::class.java)
                     }
                     "理赔拍照" -> {
-                        Utils.goToNextUI(ActivityGoToCamer::class.java)
+                        Utils.goToNextUI(ActivityGoToCamera::class.java)
                     }
                 }
             }

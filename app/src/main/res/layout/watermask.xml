@@ -40,17 +40,24 @@
                 android:id="@+id/iv_location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:layout_gravity="center"
                 android:src="@mipmap/location" />
-
-            <TextView
+            <!--app:autoSizeMaxTextSize=”100sp”
+                app:autoSizeMinTextSize=”12sp”
+                app:autoSizeStepGranularity=”2sp”
+                app:autoSizeText=”uniform”-->
+            <tramais.hnb.hhrfid.ui.view.FitTextView
                 android:id="@+id/tv_location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/size_2"
+                android:layout_marginStart="@dimen/size_2"
+                android:gravity="center_vertical"
+                android:layout_gravity="center_vertical"
                 android:textColor="@color/red"
+                android:textSize="@dimen/text_size_12sp"
 
-               />
+                />
         </LinearLayout>
 
     </LinearLayout>

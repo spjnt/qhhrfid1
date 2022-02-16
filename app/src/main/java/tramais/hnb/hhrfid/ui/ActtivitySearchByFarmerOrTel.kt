@@ -132,8 +132,6 @@ class ActtivitySearchByFarmerOrTel : BaseActivity() {
         else {
             netTips()
         }
-
-
     }
 
     override fun initListner() {
@@ -199,34 +197,28 @@ class ActtivitySearchByFarmerOrTel : BaseActivity() {
                 if (!TextUtils.isEmpty(str)) {
                     val jsonObject = JSONObject.parseObject(str)
                     val jsonArray = jsonObject.getJSONArray("Data")
-
                     val farmerName = jsonObject.getString("FarmerName")
                     total = jsonObject.getInteger("Qty")
-                    mTvTotal!!.text = total.toString() + ""
+                    mTvTotal!!.text = total.toString()
                     nextAndPer(total, currentPage)
                     mTvFarmId!!.text = farmerName
-
                     if (jsonArray != null && jsonArray.size > 0) {
                         animalSaveLists = instant!!.parseCommonUseArr(jsonArray, SearchByFarm::class.java)
-
                         val message = Message()
                         message.obj = animalSaveLists
                         message.what = 2
                         handler!!.sendMessage(message)
-
                     } else {
                         showStr("暂无信息返回")
                     }
-
-
                 } else {
                     showStr("暂无信息返回")
                 }
             }
         } else {
             val farmListCaches: MutableList<AnimalSaveCache> = ArrayList()
-            if (farmListCaches != null) farmListCaches.clear()
-            var condition_arr: Array<String>?
+            farmListCaches.clear()
+            val condition_arr: Array<String>?
             val numeric = Utils.isNumeric(input)
             condition_arr = if (!numeric) {
                 arrayOf("FarmName like ? and creatTime>= ?  and creatTime<= ? ", "%$input%", "$startTime 00:00:00", "$endTime 23:59:59")
@@ -235,10 +227,10 @@ class ActtivitySearchByFarmerOrTel : BaseActivity() {
             }
             where(*condition_arr).order("creatTime desc").findAsync(AnimalSaveCache::class.java).listen { list: List<AnimalSaveCache> ->
                 LogUtils.e("list  ${list.size}")
-                if (list != null && list.isNotEmpty()) {
+                if (list.isNotEmpty()) {
                     total = list.size
                     farmListCaches.addAll(list)
-                    mTvTotal!!.text = total.toString() + ""
+                    mTvTotal!!.text = total.toString()
                     cacheToLine(farmListCaches)
                     nextAndPer(total, currentPage)
                 } else {

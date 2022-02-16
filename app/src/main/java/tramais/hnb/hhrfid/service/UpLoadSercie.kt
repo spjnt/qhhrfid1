@@ -98,11 +98,11 @@ class UpLoadSercie : Service() {
     /*牧户信息*/
     private fun upLoadFarmer(getOneString: GetOneString) {
         LitePal.where("isUpLoad =?", "0").findAsync(FarmListCache::class.java).listen { uploadS ->
-            var path: HashMap<String, String?> = HashMap()
+            val path: HashMap<String, String?> = HashMap()
             path.clear()
             if (uploadS != null && uploadS.size > 0) {
                 for (item_ in 0 until uploadS.size) {
-                    var item = uploadS[item_]
+                    val item = uploadS[item_]
                     val idPath = item.idPath
                     val bankPath = item.bankPath
                     val zjBackPicture = item.zjBackPicture

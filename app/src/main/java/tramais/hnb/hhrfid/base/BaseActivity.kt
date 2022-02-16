@@ -305,39 +305,6 @@ abstract class BaseActivity : AppCompatActivity() {
                 + "<font color='#646f7f'  size='5'>" + "页" + "</font>")
     }
 
-/*    fun initConfig(mSmartTmrData: SmartTable<*>) {
-        mSmartTmrData.config.isShowTableTitle = false
-        mSmartTmrData.config.isShowXSequence = false
-        mSmartTmrData.config.isShowYSequence = false
-        mSmartTmrData.config.verticalPadding = 20
-        mSmartTmrData.config.horizontalPadding = 20
-        mSmartTmrData.config.contentStyle = FontStyle(this, 16, resources.getColor(R.color.black))
-        mSmartTmrData.config.columnTitleStyle = FontStyle(this, 16, resources.getColor(R.color.black))
-        mSmartTmrData.config.isFixedYSequence = true
-        val outSize = Point()
-        windowManager.defaultDisplay.getRealSize(outSize)
-        val x = outSize.x
-        mSmartTmrData.config.minTableWidth = x
-    }*/
-
-    open fun formattNums(nums: String): String? {
-        if (!TextUtils.isEmpty(nums) && nums.length >= 8) {
-            val start = nums.substring(0, 4)
-            val end = nums.substring(nums.length - 4)
-            return "$start****$end"
-            /* if (nums.length() == 11) {
-                return nums.replaceAll("(\\d{3})\\d{5}(\\d{3})", "$1****$2");
-            } else if (nums.length() == 18) {
-                return nums.replaceAll("(\\d{4})\\d{10}(\\d{4})", "$1****$2");
-            } else {
-                int i = nums.length() - 8;
-                String start = nums.substring(0, 4);
-                String end = nums.substring(nums.length() - 4, nums.length());
-                return start + "****" + end;
-            }*/
-        }
-        return nums
-    }
 
     companion object {
         const val GET_EPC_C72 = 1 shl 100
