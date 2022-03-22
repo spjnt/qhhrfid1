@@ -115,7 +115,7 @@ class ActivityFarmList : BaseActivity() {
     override fun initData() {
         val intent = intent
         module_name = intent.getStringExtra(Constants.MODULE_NAME)
-        LogUtils.e("module_name  $module_name")
+       // LogUtils.e("module_name  $module_name")
         if (!module_name.isNullOrEmpty()) {
             if (module_name == "养殖户登记") {
                 setRightText("新增农户")

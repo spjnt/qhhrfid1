@@ -1885,9 +1885,7 @@ class RequestUtil(var context: Context) {
         OkhttpUtil.getInstance(context).doPosts(Config.NXLPAppServlet, params, object : OkResponseInterface {
             override fun onSuccess(bean: HttpBean, id: Int) {
                 getCore.getCore(JSONObject.parseObject(bean.response, SubmitCoreBean::class.java))
-
             }
-
             override fun onError(e: Exception) {}
         })
     }
@@ -1899,12 +1897,9 @@ class RequestUtil(var context: Context) {
         }*/
     fun ai(FarmerNumber: String?, filename: String?, address: String?, latitude: Double, longitude: Double, getShuShu: GetShuShu) {
         val params = Params.createParams()
-
         params.add("CompanyNumber", companyNum) //投保单号
         params.add("EmployeeName", employName)
         params.add("FarmerNumber", FarmerNumber) //投保单号
-
-
         params.add("filename", filename) //投保单号
         params.add("address", address)
         params.add("latitude", latitude) //投保单号
@@ -1912,7 +1907,6 @@ class RequestUtil(var context: Context) {
         OkhttpUtil.getInstance(context).doPosts(Config.AIShuoShuo, params, object : OkResponseInterface {
             override fun onSuccess(bean: HttpBean, id: Int) {
                 getShuShu.getShu(JSONObject.parseObject(bean.response, ShuShu::class.java))
-
             }
 
             override fun onError(e: Exception) {}

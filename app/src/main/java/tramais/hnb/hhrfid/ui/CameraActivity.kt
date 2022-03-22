@@ -40,8 +40,6 @@ import tramais.hnb.hhrfid.util.*
 import tramais.hnb.hhrfid.util.GsonUtil.Companion.instant
 import tramais.hnb.hhrfid.waterimage.WaterMaskUtil
 import tramais.hnb.hhrfid.waterimage.WaterMaskView
-import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.math.max
 
 class CameraActivity : BaseActivity() {
@@ -522,8 +520,14 @@ class CameraActivity : BaseActivity() {
                                 val Bitmapbm = BitmapFactory.decodeFile(it.absolutePath)
                                 if (Bitmapbm != null && waterMaskView != null) {
                                     waterMaskView!!.setBackData(crators, Bitmapbm.height.toFloat(), Bitmapbm.width.toFloat())
-                                    waterMaskView!!.setLeftData(waterInfos, Bitmapbm.height.toFloat())
-                                    waterMaskView!!.setLocation(farmer_address,Bitmapbm.width)
+                                    val int = PreferUtils.getInt(this@CameraActivity, Constants.color_int)
+                                    val intColor = if (int == -1) {
+                                        resources.getColor(R.color.new_theme)
+                                    } else {
+                                        resources.getColor(int)
+                                    }
+                                    waterMaskView!!.setLeftData(waterInfos, Bitmapbm.height.toFloat(), intColor)
+                                    waterMaskView!!.setLocation(farmer_address, Bitmapbm.width, intColor)
 
                                     path = saveWaterMask(waterMaskView, Bitmapbm, path_, photo_name)
                                     if (it.exists())

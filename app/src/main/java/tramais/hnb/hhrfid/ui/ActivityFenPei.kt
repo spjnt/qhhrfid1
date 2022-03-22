@@ -222,14 +222,13 @@ class ActivityFenPei : BaseActivity() {
                 arrayOf("number like ?  ", "%$input%")
             }
         }
-        val fluentQuery: FluentQuery?
 
-        fluentQuery = if (array != null) {
+        val fluentQuery: FluentQuery? = if (array != null) {
             LitePal.where(*array).order("number desc").limit(20)
         } else {
             LitePal.where(null).order("number desc").limit(20)
         }
-        fluentQuery.findAsync(BaoAnListCache::class.java).listen { list: List<BaoAnListCache> ->
+        fluentQuery?.findAsync(BaoAnListCache::class.java)?.listen { list: List<BaoAnListCache> ->
             if (list.isNotEmpty()) {
                 cacheToLine(farmListCaches, statu)
             } else {
@@ -243,8 +242,8 @@ class ActivityFenPei : BaseActivity() {
         if (list.size == 0) return
         touBaoBeans?.clear()
         list.forEach {
-            var statu_: Boolean = false
-            statu_ = if (statu == "全部") {
+            //  var statu_: Boolean = false
+            val statu_ = if (statu == "全部") {
                 it.status.equals("新建") || it.status.equals("已分配")
             } else {
                 it.status.equals(statu)
@@ -268,7 +267,6 @@ class ActivityFenPei : BaseActivity() {
                 fenPei.insureNumber = it.insureNumber
                 touBaoBeans!!.add(fenPei)
             }
-
         }
         val msg = Message()
         msg.obj = touBaoBeans
@@ -291,7 +289,8 @@ class ActivityFenPei : BaseActivity() {
             it.setOnItemClickListener { adapter, view, position ->
                 val fenPei = it.getItem(position) as FenPei
                 fenPei.let {
-                    DialogCheckInfo(context, "报案信息", it).show()
+                    val dialogCheckInfo = DialogCheckInfo(context, "报案信息", it)
+                    if (!isFinishing && !dialogCheckInfo.isShowing) dialogCheckInfo.show()
                 }
             }
         }

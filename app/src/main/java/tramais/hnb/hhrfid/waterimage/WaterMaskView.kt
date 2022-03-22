@@ -90,37 +90,25 @@ class WaterMaskView @JvmOverloads constructor(context: Context, attrs: Attribute
 
 
     private var infos: MutableList<String> = ArrayList()
-    fun setLeftData(infos: MutableList<String>, width: Float) {
+    fun setLeftData(infos: MutableList<String>, width: Float,color: Int) {
         this.infos = infos
-        setLeftAdapter(width)
+        setLeftAdapter(width,color)
         mLeftAdapter!!.addData(infos)
     }
 
     var location_: String? = null
 
     @SuppressLint("SetTextI18n")
-    fun setLocation(location: String?, width: Int) {
+    fun setLocation(location: String?, width: Int,color:Int) {
         this.location_ = location
         if (location_.isNullOrEmpty()) {
             tvLocation.text = "无法定位"
         } else {
             tvLocation.text = ":${location.toString()}"
+            tvLocation.setTextColor(color)
             val layoutParams = tvLocation.layoutParams
             layoutParams.width = (width*0.95).toInt()
             tvLocation.layoutParams = layoutParams
-            /*  val rep_len = 15
-              val loc_buff = StringBuffer(location_!!)
-              val len = location_!!.length
-              var insert: StringBuffer? = null
-              if (len > rep_len) {
-                  for (item in 1..(len / rep_len)) {
-                      insert = loc_buff.insert(rep_len * item, "\n")
-                  }
-              } else {
-                  insert = StringBuffer()
-                  insert.append(location_)
-              }
-              tvLocation.text = ":${insert.toString()}"*/
         }
 
     }
@@ -147,6 +135,7 @@ class WaterMaskView @JvmOverloads constructor(context: Context, attrs: Attribute
                         val layoutParams = view.layoutParams
                         layoutParams.height = (height / 5).toInt()
                         layoutParams.width = (width / 2).toInt()
+
                         //  LogUtils.e("width  $width")
                         // if (width >= max_width) { //>1080
                         // view.textSize = 12.0f
@@ -165,13 +154,14 @@ class WaterMaskView @JvmOverloads constructor(context: Context, attrs: Attribute
 
 
     var mLeftAdapter: BaseQuickAdapter<String?, BaseViewHolder>? = null
-    fun setLeftAdapter(width: Float) {
+    fun setLeftAdapter(width: Float,color: Int) {
         val layoutParams = rlLeft.layoutParams
         layoutParams.width = (width*0.95).toInt()
         rlLeft.layoutParams = layoutParams
         rlLeft.adapter = object : BaseQuickAdapter<String?, BaseViewHolder>(R.layout.item_text_small) {
             override fun convert(holder: BaseViewHolder, item: String?) {
                 val view = holder.getView<TextView>(R.id.tv)
+                view.setTextColor(color)
                 /* if (width >= max_width) { //>1080
                      view.textSize = 16.0f
                  } else if (width <= max_width && width > middle_width) {//  >860 <1080

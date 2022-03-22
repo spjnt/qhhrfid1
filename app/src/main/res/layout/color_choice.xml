@@ -37,10 +37,11 @@
 
     <include layout="@layout/gray_line" />
 
-    <ListView
-        android:id="@+id/list_room_choice"
+    <androidx.recyclerview.widget.RecyclerView
+        android:background="@color/color_gray"
+        android:id="@+id/color_choice"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:dividerHeight="@dimen/size_0"
+        android:dividerHeight="@dimen/size_0.5px"
         android:scrollbars="none" />
 </LinearLayout>

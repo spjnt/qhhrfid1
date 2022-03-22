@@ -14,11 +14,10 @@ import com.yanzhenjie.recyclerview.ExpandableAdapter
 import tramais.hnb.hhrfid.R
 import tramais.hnb.hhrfid.bean.CheckDetail
 
-class ExpandedAdapter(context: Context?) : ExpandableAdapter<ExpandableAdapter.ViewHolder?>() {
+open class ExpandedAdapter(context: Context?) : ExpandableAdapter<ExpandableAdapter.ViewHolder?>() {
     private val mInflater: LayoutInflater = LayoutInflater.from(context)
     private var mGroupList: MutableList<CheckDetail.LiPeiAnimalDataDTO?>? = ArrayList()
     fun setGroupList(groupList: MutableList<CheckDetail.LiPeiAnimalDataDTO?>?) {
-
         mGroupList = groupList
         notifyDataSetChanged()
     }
@@ -29,7 +28,7 @@ class ExpandedAdapter(context: Context?) : ExpandableAdapter<ExpandableAdapter.V
 
     override fun childItemCount(parentPosition: Int): Int {
         val liPeiAnimalPicData = mGroupList!![parentPosition]!!.liPeiAnimalPicData
-        return if (liPeiAnimalPicData == null) 0 else liPeiAnimalPicData!!.size
+        return liPeiAnimalPicData?.size ?: 0
     }
 
     override fun createParentHolder(root: ViewGroup, viewType: Int): ViewHolder {
@@ -57,7 +56,7 @@ class ExpandedAdapter(context: Context?) : ExpandableAdapter<ExpandableAdapter.V
         var mTvComRate: TextView = itemView.findViewById(R.id.tv_com_rate)
         fun setData(data: CheckDetail.LiPeiAnimalDataDTO?, position: Int) {
             data?.let {
-                var tagInfo = if (data.fEarNumber.isNullOrBlank())
+                val tagInfo = if (data.fEarNumber.isNullOrBlank())
                     position + 1
                 else (position + 1).toString() + " -- " + data.fEarNumber
                 mTvEarTag.text = "标的: $tagInfo"
@@ -90,7 +89,7 @@ class ExpandedAdapter(context: Context?) : ExpandableAdapter<ExpandableAdapter.V
         notifyItemRangeChanged(position, this.mGroupList!!.size - position)
     }
 
-    fun compatibilityDataSizeChanged(size: Int) {
+    private fun compatibilityDataSizeChanged(size: Int) {
         if (this.mGroupList!!.size == size) {
             notifyDataSetChanged()
         }

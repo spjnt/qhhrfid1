@@ -1,5 +1,6 @@
 package tramais.hnb.hhrfid.ui
 
+import android.annotation.SuppressLint
 import android.os.*
 import android.view.View
 import android.widget.*
@@ -67,11 +68,10 @@ class ActivitySubmitCore : BaseActivity() {
             return
         }
         RequestUtil.getInstance(this)!!.getNXLPAppServlet(Utils.getText(mNmber), employeeNo, object : GetCore {
+            @SuppressLint("SetTextI18n")
             override fun getCore(core: SubmitCoreBean?) {
-
                 core?.let {
                     showStr(it.msg)
-
                     if (it.resCode < 0) {
                         mSumitResult!!.text = "同步结果: ${it.msg ?: ""}" + "\n\n" + "失败原因: ${it.fErrorMsg ?: ""}"
                         mComNumber?.text = "同步失败"
@@ -79,13 +79,11 @@ class ActivitySubmitCore : BaseActivity() {
                     } else {
                         mComNumber?.text = it.fCompensateNo
                         mClaimNum?.text = it.fClaimNo
-
                         mSumitResult!!.text = "同步结果: ${it.msg}" + "\n\n" + "立案号: ${it.fClaimNo ?: ""}" + "\n\n" + "计算书号: ${it.fCompensateNo ?: ""}" + "\n\n" + "批单号: ${it.fEndorseNo ?: ""}"
                     }
                 }
             }
         })
-
     }
 
     var userName_: String = ""
@@ -111,7 +109,7 @@ class ActivitySubmitCore : BaseActivity() {
     }
 
     private var employeeListBeans: MutableList<EmployeeListBean.DataDTO?>? = ArrayList()
-    fun getChecker() {
+    private fun getChecker() {
         employeeListBeans!!.clear()
         RequestUtil.getInstance(this)!!.getEmplyeListnNew("", "核保", object : GetEmployeeList {
             override fun getEmployee(infoDetail: EmployeeListBean?) {
@@ -123,5 +121,4 @@ class ActivitySubmitCore : BaseActivity() {
             }
         })
     }
-
 }

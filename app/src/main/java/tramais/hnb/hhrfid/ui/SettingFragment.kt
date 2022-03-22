@@ -7,38 +7,26 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
-import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.alibaba.fastjson.JSONObject
-import com.allenliu.versionchecklib.core.DownloadManager
-import com.allenliu.versionchecklib.utils.ALog
-import com.allenliu.versionchecklib.utils.FileHelper
-import com.allenliu.versionchecklib.v2.AllenVersionChecker
-import com.allenliu.versionchecklib.v2.builder.UIData
-import com.allenliu.versionchecklib.v2.callback.CustomVersionDialogListener
-import com.apkfuns.logutils.LogUtils
-import com.gyf.immersionbar.ImmersionBar
 import com.gyf.immersionbar.ktx.immersionBar
 import com.rscja.deviceapi.RFIDWithUHF
 import com.rscja.deviceapi.exception.ConfigurationException
 import tramais.hnb.hhrfid.R
 import tramais.hnb.hhrfid.base.BaseFragment
-import tramais.hnb.hhrfid.bean.HttpBean
-import tramais.hnb.hhrfid.constant.Config
+import tramais.hnb.hhrfid.bean.ColorChoiceBean
 import tramais.hnb.hhrfid.constant.Constants
-import tramais.hnb.hhrfid.interfaces.GetResultJsonObject
-import tramais.hnb.hhrfid.interfaces.OkResponseInterface
-import tramais.hnb.hhrfid.net.OkhttpUtil
-import tramais.hnb.hhrfid.net.Params
+import tramais.hnb.hhrfid.interfaces.GetCommon
 import tramais.hnb.hhrfid.service.DownloadService
-import tramais.hnb.hhrfid.ui.dialog.BaseDialog
 import tramais.hnb.hhrfid.ui.dialog.DialogFeedBack
 import tramais.hnb.hhrfid.ui.popu.PopuChoice
-import tramais.hnb.hhrfid.util.*
-import java.io.File
-import java.util.*
+import tramais.hnb.hhrfid.ui.popu.PopuColorChoice
+import tramais.hnb.hhrfid.util.NetUtil
+import tramais.hnb.hhrfid.util.PreferUtils
+import tramais.hnb.hhrfid.util.TimeUtil
+import tramais.hnb.hhrfid.util.Utils
 
 class SettingFragment : BaseFragment() {
 
@@ -48,19 +36,23 @@ class SettingFragment : BaseFragment() {
     private var mIvRefChoice: RelativeLayout? = null
     private var data_img: MutableList<String>? = null
     private var data_rfid: MutableList<String>? = null
-
-
+    private var mColorChoice: RelativeLayout? = null
+    private var mTvColor: TextView? = null
+    private var mTvCologBg: TextView? = null
     private var mTvAccount: TextView? = null
     private var mTvPhone: TextView? = null
     private var mRlVersion: RelativeLayout? = null
     private var mRlCache: RelativeLayout? = null
     private var mRlFeedback: RelativeLayout? = null
     private var mBtnLogin: LinearLayout? = null
-//    private var mTvVersion: TextView? = null
+
+    //    private var mTvVersion: TextView? = null
     private var mTvCacheTime: TextView? = null
     private var mTvCompany: TextView? = null
     override fun findViewById(view: View?) {
         view?.let {
+            mTvColor = it.findViewById(R.id.tv_color)
+            mTvCologBg = it.findViewById(R.id.tv_color_bg)
             mIvPhotos = it.findViewById(R.id.iv_photos)
             mRlPhotoChoice = it.findViewById(R.id.rl_photo_choice)
             mTvRef = it.findViewById(R.id.tv_ref)
@@ -72,8 +64,9 @@ class SettingFragment : BaseFragment() {
             mRlFeedback = it.findViewById(R.id.rl_feedback)
             mBtnLogin = it.findViewById(R.id.btn_quit)
             mTvCompany = it.findViewById(R.id.tv_company)
+            mColorChoice = it.findViewById(R.id.rl_color)
 //            mTvVersion = it.findViewById(R.id.tv_version)
-           // mTvVersion!!.text = "V " + PackageUtils.getVersionName(requireContext())
+            // mTvVersion!!.text = "V " + PackageUtils.getVersionName(requireContext())
             val power = PreferUtils.getString(context, Constants.c72_power)
 
             if (!TextUtils.isEmpty(power) && Integer.valueOf(power) >= 0) mTvRef!!.text = power + "dbm"
@@ -118,9 +111,16 @@ class SettingFragment : BaseFragment() {
         if (ifC72()) {
             Thread { initUhf() }.start()
         }
+        val color_str = PreferUtils.getString(context, Constants.color_str)
+        val color_int = PreferUtils.getInt(context, Constants.color_int)
+        if (color_str.isNullOrEmpty() && color_int == -1) {
+            mTvColor!!.text = colors[0].colorStr
+            mTvCologBg!!.setBackgroundColor(resources.getColor(colors[0].colorInt))
+        } else {
+            mTvColor!!.text = color_str
+            mTvCologBg!!.setBackgroundColor(resources.getColor(color_int))
+        }
     }
-
-
 
 
     companion object {
@@ -143,13 +143,28 @@ class SettingFragment : BaseFragment() {
                 mReader!!.init()
             }
         } catch (ex: ConfigurationException) {
-         //   "请确定是否使用正确的设备".showStr()
+            //   "请确定是否使用正确的设备".showStr()
 
             ex.printStackTrace()
         }
     }
 
+    val colors: MutableList<ColorChoiceBean> = mutableListOf(ColorChoiceBean("红色", R.color.new_theme),
+            ColorChoiceBean("绿色", R.color.f08c792),
+            ColorChoiceBean("蓝色", R.color.login_button), ColorChoiceBean("橙色", R.color.orange),
+            ColorChoiceBean("黑色", R.color.black), ColorChoiceBean("白色", R.color.white))
+
     override fun initListener() {
+        mColorChoice!!.setOnClickListener {
+            PopuColorChoice(requireActivity(), mColorChoice!!, "请选择颜色", colors, object : GetCommon<ColorChoiceBean> {
+                override fun getCommon(t: ColorChoiceBean) {
+                    mTvColor!!.text = t.colorStr
+                    mTvCologBg!!.setBackgroundColor(resources.getColor(t.colorInt))
+                    PreferUtils.putString(requireContext(), Constants.color_str, t.colorStr)
+                    PreferUtils.putInt(requireContext(), Constants.color_int, t.colorInt)
+                }
+            })
+        }
         /*设置照片数量*/
         mRlPhotoChoice!!.setOnClickListener { view: View? ->
             PopuChoice(activity, mRlPhotoChoice, "请选择照片数量", data_img) { str: String ->
@@ -216,12 +231,8 @@ class SettingFragment : BaseFragment() {
     }
 
 
-
-
-
-
-
     private var receiver: MyReceiver? = null
+
     inner class MyReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val down = intent.getIntExtra(Constants.DownLoad_desc, 0)

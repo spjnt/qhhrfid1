@@ -309,12 +309,18 @@ class CameraOnlyActivity : BaseActivity() {
                     .filter { true }             //(可选)过滤器
                     .compressObserver {
                         onSuccess = {
-                           // LogUtils.e("it.absolutePath   ${it.absolutePath}")
+                            // LogUtils.e("it.absolutePath   ${it.absolutePath}")
                             val Bitmapbm = BitmapFactory.decodeFile(it.absolutePath)
                             if (Bitmapbm != null) {
+                                val int = PreferUtils.getInt(this@CameraOnlyActivity, Constants.color_int)
+                                val intColor = if (int == -1) {
+                                    resources.getColor(R.color.new_theme)
+                                } else {
+                                    resources.getColor(int)
+                                }
                                 waterMaskView!!.setBackData(crators, Bitmapbm.height.toFloat(), Bitmapbm.width.toFloat())
-                                waterMaskView!!.setLeftData(waterInfos, Bitmapbm.width.toFloat())
-                                waterMaskView!!.setLocation(location_add, Bitmapbm.width)
+                                waterMaskView!!.setLeftData(waterInfos, Bitmapbm.width.toFloat(), intColor)
+                                waterMaskView!!.setLocation(location_add, Bitmapbm.width, intColor)
 
                                 path = saveWaterMask(waterMaskView, Bitmapbm, path_, photo_name)
                                 if (path.isNotEmpty() && File(path).exists()) {
@@ -323,7 +329,7 @@ class CameraOnlyActivity : BaseActivity() {
                                     lifecycleScope.launch {
                                         withContext(Dispatchers.Main) {
                                             bitmaps!!.add(path)
-                                           // LogUtils.e("path  $path")
+                                            // LogUtils.e("path  $path")
                                             scan_total.bringToFront()
                                             scan_total.text = "当前第 ${bitmaps.size} 张"
                                             imv_pic!!.visibility = View.VISIBLE

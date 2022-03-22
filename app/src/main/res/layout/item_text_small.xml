@@ -7,7 +7,7 @@
     android:padding="@dimen/size_0.5px"
     android:text=""
     android:textSize="@dimen/text_size_12sp"
-    android:textColor="@color/red"
+    android:textColor="@color/new_theme"
 
     />
 <!--  android:autoSizeMaxTextSize="@dimen/text_size_14sp"

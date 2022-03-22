@@ -77,5 +77,6 @@ public interface Constants {
 
     String camer_insure = "camer_insure";
     String camer_insure_name = "camer_insure_name";
-
+    String color_str = "color_str";
+    String color_int = "color_int";
 }

@@ -8,7 +8,9 @@ import android.text.TextUtils
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
@@ -21,7 +23,9 @@ import com.luck.picture.lib.config.PictureMimeType
 import com.luck.picture.lib.entity.LocalMedia
 import com.luck.picture.lib.listener.OnResultCallbackListener
 import com.luck.picture.lib.style.PictureParameterStyle
-import com.yanzhenjie.recyclerview.*
+import com.yanzhenjie.recyclerview.OnItemMenuClickListener
+import com.yanzhenjie.recyclerview.SwipeMenuCreator
+import com.yanzhenjie.recyclerview.SwipeMenuItem
 import tramais.hnb.hhrfid.R
 import tramais.hnb.hhrfid.base.BaseFragment
 import tramais.hnb.hhrfid.bean.CheckDetail
@@ -29,7 +33,10 @@ import tramais.hnb.hhrfid.bean.FenPei
 import tramais.hnb.hhrfid.bean.InsureLableBean
 import tramais.hnb.hhrfid.bean.RiskReason
 import tramais.hnb.hhrfid.constant.Config
-import tramais.hnb.hhrfid.interfaces.*
+import tramais.hnb.hhrfid.interfaces.ChoicePhoto
+import tramais.hnb.hhrfid.interfaces.GetBool
+import tramais.hnb.hhrfid.interfaces.GetCommonWithError
+import tramais.hnb.hhrfid.interfaces.GetInsureLable
 import tramais.hnb.hhrfid.lv.ExpandedAdapter
 import tramais.hnb.hhrfid.net.RequestUtil
 import tramais.hnb.hhrfid.ui.ActivityFeedCheck
@@ -41,9 +48,10 @@ import tramais.hnb.hhrfid.ui.dialog.DialogImg
 import tramais.hnb.hhrfid.ui.popu.PopuChoice
 import tramais.hnb.hhrfid.ui.popu.PopuChoicePicture
 import tramais.hnb.hhrfid.ui.view.RecyleViewForScrollView
-import tramais.hnb.hhrfid.util.*
-import java.util.*
-import kotlin.collections.ArrayList
+import tramais.hnb.hhrfid.util.GlideEngine
+import tramais.hnb.hhrfid.util.NetUtil
+import tramais.hnb.hhrfid.util.UpLoadFileUtil
+import tramais.hnb.hhrfid.util.Utils
 
 
 class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
@@ -219,7 +227,8 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
 
                     data_change.add(movie)
                     if (mAdapter != null)
-                        mAdapter!!.addData(data_change)
+                        requireActivity().runOnUiThread { mAdapter!!.addData(data_change) }
+
                     mLossTotal.setText(mAdapter!!.getData()?.size.toString() ?: "0")
                 } else {
                     "该耳标号已添加".showStr()
@@ -247,7 +256,9 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
                 }
 
                 if (mAdapter != null)
-                    mAdapter!!.addData(data_change)
+                    requireActivity().runOnUiThread {
+                        mAdapter!!.addData(data_change)
+                    }
             }
             mLossTotal.setText(mAdapter!!.getData()?.size.toString() ?: "0")
         }
@@ -260,7 +271,7 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
                 return@setOnClickListener
             }
             val unitCoverage = Utils.getText(mUnitCoverage)
-            if (!unitCoverage.isNullOrBlank()) {
+            if (unitCoverage.isNotBlank()) {
                 if (com_total.toDouble() > unitCoverage.toDouble()) {
                     "损失金额不得大于单位保额".showStr()
                     return@setOnClickListener
@@ -272,10 +283,10 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
             mAdapter?.let { adapter ->
                 val data = adapter.getData()
                 val data_change: MutableList<CheckDetail.LiPeiAnimalDataDTO?> = ArrayList()
-                data_change?.clear()
+                data_change.clear()
                 for (index in 0 until data!!.size) {
                     val item = data[index]
-                    var movie = CheckDetail.LiPeiAnimalDataDTO()
+                    val movie = CheckDetail.LiPeiAnimalDataDTO()
                     item?.let {
                         movie.fEarNumber = it.fEarNumber
                         movie.fLossAmount = com_total
@@ -283,7 +294,6 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
                         movie.fEntryID = item.fEntryID
                         movie.liPeiAnimalPicData = item.liPeiAnimalPicData
                         adapter.upDateData(index, movie)
-
                     }
                 }
                 //adapter.setGroupList(data_change)
@@ -301,7 +311,7 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
 
 
             if (Utils.isNumeric(com_rate)) {
-                if (com_rate!!.toDouble() > 100) {
+                if (com_rate.toDouble() > 100) {
                     "损失比例不得大于100".showStr()
                     return@setOnClickListener
                 }
@@ -309,10 +319,10 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
             mAdapter?.let { adapter ->
                 val data = adapter.getData()
                 val data_change: MutableList<CheckDetail.LiPeiAnimalDataDTO?> = ArrayList()
-                data_change?.clear()
+                data_change.clear()
                 for (index in 0 until data!!.size) {
                     val item = data[index]
-                    var movie = CheckDetail.LiPeiAnimalDataDTO()
+                    val movie = CheckDetail.LiPeiAnimalDataDTO()
                     item?.let {
                         movie.fEarNumber = it.fEarNumber
                         movie.fLossAmount = it.fLossAmount
@@ -334,16 +344,16 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
                 mHuarmType.text = str
             }
         }
-        mSave!!.setOnClickListener {
+        mSave.setOnClickListener {
 
 
             val loss_total = Utils.getEdit(mLossTotal)
-            if (loss_total.isNullOrEmpty()) {
+            if (loss_total.isEmpty()) {
                 "请输入损失数量".showStr()
                 return@setOnClickListener
             }
             val harm_type = Utils.getText(mHuarmType)
-            if (harm_type.isNullOrEmpty()) {
+            if (harm_type.isEmpty()) {
                 "请选择灾害类型".showStr()
                 return@setOnClickListener
             }
@@ -354,14 +364,15 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
             }
 
             for (item in data_quick) {
+
                 if (item!!.fLossAmount.isNullOrEmpty() || item.fRiskPre.isNullOrEmpty()) {
                     "损失金额或损失比例不能为空".showStr()
 
-                    break
+                    return@setOnClickListener
                 }
             }
             showAvi()
-            LogUtils.e("time  show" + System.currentTimeMillis())
+            //  LogUtils.e("time  show" + System.currentTimeMillis())
 
             Thread {
                 y = 0
@@ -386,7 +397,7 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
                         data?.let {
                             val liPeiAnimalDataDTO = data[parentPosition]
                             val dialogEdit = DialogEditCheck(requireContext(), "修改参数", parentPosition, dialog_title, liPeiAnimalDataDTO) { map ->
-                                var movie = CheckDetail.LiPeiAnimalDataDTO()
+                                val movie = CheckDetail.LiPeiAnimalDataDTO()
 
                                 movie.fEntryID = data[parentPosition]?.fEntryID
                                 if (map[dialog_title[0]] == "0.0" || map[dialog_title[0]].isNullOrEmpty()) {
@@ -432,7 +443,9 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
                         override fun getBool(tf: Boolean) {
                             if (tf) {
                                 if (mAdapter != null) {
-                                    mAdapter!!.removeAt(parentPosition)
+                                    requireActivity().runOnUiThread {
+                                        mAdapter!!.removeAt(parentPosition)
+                                    }
                                     mLossTotal.setText(mAdapter!!.getData()?.size.toString() ?: "0")
                                 }
                             }
@@ -473,7 +486,7 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
 
             val height = ViewGroup.LayoutParams.MATCH_PARENT
 
-            var editItem = SwipeMenuItem(context)
+            val editItem = SwipeMenuItem(context)
             editItem.text = "编辑"
             editItem.setTextColorResource(R.color.white)
             editItem.setBackgroundColorResource(R.color.f08c792)
@@ -481,7 +494,7 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
             editItem.height = height
             rightMenu.addMenuItem(editItem)
 
-            var deleteItem = SwipeMenuItem(context)
+            val deleteItem = SwipeMenuItem(context)
             deleteItem.text = "删除"
             deleteItem.setTextColorResource(R.color.white)
             deleteItem.setBackgroundColorResource(R.color.fb588f7)
@@ -490,7 +503,7 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
             rightMenu.addMenuItem(deleteItem)
 
 
-            var photoItem = SwipeMenuItem(context)
+            val photoItem = SwipeMenuItem(context)
             photoItem.text = "拍照"
             photoItem.setTextColor(Color.WHITE)
             photoItem.setBackgroundColorResource(R.color.f1de5e2)
@@ -555,7 +568,8 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
                     }
                 } else {
                     dto_.liPeiAnimalPicData = null
-                    mAdapter!!.upDateData(index, dto)
+                    requireActivity().runOnUiThread { mAdapter!!.upDateData(index, dto) }
+
                     if (index == dto_all.size - 1) {
                         y = 0
                         val toJsonString = toJsonString(mAdapter!!.getData())
@@ -577,26 +591,26 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
 
     var riskAmount = 0.0
     fun toJsonString(dots: MutableList<CheckDetail.LiPeiAnimalDataDTO?>?): JSONArray? {
-        if (dots!!.isEmpty() || dots == null) return null
-        var dto_arr = JSONArray()
+        if (dots!!.isEmpty()) return null
+        val dto_arr = JSONArray()
         riskAmount = 0.0
         for (item in dots) {
-            var pic_arr = JSONArray()
-            var dot_json = JSONObject()
+            val pic_arr = JSONArray()
+            val dot_json = JSONObject()
             val liPeiAnimalPicData = item!!.liPeiAnimalPicData
             liPeiAnimalPicData?.let {
                 pic_arr.clear()
                 for (item_ in it) {
                     val picUrl = item_.picUrl
                     if (!picUrl.isNullOrBlank()) {
-                        var pic_json = JSONObject()
+                        val pic_json = JSONObject()
                         pic_json["PicUrl"] = picUrl
                         pic_arr.add(pic_json)
                     }
 
                 }
             }
-            var lossAmout = if (!item.fLossAmount.isNullOrBlank()) {
+            val lossAmout = if (!item.fLossAmount.isNullOrBlank()) {
                 item.fLossAmount!!.toDouble()
             } else {
                 0.0
@@ -672,7 +686,7 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
     }
 
     override fun actionCamera() {
-        var intent = Intent(context, CameraOnlyActivity::class.java)
+        val intent = Intent(context, CameraOnlyActivity::class.java)
         var fenPei_ = FenPei()
         fenPei_.farmerName = fenPei!!.farmerName
         fenPei_.fRemark = "sunshi"

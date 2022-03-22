@@ -85,9 +85,7 @@ class ActtivitySearchByFarmerOrTel : BaseActivity() {
     }
     private var mLvContent: RecyclerView? = null
     private val delayRun: Runnable? = Runnable {
-
         getInfoLine(Utils.getEdit(mEtSearch), Utils.getText(mIvStartTime), Utils.getText(mIvEndTime), 1)
-
     }
 
     /*
@@ -98,8 +96,6 @@ class ActtivitySearchByFarmerOrTel : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search_by_farm_tel)
     }
-
-
     override fun initView() {
         setTitleText("投保人查询")
         //  setTitlTextColor(R.color.light_blue)
@@ -117,7 +113,7 @@ class ActtivitySearchByFarmerOrTel : BaseActivity() {
         mIvEndTime!!.text = TimeUtil.getTime(Constants.yyyy_mm_dd)
         if (!NetUtil.checkNet(context)) {
             nameCache = getNameCache()
-            LogUtils.e("name $nameCache")
+          //  LogUtils.e("name $nameCache")
         }
         mSmartTable = findViewById(R.id.smart_table)
         mSmartTable!!.visibility = View.VISIBLE
@@ -138,9 +134,7 @@ class ActtivitySearchByFarmerOrTel : BaseActivity() {
         mPrePage!!.setOnClickListener { v: View? ->
             if (currentPage > 1) {
                 currentPage--
-
                 getInfoLine(Utils.getEdit(mEtSearch), Utils.getText(mIvStartTime), Utils.getText(mIvEndTime), currentPage)
-
             } else if (currentPage == 1) {
                 showStr("已经是第一页")
             }
@@ -148,17 +142,13 @@ class ActtivitySearchByFarmerOrTel : BaseActivity() {
         mNextPage!!.setOnClickListener { v: View? ->
             if (currentPage < pages) {
                 currentPage++
-
                 getInfoLine(Utils.getEdit(mEtSearch), Utils.getText(mIvStartTime), Utils.getText(mIvEndTime), currentPage)
-
             } else if (currentPage == pages) {
                 showStr("已经是最后一页")
             }
         }
         mBtnSearch!!.setOnClickListener { view: View? ->
-
             getInfoLine(Utils.getEdit(mEtSearch), Utils.getText(mIvStartTime), Utils.getText(mIvEndTime), currentPage)
-
         }
 
         mIvStartTime!!.setOnClickListener { view: View? ->
@@ -171,7 +161,6 @@ class ActtivitySearchByFarmerOrTel : BaseActivity() {
             TimeUtil.initTimePicker(this, 5, 0) { str: String? ->
                 mIvEndTime!!.text = str
                 getInfoLine(Utils.getEdit(mEtSearch), Utils.getText(mIvStartTime), str!!, currentPage)
-
             }
         }
     }
@@ -193,7 +182,7 @@ class ActtivitySearchByFarmerOrTel : BaseActivity() {
         if (animalSaveLists != null) animalSaveLists!!.clear()
         if (NetUtil.checkNet(this)) {
             getInstance(context)!!.searchByFramNum(input, startTime, endTime, currentPage, "养殖险") { str: String? ->
-                LogUtils.e("str  ${str}")
+             //   LogUtils.e("str  ${str}")
                 if (!TextUtils.isEmpty(str)) {
                     val jsonObject = JSONObject.parseObject(str)
                     val jsonArray = jsonObject.getJSONArray("Data")

@@ -24,7 +24,8 @@ allprojects {
         maven { url "https://www.jitpack.io" }
         mavenCentral()
         maven { url "http://maven.aliyun.com/nexus/content/repositories/releases" }
-        maven { url "http://gykj123.cn:9032/maven/nexus/content/groups/public/" }
+       // maven { url "http://gykj123.cn:9032/maven/nexus/content/groups/public/" }
+        maven { url "http://maven1.agribigdata.com.cn/nexus/content/groups/public/" }
     }
 }
 
