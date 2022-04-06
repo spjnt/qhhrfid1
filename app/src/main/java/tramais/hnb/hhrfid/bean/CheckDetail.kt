@@ -198,7 +198,7 @@ class CheckDetail { /* */
          * liPeiAnimalPicData
          */
         @JSONField(name = "LiPeiAnimalPicData")
-        var liPeiAnimalPicData: List<LiPeiAnimalPicDataDTO>? = null
+        var liPeiAnimalPicData: MutableList<LiPeiAnimalPicDataDTO>? = null
          var isExpanded = false
 
         /**

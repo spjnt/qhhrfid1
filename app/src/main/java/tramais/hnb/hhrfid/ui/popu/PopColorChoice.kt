@@ -13,18 +13,12 @@ import tramais.hnb.hhrfid.R
 import tramais.hnb.hhrfid.bean.ColorChoiceBean
 import tramais.hnb.hhrfid.interfaces.GetCommon
 
-class PopuColorChoice(context: Activity, rootView: View, title: String, data: List<ColorChoiceBean>, getRoom: GetCommon<ColorChoiceBean>) : PopupWindow(), View.OnClickListener {
-    var data: List<ColorChoiceBean> = data
-    private val conentView: View? = null
+class PopColorChoice(val context: Activity,val rootView: View, private val title: String,val data: List<ColorChoiceBean>,val getRoom: GetCommon<ColorChoiceBean>) : PopupWindow(), View.OnClickListener {
     private var listView: RecyclerView? = null
     private var inflate: View? = null
     private var tv_confim: TextView? = null
     private var tv_title: TextView? = null
-    private val getRoom: GetCommon<ColorChoiceBean> = getRoom
-    private val rootView: View = rootView
-    private val context: Activity = context
     private var lp: WindowManager.LayoutParams? = null
-    private val title: String
     private fun initView(context: Activity, data: List<ColorChoiceBean>) {
         val inflater = LayoutInflater.from(context)
         inflate = inflater.inflate(R.layout.color_choice, null)
@@ -57,13 +51,13 @@ class PopuColorChoice(context: Activity, rootView: View, title: String, data: Li
     /**
      * 设置窗口的相关属性
      */
-    @SuppressLint("InlinedApi")
+    @SuppressLint("InlinedApi", "ClickableViewAccessibility")
     private fun setPopupWindow(context: Activity) {
         this.contentView = inflate // 设置View
         lp = context.window.attributes
         lp!!.alpha = 0.4f
         context.window.attributes = lp
-        var height_ = context.resources.displayMetrics.heightPixels
+        val height_ = context.resources.displayMetrics.heightPixels
         this.width = ViewGroup.LayoutParams.MATCH_PARENT // 设置弹出窗口的宽
         this.height = height_ / 2 // 设置弹出窗口的高
         // 设置SelectPicPopupWindow弹出窗体可点击
@@ -91,18 +85,17 @@ class PopuColorChoice(context: Activity, rootView: View, title: String, data: Li
         }
     }
 
-    private fun dissMiss() {
+    private fun disMiss() {
         lp!!.alpha = 1f
         context.window.attributes = lp
     }
 
     override fun dismiss() {
         super.dismiss()
-        dissMiss()
+        disMiss()
     }
 
     init {
-        this.title = title
         initView(context, data)
         setPopupWindow(context)
     }

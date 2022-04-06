@@ -233,23 +233,16 @@ class ActivityUnderWriteDeal : BaseActivity() {
         }
         animals.clear()
         if (NetUtil.checkNet(this) && type == "from_farmerlist") {
-
             mLocationClient = LocationClient(applicationContext)
             BDLoactionUtil.initLoaction(mLocationClient)
             //声明LocationClient类
             mLocationClient!!.registerLocationListener(DetailLocationListener { lat: Double, log: Double, add: String? ->
-
-
                 if (!add.isNullOrEmpty() && !add.contains("null")) {
                     mLocationClient!!.stop()
                     if (!add.contains("null")) {
                         addressDeatail!!.setText(add)
                     }
-
-
                 }
-
-
             })
         }
         getDept()

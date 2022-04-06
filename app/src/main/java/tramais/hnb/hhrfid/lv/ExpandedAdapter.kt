@@ -1,4 +1,3 @@
-
 package tramais.hnb.hhrfid.lv
 
 import android.content.Context
@@ -9,7 +8,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.IntRange
 import androidx.annotation.NonNull
+import com.apkfuns.logutils.LogUtils
 import com.bumptech.glide.Glide
+import com.google.gson.Gson
 import com.yanzhenjie.recyclerview.ExpandableAdapter
 import tramais.hnb.hhrfid.R
 import tramais.hnb.hhrfid.bean.CheckDetail
@@ -71,6 +72,8 @@ open class ExpandedAdapter(context: Context?) : ExpandableAdapter<ExpandableAdap
 
     internal class ChildHolder(itemView: View, adapter: ExpandableAdapter<*>?) : ExpandableAdapter.ViewHolder(itemView, adapter) {
         var mTvTitle: ImageView = itemView.findViewById(R.id.iv_photos)
+
+        //        var mIvDelete: ImageView = itemView.findViewById(R.id.iv_delete)
         fun setData(data: CheckDetail.LiPeiAnimalDataDTO.LiPeiAnimalPicDataDTO) {
             Glide.with(itemView).load(data.picUrl).into(mTvTitle)
         }
@@ -96,7 +99,7 @@ open class ExpandedAdapter(context: Context?) : ExpandableAdapter<ExpandableAdap
     }
 
     open fun upDateData(@IntRange(from = 0) position: Int, data: CheckDetail.LiPeiAnimalDataDTO) {
-        //LogUtils.e("groupList  ${position}")
+      //  LogUtils.e("data  ${Gson().toJson(data)}")
         this.mGroupList!![position]!!.fRiskPre = data.fRiskPre
         this.mGroupList!![position]!!.fLossAmount = data.fLossAmount
         this.mGroupList!![position]!!.fEarNumber = data.fEarNumber
@@ -104,23 +107,14 @@ open class ExpandedAdapter(context: Context?) : ExpandableAdapter<ExpandableAdap
         notifyDataSetChanged()
     }
 
-    open fun addData(@NonNull data: CheckDetail.LiPeiAnimalDataDTO) {
-        this.mGroupList!!.add(data)
-        notifyItemInserted(this.mGroupList!!.size)
-        compatibilityDataSizeChanged(1)
-    }
 
     open fun addData(@NonNull newData: MutableList<CheckDetail.LiPeiAnimalDataDTO?>) {
         this.mGroupList!!.addAll(newData)
-        notifyItemRangeInserted(this.mGroupList!!.size - newData.size, newData.size)
-        compatibilityDataSizeChanged(newData.size)
+//        notifyItemRangeInserted(this.mGroupList!!.size - newData.size, newData.size)
+//        compatibilityDataSizeChanged(newData.size)
+        notifyDataSetChanged()
     }
 
-    open fun addData(@IntRange(from = 0) position: Int, data: CheckDetail.LiPeiAnimalDataDTO) {
-        this.mGroupList!!.add(position, data)
-        notifyItemInserted(position)
-        compatibilityDataSizeChanged(1)
-    }
 
     open fun getData(): MutableList<CheckDetail.LiPeiAnimalDataDTO?>? {
         return mGroupList

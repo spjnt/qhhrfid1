@@ -1,20 +1,14 @@
 package tramais.hnb.hhrfid.ui
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.graphics.Canvas
-import android.graphics.Paint
 import android.graphics.Point
-import android.graphics.Rect
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
-import android.text.Editable
 import android.text.TextUtils
-import android.text.TextWatcher
-import android.util.Log
 import android.view.View
-import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.TextView
@@ -25,12 +19,9 @@ import com.apkfuns.logutils.LogUtils
 import com.bin.david.form.core.SmartTable
 import com.bin.david.form.core.TableConfig
 import com.bin.david.form.data.CellInfo
-import com.bin.david.form.data.CellRange
 import com.bin.david.form.data.column.Column
 import com.bin.david.form.data.format.bg.BaseBackgroundFormat
 import com.bin.david.form.data.format.bg.BaseCellBackgroundFormat
-import com.bin.david.form.data.format.bg.IBackgroundFormat
-import com.bin.david.form.data.format.bg.ICellBackgroundFormat
 import com.bin.david.form.data.style.FontStyle
 import com.bin.david.form.data.table.PageTableData
 import com.bin.david.form.data.table.TableData
@@ -46,8 +37,6 @@ import tramais.hnb.hhrfid.util.GsonUtil.Companion.instant
 import tramais.hnb.hhrfid.util.NetUtil
 import tramais.hnb.hhrfid.util.TimeUtil
 import tramais.hnb.hhrfid.util.Utils
-import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.math.ceil
 
 
@@ -69,14 +58,15 @@ class ActtivitySearchByFarmerOrTel : BaseActivity() {
     private var mSmartTable: SmartTable<SearchByFarm>? = null
     private var pageTableData: PageTableData<SearchByFarm>? = null
     private var pages = 0
-    private val handler: Handler? = object : Handler() {
+    private val handler: Handler? = @SuppressLint("HandlerLeak")
+    object : Handler() {
         override fun handleMessage(msg: Message) {
             super.handleMessage(msg)
             when (msg.what) {
                 2 -> {
                     animalSaveLists1 = msg.obj as List<SearchByFarm>
 
-                    mTvTotal!!.text = animalSaveLists1!!.size.toString() + ""
+                    //   mTvTotal!!.text = animalSaveLists1!!.size.toString() + ""
                     //nextAndPer(animalSaveLists1!!.size ?: 0, currentPage)
                     initSmartTable(animalSaveLists1)
                 }
@@ -96,6 +86,7 @@ class ActtivitySearchByFarmerOrTel : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search_by_farm_tel)
     }
+
     override fun initView() {
         setTitleText("投保人查询")
         //  setTitlTextColor(R.color.light_blue)
@@ -113,7 +104,7 @@ class ActtivitySearchByFarmerOrTel : BaseActivity() {
         mIvEndTime!!.text = TimeUtil.getTime(Constants.yyyy_mm_dd)
         if (!NetUtil.checkNet(context)) {
             nameCache = getNameCache()
-          //  LogUtils.e("name $nameCache")
+            //  LogUtils.e("name $nameCache")
         }
         mSmartTable = findViewById(R.id.smart_table)
         mSmartTable!!.visibility = View.VISIBLE
@@ -123,6 +114,7 @@ class ActtivitySearchByFarmerOrTel : BaseActivity() {
     override fun initData() {
         val farmer_name = intent.getStringExtra(Constants.farmer_name)
         mTvFarmId!!.text = farmer_name
+        mEtSearch!!.setText(farmer_name)
         if (NetUtil.checkNet(this))
             getInfoLine(intent.getStringExtra(Constants.farmer_id_nums)!!, Utils.getText(mIvStartTime), Utils.getText(mIvEndTime), 1)
         else {
@@ -182,12 +174,13 @@ class ActtivitySearchByFarmerOrTel : BaseActivity() {
         if (animalSaveLists != null) animalSaveLists!!.clear()
         if (NetUtil.checkNet(this)) {
             getInstance(context)!!.searchByFramNum(input, startTime, endTime, currentPage, "养殖险") { str: String? ->
-             //   LogUtils.e("str  ${str}")
+                //   LogUtils.e("str  ${str}")
                 if (!TextUtils.isEmpty(str)) {
                     val jsonObject = JSONObject.parseObject(str)
                     val jsonArray = jsonObject.getJSONArray("Data")
                     val farmerName = jsonObject.getString("FarmerName")
                     total = jsonObject.getInteger("Qty")
+                    //    LogUtils.e("total  $total")
                     mTvTotal!!.text = total.toString()
                     nextAndPer(total, currentPage)
                     mTvFarmId!!.text = farmerName
@@ -313,8 +306,8 @@ class ActtivitySearchByFarmerOrTel : BaseActivity() {
         if (NetUtil.checkNet(context)) {
             // ranges.add(CellRange(2, 2, 0, 2))
 
-            val tableData = TableData("", underWrites, labelnumber_column, name_column, category_column, checktime_column
-            )
+            val tableData =
+                    TableData("", underWrites, labelnumber_column, name_column, category_column, checktime_column)
             //   tableData.userCellRange=ranges
             //   tableData.addCellRange(CellRange(2, 2, 0, 2))
             mSmartTable!!.setTableData(tableData)
@@ -344,9 +337,9 @@ class ActtivitySearchByFarmerOrTel : BaseActivity() {
         mSmartTmrData.config.isFixedYSequence = true
         mSmartTmrData.config.contentCellBackgroundFormat = object : BaseCellBackgroundFormat<CellInfo<*>?>() {
             override fun getBackGroundColor(t: CellInfo<*>?): Int {
-              /*  if (t!!.col == 0) {
-                    return ContextCompat.getColor(this@ActtivitySearchByFarmerOrTel, R.color.f08c792)
-                }*/
+                /*  if (t!!.col == 0) {
+                      return ContextCompat.getColor(this@ActtivitySearchByFarmerOrTel, R.color.f08c792)
+                  }*/
                 return TableConfig.INVALID_COLOR
             }
 

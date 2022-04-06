@@ -15,7 +15,6 @@ import tramais.hnb.hhrfid.R
 import tramais.hnb.hhrfid.camera.CameraSize
 import tramais.hnb.hhrfid.camera.CameraSizeCalculator
 import java.io.IOException
-import java.util.*
 
 @SuppressLint("ShowToast")
 class CustomCameraView : FrameLayout, SurfaceHolder.Callback, Camera.AutoFocusCallback {
@@ -36,6 +35,7 @@ class CustomCameraView : FrameLayout, SurfaceHolder.Callback, Camera.AutoFocusCa
     private var safeToTakePicture = false
 
     constructor(context: Context?) : super(context!!) {}
+    @SuppressLint("ClickableViewAccessibility")
     constructor(context: Context?, attrs: AttributeSet?) : super(context!!, attrs) {
         Companion.context = context
 
@@ -87,7 +87,6 @@ class CustomCameraView : FrameLayout, SurfaceHolder.Callback, Camera.AutoFocusCa
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int,
                                 height: Int) {
-
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder) {
@@ -180,7 +179,7 @@ class CustomCameraView : FrameLayout, SurfaceHolder.Callback, Camera.AutoFocusCa
     }
 
 
-    fun getPhotoSizes(): Array<CameraSize> {
+    private fun getPhotoSizes(): Array<CameraSize> {
         return camera?.parameters?.supportedPictureSizes?.map { CameraSize(it.width, it.height) }
                 ?.toTypedArray()!!
 
@@ -320,7 +319,7 @@ class CustomCameraView : FrameLayout, SurfaceHolder.Callback, Camera.AutoFocusCa
     fun takePicture() {
         if (camera != null && safeToTakePicture) {
             safeToTakePicture = false
-            camera!!.takePicture(null, null, { data, camera ->
+            camera!!.takePicture(null, null) { data, camera ->
                 if (data != null && data.isNotEmpty()) {
                     onTakePictureInfo!!.onTakePictureInofo(true, data)
                 } else {
@@ -329,7 +328,7 @@ class CustomCameraView : FrameLayout, SurfaceHolder.Callback, Camera.AutoFocusCa
                 camera.stopPreview()
                 camera.startPreview()
                 safeToTakePicture = true
-            })
+            }
             mode = MODE.NONE
         }
     }
@@ -355,6 +354,7 @@ class CustomCameraView : FrameLayout, SurfaceHolder.Callback, Camera.AutoFocusCa
         onTakePictureInfo = _onTakePictureInfo
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     override fun onAutoFocus(success: Boolean, _camera: Camera) {
         if (success) {
             mode = MODE.FOCUSED

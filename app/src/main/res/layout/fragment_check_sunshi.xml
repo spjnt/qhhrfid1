@@ -65,20 +65,42 @@
 
             <include layout="@layout/item_line" />
 
-            <LinearLayout style="@style/ll">
+            <RelativeLayout style="@style/ll">
 
                 <TextView
+                    android:id="@+id/tv_ear_tag"
                     style="@style/text_left_ll_big"
                     android:text="耳  标  号:" />
 
-                <TextView
+                <EditText
                     android:id="@+id/ear_tags"
                     style="@style/text_right_ll"
-                    android:layout_marginRight="@dimen/size_10"
-                    android:drawableRight="@mipmap/arrow_right_small"
-                    android:hint="请选择耳标号"
+                    android:layout_marginStart="@dimen/size_10"
+                    android:layout_marginEnd="@dimen/size_10"
+                    android:layout_toLeftOf="@id/tv_add_choice"
+                    android:layout_toRightOf="@id/tv_ear_tag"
+                    android:background="@null"
+                    android:hint="请选择/输入耳标号"
+                    android:inputType="number"
+                    android:singleLine="true"
                     android:text="" />
-            </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_add_choice"
+                    android:layout_width="@dimen/size_65"
+                    android:layout_height="@dimen/size_30"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/size_10"
+                    android:background="@drawable/bottom_no_conner"
+                    android:gravity="center"
+                    android:paddingLeft="@dimen/size_8"
+                    android:paddingRight="@dimen/size_8"
+
+                    android:text="选择耳标"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_12sp" />
+            </RelativeLayout>
 
             <include layout="@layout/item_line" />
 
@@ -92,8 +114,8 @@
                 <EditText
                     android:id="@+id/loss_total"
                     style="@style/text_right_ll"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="0dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="0dp"
                     android:layout_toLeftOf="@id/tv_sure"
                     android:layout_toRightOf="@id/tv_loss_total"
                     android:background="@null"

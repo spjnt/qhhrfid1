@@ -1,5 +1,6 @@
 package tramais.hnb.hhrfid.ui
 
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -22,7 +23,7 @@ import tramais.hnb.hhrfid.interfaces.GetCommon
 import tramais.hnb.hhrfid.service.DownloadService
 import tramais.hnb.hhrfid.ui.dialog.DialogFeedBack
 import tramais.hnb.hhrfid.ui.popu.PopuChoice
-import tramais.hnb.hhrfid.ui.popu.PopuColorChoice
+import tramais.hnb.hhrfid.ui.popu.PopColorChoice
 import tramais.hnb.hhrfid.util.NetUtil
 import tramais.hnb.hhrfid.util.PreferUtils
 import tramais.hnb.hhrfid.util.TimeUtil
@@ -45,12 +46,14 @@ class SettingFragment : BaseFragment() {
     private var mRlCache: RelativeLayout? = null
     private var mRlFeedback: RelativeLayout? = null
     private var mBtnLogin: LinearLayout? = null
+    private var mLlColor: LinearLayout? = null
 
     //    private var mTvVersion: TextView? = null
     private var mTvCacheTime: TextView? = null
     private var mTvCompany: TextView? = null
     override fun findViewById(view: View?) {
         view?.let {
+            mLlColor = it.findViewById(R.id.ll_color)
             mTvColor = it.findViewById(R.id.tv_color)
             mTvCologBg = it.findViewById(R.id.tv_color_bg)
             mIvPhotos = it.findViewById(R.id.iv_photos)
@@ -117,6 +120,11 @@ class SettingFragment : BaseFragment() {
             mTvColor!!.text = colors[0].colorStr
             mTvCologBg!!.setBackgroundColor(resources.getColor(colors[0].colorInt))
         } else {
+          /*  if (color_str == "白色") {
+                mLlColor!!.setBackgroundColor(resources.getColor(R.color.gray))
+            } else {
+                mLlColor!!.setBackgroundColor(resources.getColor(R.color.white))
+            }*/
             mTvColor!!.text = color_str
             mTvCologBg!!.setBackgroundColor(resources.getColor(color_int))
         }
@@ -156,22 +164,28 @@ class SettingFragment : BaseFragment() {
 
     override fun initListener() {
         mColorChoice!!.setOnClickListener {
-            PopuColorChoice(requireActivity(), mColorChoice!!, "请选择颜色", colors, object : GetCommon<ColorChoiceBean> {
+            PopColorChoice(requireActivity(), mColorChoice!!, "请选择颜色", colors, object : GetCommon<ColorChoiceBean> {
                 override fun getCommon(t: ColorChoiceBean) {
-                    mTvColor!!.text = t.colorStr
+                    val color_str = t.colorStr
+                   /* if (color_str == "白色") {
+                        mLlColor!!.setBackgroundColor(resources.getColor(R.color.gray))
+                    } else {
+                        mLlColor!!.setBackgroundColor(resources.getColor(R.color.white))
+                    }*/
+                    mTvColor!!.text = color_str
                     mTvCologBg!!.setBackgroundColor(resources.getColor(t.colorInt))
-                    PreferUtils.putString(requireContext(), Constants.color_str, t.colorStr)
+                    PreferUtils.putString(requireContext(), Constants.color_str, color_str)
                     PreferUtils.putInt(requireContext(), Constants.color_int, t.colorInt)
                 }
             })
         }
         /*设置照片数量*/
-        mRlPhotoChoice!!.setOnClickListener { view: View? ->
+      /*  mRlPhotoChoice!!.setOnClickListener { view: View? ->
             PopuChoice(activity, mRlPhotoChoice, "请选择照片数量", data_img) { str: String ->
                 mIvPhotos!!.text = str + "张"
                 PreferUtils.putInt(context, Constants.img_total, Integer.valueOf(str))
             }
-        }
+        }*/
         /*设置功率*/mIvRefChoice!!.setOnClickListener { view: View? ->
             if (ifC72()) {
                 PopuChoice(activity, mIvRefChoice, "请设置功率", data_rfid) { str: String ->
@@ -188,7 +202,6 @@ class SettingFragment : BaseFragment() {
             if (NetUtil.checkNet(requireContext())) {
                 // showStr(context, "正在缓存,请稍等")
                 startDownload()
-
             } else {
                 "请确认是否联网".showStr()
                 // showStr(context, "请确认是否联网")
@@ -201,7 +214,6 @@ class SettingFragment : BaseFragment() {
         mBtnLogin!!.setOnClickListener { view: View? ->
             //  Utils.goToNextUI(ActivityLogin.class);
             requireActivity().finish()
-
         }
     }
 
@@ -211,6 +223,7 @@ class SettingFragment : BaseFragment() {
         requireActivity().startService(intent)
         showAvi("正在下载,请稍等")
         //注册广播接收器
+       // DownloadService().javaClass.toString()
         if (receiver == null) receiver = MyReceiver()
         val filter = IntentFilter()
         filter.addAction("tramais.hnb.hhrfid.service.DownLoadService")
@@ -224,9 +237,7 @@ class SettingFragment : BaseFragment() {
 
     override fun initImmersionBar() {
         immersionBar {
-
             statusBarDarkFont(false)
-
         }
     }
 
@@ -234,6 +245,7 @@ class SettingFragment : BaseFragment() {
     private var receiver: MyReceiver? = null
 
     inner class MyReceiver : BroadcastReceiver() {
+        @SuppressLint("SetTextI18n")
         override fun onReceive(context: Context, intent: Intent) {
             val down = intent.getIntExtra(Constants.DownLoad_desc, 0)
             if (down == 6) {

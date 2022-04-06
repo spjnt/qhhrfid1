@@ -19,12 +19,10 @@ object ShareUtils {
     fun isInstallApp(context: Context, app_package: String): Boolean {
         val packageManager = context.packageManager
         val pInfo = packageManager.getInstalledPackages(0)
-        if (pInfo != null) {
-            for (i in pInfo.indices) {
-                val pn = pInfo[i].packageName
-                if (app_package == pn) {
-                    return true
-                }
+        for (i in pInfo.indices) {
+            val pn = pInfo[i].packageName
+            if (app_package == pn) {
+                return true
             }
         }
         return false
@@ -70,21 +68,17 @@ object ShareUtils {
             }
             intent.type = type
             var uri: Uri? = null
-            if (picFile != null) {
-                //这部分代码主要功能是判断了下文件是否存在，在android版本高过7.0（包括7.0版本）
-                // 当前APP是不能直接向外部应用提供file开头的的文件路径，需要通过FileProvider转换一下。否则在7.0及以上版本手机将直接crash。
-                try {
-                    val applicationInfo = mContext.applicationInfo
-                    val targetSDK = applicationInfo.targetSdkVersion
-                    uri = if (targetSDK >= Build.VERSION_CODES.N && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        FileProvider.getUriForFile(mContext, mContext.packageName + ".fileprovider", picFile)
-                    } else {
-                        Uri.fromFile(picFile)
-                    }
-                    intent.putExtra(Intent.EXTRA_STREAM, uri)
-                } catch (e: Exception) {
-                    e.printStackTrace()
+            try {
+                val applicationInfo = mContext.applicationInfo
+                val targetSDK = applicationInfo.targetSdkVersion
+                uri = if (targetSDK >= Build.VERSION_CODES.N && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    FileProvider.getUriForFile(mContext, mContext.packageName + ".fileprovider", picFile)
+                } else {
+                    Uri.fromFile(picFile)
                 }
+                intent.putExtra(Intent.EXTRA_STREAM, uri)
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             if (getVersionCode(mContext, PACKAGE_WECHAT) > VERSION_CODE_FOR_WEI_XIN_VER7) {
@@ -98,4 +92,5 @@ object ShareUtils {
             Toast.makeText(mContext, "您需要安装微信客户端", Toast.LENGTH_LONG).show()
         }
     }
+
 }

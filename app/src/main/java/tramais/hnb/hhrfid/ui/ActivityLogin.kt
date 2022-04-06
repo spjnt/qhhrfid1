@@ -1,6 +1,7 @@
 package tramais.hnb.hhrfid.ui
 
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.*
@@ -22,7 +23,6 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.hailong.biometricprompt.fingerprint.FingerprintCallback
 import com.hailong.biometricprompt.fingerprint.FingerprintVerifyManager
-import kotlinx.android.synthetic.main.activity_login.*
 import org.litepal.LitePal.findAllAsync
 import tramais.hnb.hhrfid.R
 import tramais.hnb.hhrfid.base.BaseActivity
@@ -40,7 +40,6 @@ import tramais.hnb.hhrfid.ui.dialog.BaseDialog
 import tramais.hnb.hhrfid.util.*
 import tramais.hnb.hhrfid.util.GsonUtil.Companion.instant
 import java.io.File
-import java.util.*
 
 
 class ActivityLogin : BaseActivity() {
@@ -84,6 +83,7 @@ class ActivityLogin : BaseActivity() {
         Glide.with(this).load(R.mipmap.new_logo) //图片地址
                 .apply(options)
                 .into(logo!!)
+
     }
 
     override fun initData() {
@@ -95,15 +95,11 @@ class ActivityLogin : BaseActivity() {
         if (!TextUtils.isEmpty(password)) mEtPsw!!.setText(password)
         isRem = aBoolean
         mIvRemPass!!.isSelected = aBoolean
-
         val screenOn = isScreenOn(this)
-
-
         if (!account.isNullOrEmpty() && !password.isNullOrEmpty() && screenOn) {
             addFinger()
         } else {
             alpha(loginContent)
-
         }
     }
 
@@ -138,7 +134,7 @@ class ActivityLogin : BaseActivity() {
         timer_?.cancel()
     }
 
-//"Username":"19924940597","Password":"picc2021!"
+    //"Username":"19924940597","Password":"picc2021!"
     fun addFinger() {
 
         val builder = FingerprintVerifyManager.Builder(this@ActivityLogin)
@@ -306,16 +302,16 @@ class ActivityLogin : BaseActivity() {
 
                                 is_btn_click = true
                                 if (rtnCode >= 0 && datas != null) {
-                                    val companyNumber = datas?.getString("CompanyNumber")
-                                    val UserNumber = datas?.getString("UserNumber")
-                                    val UserName = datas?.getString("UserName")
-                                    val fxzCode = datas?.getString("FXZCode")
+                                    val companyNumber = datas.getString("CompanyNumber")
+                                    val UserNumber = datas.getString("UserNumber")
+                                    val UserName = datas.getString("UserName")
+                                    val fxzCode = datas.getString("FXZCode")
                                     PreferUtils.putString(context, Constants.FXZCode, fxzCode)
                                     PreferUtils.putString(context, Constants.companyNumber, companyNumber)
                                     PreferUtils.putString(context, Constants.userNumber, UserNumber)
                                     PreferUtils.putString(context, Constants.UserName, UserName)
                                     PreferUtils.putBoolean(context, Constants.isLogin, true)
-                                    PreferUtils.putString(context, Constants.login_data, datas?.toJSONString())
+                                    PreferUtils.putString(context, Constants.login_data, datas.toJSONString())
                                     PreferUtils.putString(context, Constants.account, userName)
 
                                     PreferUtils.putBoolean(context, Constants.isRemPsw, isRem)
@@ -354,7 +350,7 @@ class ActivityLogin : BaseActivity() {
     }
 
     private val newVersionInfo: Unit
-        private get() {
+        get() {
             verfiyAndDeleteAPK()
             val versionCode = PackageUtils.getVersionCode(this@ActivityLogin)
 
@@ -411,9 +407,10 @@ class ActivityLogin : BaseActivity() {
         return uiData
     }
 
+    @SuppressLint("StringFormatInvalid")
     private fun verfiyAndDeleteAPK() {
         //判断versioncode与当前版本不一样的apk是否存在，存在删除安装包
-        val downloadPath = FileHelper.getDownloadApkCachePath() + applicationContext.getString(R.string.versionchecklib_download_apkname, applicationContext.packageName)
+        val downloadPath = FileHelper.getDownloadApkCachePath() + applicationContext.getString(R.string.app_name, applicationContext.packageName)
         if (com.allenliu.versionchecklib.core.DownloadManager.checkAPKIsExists(applicationContext, downloadPath)) {
             try {
                 ALog.e("真正删除本地apk")

@@ -38,7 +38,7 @@
     <include layout="@layout/gray_line" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:background="@color/color_gray"
+        android:background="@color/gray"
         android:id="@+id/color_choice"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

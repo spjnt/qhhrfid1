@@ -5,12 +5,11 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.os.Handler
-import android.os.Message
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.widget.*
+import android.widget.EditText
+import android.widget.Toast
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,7 +23,7 @@ class DialogEarTags(context: Context, var earTags: MutableList<String>, var getE
     private var etSearch: EditText? = null
     private var mAdapter: QuickAdapter? = null
 
-
+    var isToast: Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dialog_choice_eartag)
@@ -44,7 +43,14 @@ class DialogEarTags(context: Context, var earTags: MutableList<String>, var getE
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable) {
                 val filter = earTags.filter { it.contains(s.toString()) }
-                if (filter == null || filter.isEmpty()) {
+                if (filter.isEmpty() && !isToast) {
+                    isToast = true
+//                    val toast = Toast(context)
+//                    val toString = toast.toString()
+//                    LogUtils.e("toString  $toString")
+//                    toast.setText("暂无匹配数据")
+//                    toast.duration = Toast.LENGTH_LONG
+//                    toast.show()
                     Toast.makeText(context, "暂无匹配数据", Toast.LENGTH_LONG).show()
                 }
                 mAdapter!!.setNewInstance(filter as MutableList<String?>)

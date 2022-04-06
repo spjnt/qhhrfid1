@@ -90,6 +90,7 @@
         <entry key="..\:/qhhrfid/app/src/main/res/layout/fragment_basic2.xml" value="0.2859375" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/fragment_camera.xml" value="0.35" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/fragment_camerax.xml" value="0.3880208333333333" />
+        <entry key="..\:/qhhrfid/app/src/main/res/layout/fragment_check.xml" value="0.3880208333333333" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/fragment_check_sunshi.xml" value="0.3880208333333333" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/fragment_crop_insure.xml" value="0.3880208333333333" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/fragment_home.xml" value="0.3536458333333333" />
@@ -107,6 +108,8 @@
         <entry key="..\:/qhhrfid/app/src/main/res/layout/item_fenpei.xml" value="0.3880208333333333" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/item_home_news_no_img.xml" value="0.3880208333333333" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/item_home_news_with_img.xml" value="0.28072916666666664" />
+        <entry key="..\:/qhhrfid/app/src/main/res/layout/item_img.xml" value="0.3880208333333333" />
+        <entry key="..\:/qhhrfid/app/src/main/res/layout/item_img_delete.xml" value="0.3880208333333333" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/item_lipei_common.xml" value="0.3880208333333333" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/item_only_toubao.xml" value="0.3697916666666667" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/item_parent_expand.xml" value="0.4" />

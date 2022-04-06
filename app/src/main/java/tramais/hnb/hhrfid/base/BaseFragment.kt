@@ -3,24 +3,19 @@ package tramais.hnb.hhrfid.base
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import com.gyf.immersionbar.components.ImmersionFragment
 import tramais.hnb.hhrfid.bean.Roles
 import tramais.hnb.hhrfid.constant.Constants
 import tramais.hnb.hhrfid.ui.dialog.DialogAvi
 import tramais.hnb.hhrfid.util.NetUtil
 import tramais.hnb.hhrfid.util.PreferUtils
-import java.util.*
-import kotlin.jvm.internal.Intrinsics
 
-abstract class BaseFragment : ImmersionFragment() /*Fragment()*/{
+abstract class BaseFragment : ImmersionFragment() /*Fragment()*/ {
     private var dialogAvi: DialogAvi? = null
     private var mActivity: Activity? = null
     abstract fun findViewById(view: View?)
@@ -64,6 +59,7 @@ abstract class BaseFragment : ImmersionFragment() /*Fragment()*/{
         //// return Build.MODEL.contains("HC72");
         return true
     }
+
     @JvmOverloads
     fun showAvi(str: String? = "") {
         if (dialogAvi == null) {
@@ -72,7 +68,9 @@ abstract class BaseFragment : ImmersionFragment() /*Fragment()*/{
         if (dialogAvi!!.isShowing) {
             dialogAvi!!.setText(str)
         }
-        if (!dialogAvi!!.isShowing ) dialogAvi!!.show()
+        if (!dialogAvi!!.isShowing)
+          dialogAvi!!.show()
+
     }
 
     fun hideAvi() {
@@ -83,6 +81,7 @@ abstract class BaseFragment : ImmersionFragment() /*Fragment()*/{
             dialogAvi!!.dismiss()
         }
     }
+
     fun netTips() {
         if (!NetUtil.checkNet(context!!)) {
             "请在联网环境下操作".showStr()
@@ -90,6 +89,7 @@ abstract class BaseFragment : ImmersionFragment() /*Fragment()*/{
         }
 
     }
+
     val companyNum: String
         get() = PreferUtils.getString(context, Constants.companyNumber)
     val userNum: String

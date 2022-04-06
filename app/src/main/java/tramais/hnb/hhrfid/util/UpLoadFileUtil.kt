@@ -39,18 +39,16 @@ object UpLoadFileUtil {
         val urls: LinkedList<String> = LinkedList<String>()
         urls.clear()
         var serial = 1
-        if (paths == null || paths.isEmpty()) {
+        if (paths.isEmpty()) {
             urls.add("")
             getList.getList(urls)
             return
         }
         paths.forEach { it ->
-
             upLoadFile(context, it.key, num, it.value, serial++) {
                 urls.add(it)
                 if (urls.size == paths.size) {
                     getList.getList(urls)
-
                 }
             }
         }

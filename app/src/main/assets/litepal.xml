@@ -19,7 +19,7 @@
           For example:
       <version value="1" />
   -->
-    <version value="110" />
+    <version value="111" />
 
     <list>
         <mapping class="tramais.hnb.hhrfid.litePalBean.IdCategoryCache" />
@@ -36,7 +36,6 @@
         <mapping class="tramais.hnb.hhrfid.litePalBean.EmployeeCache" />
         <mapping class="tramais.hnb.hhrfid.litePalBean.BaoAnListCache" />
         <mapping class="tramais.hnb.hhrfid.litePalBean.AllBillDetailCache" />
-
         <mapping class="tramais.hnb.hhrfid.litePalBean.ChaKanDetailListCache" />
         <mapping class="tramais.hnb.hhrfid.litePalBean.LossListCache" />
         <mapping class="tramais.hnb.hhrfid.litePalBean.ChanKanEntrysBean" />
@@ -47,6 +46,7 @@
         <mapping class="tramais.hnb.hhrfid.litePalBean.BankInfoCache" />
         <mapping class="tramais.hnb.hhrfid.litePalBean.NatureanCache" />
         <mapping class="tramais.hnb.hhrfid.litePalBean.DeptCache" />
+
 
     </list>
 

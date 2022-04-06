@@ -4,7 +4,9 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
+import android.text.Editable
 import android.text.TextUtils
+import android.text.TextWatcher
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +14,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.alibaba.fastjson.JSONArray
 import com.alibaba.fastjson.JSONObject
@@ -22,7 +23,6 @@ import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
 import com.luck.picture.lib.entity.LocalMedia
 import com.luck.picture.lib.listener.OnResultCallbackListener
-import com.luck.picture.lib.style.PictureParameterStyle
 import com.yanzhenjie.recyclerview.OnItemMenuClickListener
 import com.yanzhenjie.recyclerview.SwipeMenuCreator
 import com.yanzhenjie.recyclerview.SwipeMenuItem
@@ -41,6 +41,7 @@ import tramais.hnb.hhrfid.lv.ExpandedAdapter
 import tramais.hnb.hhrfid.net.RequestUtil
 import tramais.hnb.hhrfid.ui.ActivityFeedCheck
 import tramais.hnb.hhrfid.ui.CameraOnlyActivity
+import tramais.hnb.hhrfid.ui.MainActivity
 import tramais.hnb.hhrfid.ui.dialog.DialogDelete
 import tramais.hnb.hhrfid.ui.dialog.DialogEarTags
 import tramais.hnb.hhrfid.ui.dialog.DialogEditCheck
@@ -67,7 +68,8 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
     private lateinit var mRecyleView: RecyleViewForScrollView
     private lateinit var mSave: Button
     private lateinit var mSure: TextView
-    private lateinit var mEarTags: TextView
+    private lateinit var mEarTags: EditText
+    private lateinit var mBtnAddChoice: TextView
     var ear_tags: MutableList<String> = ArrayList()
 
     //    private lateinit var mAvi: AVLoadingIndicatorView
@@ -83,6 +85,10 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
                 fenPei!!.number, reason_code!![harm_type], harm_type, loss_total,
                 "", riskAmount.toString(), "", "", companyNum, "", arr) { json ->
             hideAvi()
+            val integer = json.getInteger("Code")
+            if (integer == 1) {
+                Utils.goToNextUI(MainActivity::class.java)
+            }
             json.getString("Msg").showStr()
         }
 
@@ -121,6 +127,7 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
     var mAdapter: ExpandedAdapter? = null
     override fun findViewById(view: View?) {
         view?.let {
+            mBtnAddChoice = it.findViewById(R.id.tv_add_choice)
             mEarTags = it.findViewById(R.id.ear_tags)
             mSure = it.findViewById(R.id.tv_sure)
             mRecyleView = it.findViewById(R.id.recyle_view)
@@ -186,10 +193,22 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
                     }
 
                 }
+                it.setOnItemLongClickListener { view, adapterPosition ->
+                    mAdapter?.let { ad ->
+                        val data = ad.getData()
+                        if (!ad.isParentItem(adapterPosition)) {
+                            val par_ = ad.parentItemPosition(adapterPosition)
+                            val childe_ = ad.childItemPosition(adapterPosition)
+                            val get = data?.get(par_)?.liPeiAnimalPicData
+                            get!!.removeAt(childe_)
+                            ad.notifyDataSetChanged()
+                        }
+                    }
+                }
 
             }
             mRecyleView!!.adapter = mAdapter
-            getWhiteStyle()
+            //getWhiteStyle()
 
         }
     }
@@ -198,10 +217,27 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
         return R.layout.fragment_check_sunshi
     }
 
-/*    companion object {
-        private const val SAVE_START = 1 shl 19
-        private const val SAVE_RESULT = 1 shl 20
-    }*/
+    /*    companion object {
+            private const val SAVE_START = 1 shl 19
+            private const val SAVE_RESULT = 1 shl 20
+        }*/
+    fun addTagToAdapter(tag: String?) {
+
+        val data_change: MutableList<CheckDetail.LiPeiAnimalDataDTO?> = ArrayList()
+        val filter = mAdapter!!.getData()!!.filter { it!!.fEarNumber!! == tag }
+        if (filter.isEmpty()) {
+            val movie = CheckDetail.LiPeiAnimalDataDTO()
+            movie.fEarNumber = tag
+            movie.fLossAmount = null
+            movie.fRiskPre = null
+            data_change.add(movie)
+            if (mAdapter != null)
+                requireActivity().runOnUiThread { mAdapter!!.addData(data_change) }
+            mLossTotal.setText(mAdapter!!.getData()?.size.toString() ?: "0")
+        } else {
+            "该耳标号已添加".showStr()
+        }
+    }
 
     var dialog_title: MutableList<String> = mutableListOf("损失金额", "损失比例", "耳标号")
     var click_tag: String? = null
@@ -209,49 +245,55 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
     var click_position = -1
     var current_pics: MutableList<String> = ArrayList()
     override fun initListener() {
-        mEarTags.setOnClickListener {
-            if (ear_tags.isNullOrEmpty()) {
-                "暂无耳标信息".showStr()
-                return@setOnClickListener
-            }
-            DialogEarTags(requireContext(), ear_tags) { tag ->
-                mEarTags.text = tag
-                val data_change: MutableList<CheckDetail.LiPeiAnimalDataDTO?> = ArrayList()
-                val filter = mAdapter!!.getData()!!.filter { it!!.fEarNumber!! == tag }
-                if (filter == null || filter.isEmpty()) {
-                    var movie = CheckDetail.LiPeiAnimalDataDTO()
-                    movie.fEarNumber = tag
-                    movie.fLossAmount = null
-                    movie.fRiskPre = null
+        mEarTags.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
-                    data_change.add(movie)
-                    if (mAdapter != null)
-                        requireActivity().runOnUiThread { mAdapter!!.addData(data_change) }
-
-                    mLossTotal.setText(mAdapter!!.getData()?.size.toString() ?: "0")
+            override fun afterTextChanged(s: Editable?) {
+                if (s.toString().isNotEmpty()) {
+                    mBtnAddChoice.text = "确认添加"
                 } else {
-                    "该耳标号已添加".showStr()
+                    mBtnAddChoice.text = "选择耳标"
+                }
+            }
+        })
+        mBtnAddChoice.setOnClickListener {
+            val btn = mBtnAddChoice.text.toString()
+            if (btn == "确认添加") {
+                val tag = mEarTags.text.toString()
+                if (tag.isEmpty()) {
+                    "请输入耳标号".showStr()
+                    return@setOnClickListener
+                }
+                addTagToAdapter(tag)
+            } else if (btn == "选择耳标") {
+                if (ear_tags.isNullOrEmpty()) {
+                    "暂无耳标信息".showStr()
+                    return@setOnClickListener
                 }
 
-            }.show()
+                DialogEarTags(requireContext(), ear_tags) { tag ->
+                    mEarTags.setText(tag)
+                    addTagToAdapter(tag)
 
+                }.show()
+            }
         }
+
         mSure.setOnClickListener {
             val lossTotal = Utils.getEdit(mLossTotal)
-            if (lossTotal.isNullOrEmpty()) return@setOnClickListener
+            if (lossTotal.isEmpty()) return@setOnClickListener
             val current_total = mAdapter?.getData()?.size ?: 0
             val data_change: MutableList<CheckDetail.LiPeiAnimalDataDTO?> = ArrayList()
-            var end_index = lossTotal.toInt()
+            val end_index = lossTotal.toInt()
             if (end_index > current_total) {
 
                 for (item in current_total until end_index) {
-                    var movie = CheckDetail.LiPeiAnimalDataDTO()
+                    val movie = CheckDetail.LiPeiAnimalDataDTO()
                     movie.fEarNumber = null
                     movie.fLossAmount = null
                     movie.fRiskPre = null
-
-
                     data_change.add(movie)
                 }
 
@@ -293,7 +335,7 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
                         movie.fRiskPre = it.fRiskPre
                         movie.fEntryID = item.fEntryID
                         movie.liPeiAnimalPicData = item.liPeiAnimalPicData
-                        adapter.upDateData(index, movie)
+                        requireActivity().runOnUiThread { adapter.upDateData(index, movie) }
                     }
                 }
                 //adapter.setGroupList(data_change)
@@ -308,8 +350,6 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
                 "请输入损失比例".showStr()
                 return@setOnClickListener
             }
-
-
             if (Utils.isNumeric(com_rate)) {
                 if (com_rate.toDouble() > 100) {
                     "损失比例不得大于100".showStr()
@@ -330,7 +370,6 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
                         movie.fEntryID = item.fEntryID
                         movie.liPeiAnimalPicData = item.liPeiAnimalPicData
                         adapter.upDateData(index, movie)
-
                     }
                 }
             }
@@ -340,13 +379,11 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
                 "暂无险种可选".showStr()
                 return@setOnClickListener
             }
-            PopuChoice(activity, mHuarmType, "请选择证件类型", reasons) { str: String ->
+            PopuChoice(activity, mHuarmType, "请选择事故类型", reasons) { str: String ->
                 mHuarmType.text = str
             }
         }
         mSave.setOnClickListener {
-
-
             val loss_total = Utils.getEdit(mLossTotal)
             if (loss_total.isEmpty()) {
                 "请输入损失数量".showStr()
@@ -362,12 +399,9 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
                 "暂无数据上传".showStr()
                 return@setOnClickListener
             }
-
             for (item in data_quick) {
-
                 if (item!!.fLossAmount.isNullOrEmpty() || item.fRiskPre.isNullOrEmpty()) {
                     "损失金额或损失比例不能为空".showStr()
-
                     return@setOnClickListener
                 }
             }
@@ -398,7 +432,7 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
                             val liPeiAnimalDataDTO = data[parentPosition]
                             val dialogEdit = DialogEditCheck(requireContext(), "修改参数", parentPosition, dialog_title, liPeiAnimalDataDTO) { map ->
                                 val movie = CheckDetail.LiPeiAnimalDataDTO()
-
+                                //   LogUtils.e("map  $map")
                                 movie.fEntryID = data[parentPosition]?.fEntryID
                                 if (map[dialog_title[0]] == "0.0" || map[dialog_title[0]].isNullOrEmpty()) {
                                     movie.fLossAmount = data[parentPosition]?.fLossAmount
@@ -410,7 +444,7 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
                                             return@DialogEditCheck
                                         }
                                     }
-                                    movie.fLossAmount = map[dialog_title[0]]
+                                    movie.fLossAmount = s
                                 }
 
                                 if (map[dialog_title[1]] == "0.0" || map[dialog_title[1]].isNullOrEmpty())
@@ -423,14 +457,17 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
                                             return@DialogEditCheck
                                         }
                                     }
-                                    movie.fRiskPre = map[dialog_title[1]]
+                                    movie.fRiskPre = s
                                 }
 
                                 if (map[dialog_title[2]] == "0.0" || map[dialog_title[2]].isNullOrEmpty())
                                     movie.fEarNumber = data[adapterPosition]?.fEarNumber
                                 else movie.fEarNumber = map[dialog_title[2]]
                                 movie.liPeiAnimalPicData = liPeiAnimalDataDTO!!.liPeiAnimalPicData
-                                mAdapter!!.upDateData(parentPosition, movie)
+                                requireActivity().runOnUiThread {
+                                    mAdapter!!.upDateData(parentPosition, movie)
+                                }
+
                             }
                             if (dialogEdit.isShowing) dialogEdit.dismiss()
                             if (!dialogEdit.isShowing) dialogEdit.show()
@@ -483,9 +520,7 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
     fun addSwipeMenu(): SwipeMenuCreator {
         return SwipeMenuCreator { leftMenu, rightMenu, position ->
             val width = resources.getDimensionPixelSize(R.dimen.size_60)
-
             val height = ViewGroup.LayoutParams.MATCH_PARENT
-
             val editItem = SwipeMenuItem(context)
             editItem.text = "编辑"
             editItem.setTextColorResource(R.color.white)
@@ -519,7 +554,7 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
     var y = 0
 
     fun upLoadOneByOne(dto_all: MutableList<CheckDetail.LiPeiAnimalDataDTO?>?, index: Int) {
-        var img_dto: MutableList<CheckDetail.LiPeiAnimalDataDTO.LiPeiAnimalPicDataDTO>? = ArrayList()
+        val img_dto: MutableList<CheckDetail.LiPeiAnimalDataDTO.LiPeiAnimalPicDataDTO>? = ArrayList()
 
         //照片
         val data_pics: MutableList<String?> = ArrayList()
@@ -527,7 +562,7 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
             if (index > dto_all.size - 1) return@let
             val item = dto_all[index]
             item?.let { dto ->
-                var dto_ = CheckDetail.LiPeiAnimalDataDTO()
+                val dto_ = CheckDetail.LiPeiAnimalDataDTO()
 
                 val liPeiAnimalPicData1 = dto.liPeiAnimalPicData
                 if (liPeiAnimalPicData1 != null && liPeiAnimalPicData1.isNotEmpty()) {
@@ -543,14 +578,15 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
                     UpLoadFileUtil.upLoadFile(context, "查勘", index.toString(), data_pics) { list ->
                         //照片数据
                         for (pic in list) {
-                            var img_dto_ = CheckDetail.LiPeiAnimalDataDTO.LiPeiAnimalPicDataDTO()
+                            val img_dto_ = CheckDetail.LiPeiAnimalDataDTO.LiPeiAnimalPicDataDTO()
                             if (pic!!.startsWith("http"))
                                 img_dto_.picUrl = pic
                             else img_dto_.picUrl = Config.PHOTO_URL + pic
                             img_dto?.add(img_dto_)
                         }
                         dto.liPeiAnimalPicData = img_dto
-                        mAdapter!!.upDateData(index, dto)
+                        requireActivity().runOnUiThread { mAdapter!!.upDateData(index, dto) }
+
                         if (index == dto_all.size - 1) {
                             y = 0
                             val toJsonString = toJsonString(mAdapter!!.getData())
@@ -639,13 +675,6 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
         insureType
     }
 
-
-    fun boo2Int(isTrue: Boolean): Int {
-        return if (isTrue)
-            1
-        else 0
-    }
-
     var quck_list: MutableList<CheckDetail.LiPeiAnimalDataDTO?>? = ArrayList()
     fun getDetail(num: String?) {
         if (NetUtil.checkNet(requireContext())) {
@@ -687,7 +716,7 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
 
     override fun actionCamera() {
         val intent = Intent(context, CameraOnlyActivity::class.java)
-        var fenPei_ = FenPei()
+        val fenPei_ = FenPei()
         fenPei_.farmerName = fenPei!!.farmerName
         fenPei_.fRemark = "sunshi"
 
@@ -696,7 +725,6 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
         startActivityForResult(intent, 124)
     }
 
-    var fileUrlLists: MutableList<String>? = ArrayList()
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 124 && resultCode == Activity.RESULT_OK) {
@@ -715,8 +743,8 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
                 .openGallery(PictureMimeType.ofImage())
                 .imageEngine(GlideEngine.createGlideEngine())
                 .selectionMode(PictureConfig.MULTIPLE)
-                .setPictureStyle(mPictureParameterStyle)
-                .theme(R.style.picture_default_style)
+                // .setPictureStyle(mPictureParameterStyle)
+                //  .theme(R.style.picture_default_style)
                 .maxSelectNum(9 - current_pics.size)
                 .isCompress(true)
                 .cutOutQuality(20)// 裁剪压缩质量 默认90 int
@@ -744,9 +772,9 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
                 val liPeiAnimalPicData: MutableList<CheckDetail.LiPeiAnimalDataDTO.LiPeiAnimalPicDataDTO> = ArrayList()
                 liPeiAnimalPicData.clear()
 
-                if (result != null && result.isNotEmpty())
+                if (result.isNotEmpty())
                     for (item_current in result) {
-                        var dto = CheckDetail.LiPeiAnimalDataDTO.LiPeiAnimalPicDataDTO()
+                        val dto = CheckDetail.LiPeiAnimalDataDTO.LiPeiAnimalPicDataDTO()
                         dto.picUrl = item_current
                         liPeiAnimalPicData.add(dto)
                     }
@@ -758,57 +786,57 @@ class FragmentCheckSunshi : BaseFragment(), ChoicePhoto {
         }
     }
 
-    private var mPictureParameterStyle: PictureParameterStyle? = null
-    private fun getWhiteStyle() {
-        // 相册主题
-        val requireContext = requireContext()
-        mPictureParameterStyle = PictureParameterStyle()
-        mPictureParameterStyle?.let { // 是否改变状态栏字体颜色(黑白切换)
-            it.isChangeStatusBarFontColor = true
-            // 是否开启右下角已完成(0/9)风格
-            it.isOpenCompletedNumStyle = false
-            // 是否开启类似QQ相册带数字选择风格
-            it.isOpenCheckNumStyle = false
-            // 相册状态栏背景色
-            it.pictureStatusBarColor = ContextCompat.getColor(requireContext, R.color.white)
-            // 相册列表标题栏背景色
-            it.pictureTitleBarBackgroundColor = ContextCompat.getColor(requireContext, R.color.white)
-            // 相册列表标题栏右侧上拉箭头
-            it.pictureTitleUpResId = R.drawable.picture_icon_orange_arrow_up
-            // 相册列表标题栏右侧下拉箭头
-            it.pictureTitleDownResId = R.drawable.picture_icon_orange_arrow_down
-            // 相册文件夹列表选中圆点
-            it.pictureFolderCheckedDotStyle = R.drawable.picture_orange_oval
-            // 相册返回箭头
-            it.pictureLeftBackIcon = R.drawable.picture_icon_back_arrow
-            // 标题栏字体颜色
-            it.pictureTitleTextColor = ContextCompat.getColor(requireContext, R.color.black)
-            // 相册右侧取消按钮字体颜色  废弃 改用.pictureRightDefaultTextColor和.pictureRightDefaultTextColor
-            it.pictureRightDefaultTextColor = ContextCompat.getColor(requireContext, R.color.black)
-            // 相册列表勾选图片样式
-            it.pictureCheckedStyle = R.drawable.picture_checkbox_selector
-            // 相册列表底部背景色
-            it.pictureBottomBgColor = ContextCompat.getColor(requireContext, R.color.picture_color_fa)
-            // 已选数量圆点背景样式
-            it.pictureCheckNumBgStyle = R.drawable.picture_num_oval
-            // 相册列表底下预览文字色值(预览按钮可点击时的色值)
-            it.picturePreviewTextColor = ContextCompat.getColor(requireContext(), R.color.picture_color_fa632d)
-            // 相册列表底下不可预览文字色值(预览按钮不可点击时的色值)
-            it.pictureUnPreviewTextColor = ContextCompat.getColor(requireContext, R.color.picture_color_9b)
-            // 相册列表已完成色值(已完成 可点击色值)
-            it.pictureCompleteTextColor = ContextCompat.getColor(requireContext, R.color.picture_color_fa632d)
-            // 相册列表未完成色值(请选择 不可点击色值)
-            it.pictureUnCompleteTextColor = ContextCompat.getColor(requireContext, R.color.picture_color_9b)
-            // 预览界面底部背景色
-            // it.picturePreviewBottomBgColor = ContextCompat.getColor(requireContext, R.color.picture_color_white)
-            // 原图按钮勾选样式  需设置.isOriginalImageControl(true); 才有效
-            it.pictureOriginalControlStyle = R.drawable.picture_original_checkbox
-            // 原图文字颜色 需设置.isOriginalImageControl(true); 才有效
-            it.pictureOriginalFontColor = ContextCompat.getColor(requireContext, R.color.white)
-            // 外部预览界面删除按钮样式
-            it.pictureExternalPreviewDeleteStyle = R.drawable.picture_icon_black_delete
-            // 外部预览界面是否显示删除按钮
-            it.pictureExternalPreviewGonePreviewDelete = true
-        }
-    }
+    /*   private var mPictureParameterStyle: PictureParameterStyle? = null
+       private fun getWhiteStyle() {
+           // 相册主题
+           val requireContext = requireContext()
+           mPictureParameterStyle = PictureParameterStyle()
+           mPictureParameterStyle?.let { // 是否改变状态栏字体颜色(黑白切换)
+               it.isChangeStatusBarFontColor = true
+               // 是否开启右下角已完成(0/9)风格
+               it.isOpenCompletedNumStyle = false
+               // 是否开启类似QQ相册带数字选择风格
+               it.isOpenCheckNumStyle = false
+               // 相册状态栏背景色
+               it.pictureStatusBarColor = ContextCompat.getColor(requireContext, R.color.white)
+               // 相册列表标题栏背景色
+               it.pictureTitleBarBackgroundColor = ContextCompat.getColor(requireContext, R.color.white)
+               // 相册列表标题栏右侧上拉箭头
+               it.pictureTitleUpResId = R.drawable.picture_icon_orange_arrow_up
+               // 相册列表标题栏右侧下拉箭头
+               it.pictureTitleDownResId = R.drawable.picture_icon_orange_arrow_down
+               // 相册文件夹列表选中圆点
+               it.pictureFolderCheckedDotStyle = R.drawable.picture_orange_oval
+               // 相册返回箭头
+               it.pictureLeftBackIcon = R.drawable.picture_icon_back_arrow
+               // 标题栏字体颜色
+               it.pictureTitleTextColor = ContextCompat.getColor(requireContext, R.color.black)
+               // 相册右侧取消按钮字体颜色  废弃 改用.pictureRightDefaultTextColor和.pictureRightDefaultTextColor
+               it.pictureRightDefaultTextColor = ContextCompat.getColor(requireContext, R.color.black)
+               // 相册列表勾选图片样式
+               it.pictureCheckedStyle = R.drawable.picture_checkbox_selector
+               // 相册列表底部背景色
+               it.pictureBottomBgColor = ContextCompat.getColor(requireContext, R.color.picture_color_fa)
+               // 已选数量圆点背景样式
+               it.pictureCheckNumBgStyle = R.drawable.picture_num_oval
+               // 相册列表底下预览文字色值(预览按钮可点击时的色值)
+               it.picturePreviewTextColor = ContextCompat.getColor(requireContext(), R.color.picture_color_fa632d)
+               // 相册列表底下不可预览文字色值(预览按钮不可点击时的色值)
+               it.pictureUnPreviewTextColor = ContextCompat.getColor(requireContext, R.color.picture_color_9b)
+               // 相册列表已完成色值(已完成 可点击色值)
+               it.pictureCompleteTextColor = ContextCompat.getColor(requireContext, R.color.picture_color_fa632d)
+               // 相册列表未完成色值(请选择 不可点击色值)
+               it.pictureUnCompleteTextColor = ContextCompat.getColor(requireContext, R.color.picture_color_9b)
+               // 预览界面底部背景色
+               // it.picturePreviewBottomBgColor = ContextCompat.getColor(requireContext, R.color.picture_color_white)
+               // 原图按钮勾选样式  需设置.isOriginalImageControl(true); 才有效
+               it.pictureOriginalControlStyle = R.drawable.picture_original_checkbox
+               // 原图文字颜色 需设置.isOriginalImageControl(true); 才有效
+               it.pictureOriginalFontColor = ContextCompat.getColor(requireContext, R.color.white)
+               // 外部预览界面删除按钮样式
+               it.pictureExternalPreviewDeleteStyle = R.drawable.picture_icon_black_delete
+               // 外部预览界面是否显示删除按钮
+               it.pictureExternalPreviewGonePreviewDelete = true
+           }
+       }*/
 }

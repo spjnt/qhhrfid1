@@ -2,8 +2,6 @@ package tramais.hnb.hhrfid.ui
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.KeyEvent
@@ -13,7 +11,6 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.apkfuns.logutils.LogUtils
 import org.litepal.LitePal.where
 import tramais.hnb.hhrfid.R
 import tramais.hnb.hhrfid.base.BaseActivity
@@ -25,8 +22,6 @@ import tramais.hnb.hhrfid.ui.dialog.DialogImg
 import tramais.hnb.hhrfid.util.PreferUtils
 import tramais.hnb.hhrfid.util.TimeUtil
 import tramais.hnb.hhrfid.util.Utils
-import java.util.*
-import kotlin.collections.ArrayList
 
 class ActivitySaveAnimal : BaseActivity() {
     private var mEtEarTag: TextView? = null
@@ -84,9 +79,9 @@ class ActivitySaveAnimal : BaseActivity() {
             farmer_tel = intent.getStringExtra(Constants.farmer_tel)
             farmer_name = intent.getStringExtra(Constants.farmer_name)
             if (!farmer_name.isNullOrBlank() && farmer_name!!.length > 5) {
-                var farmerName = farmer_name!!.substring(0,5)+"..."
+                var farmerName = farmer_name!!.substring(0, 5) + "..."
                 setTitleText("投保人:  $farmerName")
-            }else{
+            } else {
                 setTitleText("投保人:  $farmer_name")
 
             }
@@ -117,7 +112,7 @@ class ActivitySaveAnimal : BaseActivity() {
         }
 //        mMakeDeal!!.setOnClickListener { v: View? -> saveAnimal(true, true) }
         mScanNext!!.setOnClickListener { view: View? -> saveAnimal(false, true, false) }
-        mScanDrop!!.setOnClickListener { v: View? -> goToCamer() }
+        mScanDrop!!.setOnClickListener { v: View? -> goToCamera() }
         mAdapter?.let {
             it.setOnItemClickListener { adapter, view, position ->
                 it.getItem(position)
@@ -137,7 +132,7 @@ class ActivitySaveAnimal : BaseActivity() {
             })*/
     }
 
-    var isSave = false
+    //    var isSave = false
     private fun saveAnimal(ifGotoFile: Boolean, ifOnlySave: Boolean, isGoMain: Boolean) {
         if (TextUtils.isEmpty(Utils.getText(mEtEarTag))) {
             showStr("耳标号为空")
@@ -147,6 +142,7 @@ class ActivitySaveAnimal : BaseActivity() {
             showStr("请输入月龄")
             return
         }
+
         where("earTag =?", Utils.getText(mEtEarTag)).findAsync(EarTagCache::class.java).listen { list: List<EarTagCache?>? ->
             if (list == null || list.isEmpty()) {
                 val tagCache = EarTagCache()
@@ -154,10 +150,8 @@ class ActivitySaveAnimal : BaseActivity() {
                 tagCache.save()
             }
         }
-        //    LogUtils.e("log  $latitude  $longitude")
         PreferUtils.putString(this, Constants.age_month, Utils.getEdit(mEtMonth))
         where("LableNum =? and FarmID =?", Utils.getText(mEtEarTag), id_nums).findAsync(AnimalSaveCache::class.java).listen { list: List<AnimalSaveCache?>? ->
-            isSave = true
             val saveCache = AnimalSaveCache()
             saveCache.farmName = farmer_name
             saveCache.tel = farmer_tel
@@ -171,7 +165,6 @@ class ActivitySaveAnimal : BaseActivity() {
             saveCache.category_name = farmer_area
             saveCache.comPanyNumber = companyNum
             saveCache.employeeNumber = userNum
-
             saveCache.creatTime = TimeUtil.getTime(Constants.yyyy_MM_ddHHmmss)
             if (img_list != null && img_list!!.size > 0) {
                 if (img_list!!.size == 1) {
@@ -200,6 +193,7 @@ class ActivitySaveAnimal : BaseActivity() {
                 saveCache.img5 = ""
             }
             if (list != null && list.isNotEmpty()) {
+                //  saveCache.saveOrUpdate()
                 val i = saveCache.updateAll("LableNum =? and FarmID =?", Utils.getText(mEtEarTag), id_nums)
                 if (i > 0) {
                     showStr("保存成功")
@@ -213,10 +207,9 @@ class ActivitySaveAnimal : BaseActivity() {
                                 Utils.goToNextUI(MainActivity::class.java)
                             }
                             else -> {
-                                goToCamer()
+                                goToCamera()
                             }
                         }
-
                     } else {
                         val intent = Intent(context, ActivityFarmList::class.java)
                         intent.putExtra(Constants.MODULE_NAME, "承保验标")
@@ -234,18 +227,15 @@ class ActivitySaveAnimal : BaseActivity() {
                     if (ifOnlySave) {
                         when {
                             ifGotoFile -> {
-
                                 Utils.goToNextUI(ActivityFile::class.java)
                             }
                             isGoMain -> {
                                 Utils.goToNextUI(MainActivity::class.java)
                             }
                             else -> {
-                                goToCamer()
+                                goToCamera()
                             }
                         }
-
-
                     } else {
                         val intent = Intent(context, ActivityFarmList::class.java)
                         intent.putExtra(Constants.MODULE_NAME, "承保验标")
@@ -260,7 +250,7 @@ class ActivitySaveAnimal : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        isSave = false
+        //  isSave = false
     }
     /* private fun goDeal() {
          val intent = Intent(context, ActivityUnderWriteDeal::class.java)
@@ -275,7 +265,7 @@ class ActivitySaveAnimal : BaseActivity() {
          startActivity(intent)
      }*/
 
-    private fun goToCamer() {
+    private fun goToCamera() {
         val intent = Intent(context, CameraActivity::class.java)
         intent.putExtra(Constants.farmer_zjCategory, farmer_zjCategory)
         intent.putExtra(Constants.farmer_name, farmer_name)

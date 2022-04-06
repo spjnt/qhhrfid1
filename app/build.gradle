@@ -11,10 +11,10 @@ android {
     compileSdkVersion 31
     buildToolsVersion "30.0.3"
     defaultConfig {
-        applicationId "tramais.hnb.hhrfid.test"
+        applicationId "tramais.hnb.hhrfid.test"//.test
         minSdkVersion 21
-        versionCode 235
-        versionName "2.35"
+        versionCode 247
+        versionName "2.47"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         ndk {
             // 设置支持的SO库架构
@@ -112,7 +112,7 @@ dependencies {
     //国源SDK
     implementation('com.grandtech.common:standard_sdk_qh_prod:0.0.0.0.1:@aar') {  transitive = true }
     // implementation('com.grandtech.common:standard_sdk_prod:0.0.0.1.5:@aar') { transitive = true }
-    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    implementation 'com.github.bumptech.glide:glide:4.13.0'
     // 基础依赖包，必须要依赖  沉浸式
     implementation 'com.gyf.immersionbar:immersionbar:3.0.0'
     // fragment快速实现（可选）
@@ -122,13 +122,13 @@ dependencies {
     implementation 'com.joanzapata.pdfview:android-pdfview:1.0.4@aar'
 
     implementation 'io.github.lucksiege:pictureselector:v2.7.3-rc05'
-
+//    implementation 'io.github.lucksiege:pictureselector:v3.0.8'
     //手势缩放控件
     // implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     //水印数字
   //  implementation 'com.huangyz0918:androidwm-light:0.1.2'
 //    implementation 'com.huangyz0918:androidwm:0.2.3'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0-alpha01'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0'
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1"
     implementation project(':biometricprompt')
 

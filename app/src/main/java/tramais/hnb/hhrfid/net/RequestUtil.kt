@@ -158,7 +158,8 @@ class RequestUtil(var context: Context) {
         get() = PreferUtils.getString(context, Constants.userNumber)
     val employName: String
         get() = PreferUtils.getString(context, Constants.UserName)
-
+    val fXZCode: String
+        get() = PreferUtils.getString(context, Constants.FXZCode)
     fun getIndefiyCategory(cardCategory: GetIdCardCategory) {
         list_indefiy?.clear()
         map_indefiy?.clear()
@@ -1486,7 +1487,7 @@ class RequestUtil(var context: Context) {
 
     fun getRegion(getRegion: GetCommon<Region>) {
         val params = Params.createParams()
-        params.add("FNumber", PreferUtils.getString(context, Constants.FXZCode))
+        params.add("FNumber", fXZCode)
         OkhttpUtil.getInstance(context).doPosts(Config.getRegion, params, object : OkResponseInterface {
             override fun onSuccess(bean: HttpBean, id: Int) {
                 getRegion.getCommon(JSONObject.parseObject(bean.response, Region::class.java))
@@ -1499,7 +1500,7 @@ class RequestUtil(var context: Context) {
 
     fun getRegionWithCache(getRegion: GetCommonWithError<Region>) {
         val params = Params.createParams()
-        params.add("FNumber", PreferUtils.getString(context, Constants.FXZCode))
+        params.add("FNumber", fXZCode)
         OkhttpUtil.getInstance(context).doPosts(Config.getRegion, params, object : OkResponseInterface {
             override fun onSuccess(bean: HttpBean, id: Int) {
                 getRegion.getCommon(JSONObject.parseObject(bean.response, Region::class.java))
@@ -1973,7 +1974,7 @@ class RequestUtil(var context: Context) {
     }
     fun address(getCommon: GetCommon<Address>) {
         val params = Params.createParams()
-        params.add("FCompanyNumber", companyNum)
+        params.add("FCompanyNumber", fXZCode)
         OkhttpUtil.getInstance(context).doPosts(Config.address, params, object : OkResponseInterface {
             override fun onSuccess(bean: HttpBean, id: Int) {
                 getCommon.getCommon(JSONObject.parseObject(bean.response, Address::class.java))

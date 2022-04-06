@@ -26,7 +26,7 @@ class ActivitySign : BaseActivity() {
     private var about: TextView? = null
     private var iv_sign: ImageView? = null
     private var rem_about: ImageView? = null
-    private var isRember: Boolean = true
+    private var isRember: Boolean = false
     private lateinit var mLinePath: LinePathView
     private var fromOrientation = 0
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,10 +43,9 @@ class ActivitySign : BaseActivity() {
         mClear = findViewById(R.id.clear)
         mSave = findViewById(R.id.save)
         about = findViewById(R.id.about)
-
         about!!.text = Html.fromHtml(resources.getString(R.string.checkbox_text))
         rem_about = findViewById(R.id.iv_rem_pass)
-        rem_about!!.isSelected = true
+        rem_about!!.isSelected = false
     }
 
     var sign_common: String? = null
@@ -59,7 +58,6 @@ class ActivitySign : BaseActivity() {
             sign_common = it.getStringExtra(Constants.Sign_Common)
             mTitle!!.text = for_sign
         }
-
     }
 
     override fun initListner() {
@@ -71,8 +69,6 @@ class ActivitySign : BaseActivity() {
         rem_about!!.setOnClickListener {
             isRember = !isRember
             rem_about!!.isSelected = isRember
-
-
         }
         mClear!!.setOnClickListener {
             if (iv_sign!!.visibility == View.VISIBLE) {
@@ -90,7 +86,7 @@ class ActivitySign : BaseActivity() {
             if (mLinePath.visibility == View.VISIBLE && mLinePath.touched) {
                 val time = TimeUtil.getTime(Constants.yyyyMMddHHmmss)
                 val path = FileUtil.getSDPath() + Constants.sdk_middle_sign
-                var childPaht = "$time.jpg"
+                val childPaht = "$time.jpg"
                 // FileUtil.makeFilePath(path, childPaht)
                 mLinePath.save(path + childPaht)
                 val intent = Intent()
@@ -104,7 +100,6 @@ class ActivitySign : BaseActivity() {
                 setResult(Activity.RESULT_OK, intent)
                 finish()
             }
-
         }
     }
 

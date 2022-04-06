@@ -30,10 +30,8 @@ class ActivityWeightBody : BaseActivity(), ChoicePhoto {
     override fun initView() {
         setTitleText("AI理赔")
         mLength = findViewById(R.id.et_length)
-
         mWeight = findViewById(R.id.et_weight)
         mCamer = findViewById(R.id.camer)
-
     }
 
     override fun initData() {
@@ -43,7 +41,6 @@ class ActivityWeightBody : BaseActivity(), ChoicePhoto {
     override fun initListner() {
         mCamer!!.setOnClickListener {
             PopuChoicePicture(this@ActivityWeightBody, this@ActivityWeightBody).showAtLocation(mCamer, Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL, 0, 0)
-
         }
     }
 
@@ -72,13 +69,8 @@ class ActivityWeightBody : BaseActivity(), ChoicePhoto {
                             }
                             hideAvi()
                         }.start()
-
-
                     }
-
                     override fun onCancel() {}
                 })
     }
-
-
 }

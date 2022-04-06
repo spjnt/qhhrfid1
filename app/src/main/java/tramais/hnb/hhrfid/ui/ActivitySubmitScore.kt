@@ -135,15 +135,12 @@ class ActivitySubmitScore : BaseActivity() {
                 DialogCheckInfo(this, "提交核心", item).show()
             }
         }
-
-
         rlPayType!!.setOnClickListener {
             isLoadMore = false
             mIvArrow!!.animate().setDuration(100).rotation(90f).start()//缴费状态：未同步 传f5 ，未缴费  传f7 ，已缴费  传f9
             PopuUtils(this).initChoicePop(rlPayType, choice_type) { str: String? ->
 //未初审  传f1，未公示  传f3 ，已公示  传f5
                 mTypeChoice!!.text = str
-
                 mIvArrow!!.animate().setDuration(100).rotation(0f).start()
                 getBill(Utils.getEdit(etSearch), str!!, pageIndex)
             }
@@ -175,17 +172,12 @@ class ActivitySubmitScore : BaseActivity() {
                 it.finishLoadMoreWithNoMoreData()
             }
         }
-
-
     }
 
     var currnet_status: String = "7"
     private fun getBill(input: String, statu: String, pageIndex: Int) {
-
-
         //状态：1新建，3已分配，5已查勘、7已立案、9已定损、
-
-        var statu_ = when (statu) {
+        val statu_ = when (statu) {
             "全部" ->
                 "9"
             "待提交" ->
@@ -194,7 +186,6 @@ class ActivitySubmitScore : BaseActivity() {
                 "f9"
             else ->
                 "9"
-
         }
         currnet_status = statu_
         //     LogUtils.e("statu_  $statu  $statu_")

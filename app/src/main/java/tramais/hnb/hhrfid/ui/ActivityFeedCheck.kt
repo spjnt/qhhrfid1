@@ -11,15 +11,19 @@ import tramais.hnb.hhrfid.base.BaseActivity
 import tramais.hnb.hhrfid.bean.FenPei
 import tramais.hnb.hhrfid.lv.NavigatorAdapter
 import tramais.hnb.hhrfid.lv.ViewPagerAdapter
-import tramais.hnb.hhrfid.ui.fragment.*
+import tramais.hnb.hhrfid.ui.fragment.FragmentCheck
+import tramais.hnb.hhrfid.ui.fragment.FragmentCheckSunshi
+import tramais.hnb.hhrfid.ui.fragment.FragmentSign
 import tramais.hnb.hhrfid.ui.view.CustomScrollViewPager
 
 
 class ActivityFeedCheck : BaseActivity() {
     private lateinit var mMagicIndicator: MagicIndicator
-//    var fragment_banan: Fragment? = null
+
+    //    var fragment_banan: Fragment? = null
     var fragment_check: Fragment? = null
-//    var fragment_basic: Fragment? = null
+
+    //    var fragment_basic: Fragment? = null
     var fragment_sign: Fragment? = null
     var fragment_check_sunshi: Fragment? = null
     var fragmentList: MutableList<Fragment>? = ArrayList()
@@ -40,16 +44,16 @@ class ActivityFeedCheck : BaseActivity() {
         initViewPage()
     }
 
-    fun initViewPage() {
+    private fun initViewPage() {
 
-     /*   if (fragment_banan == null)
-            fragment_banan = FragmentBaoAn()
-        if (!fragmentList!!.contains(fragment_banan!!))
-          //  fragmentList!!.add(fragment_banan!!)
-        if (fragment_basic == null)
-            fragment_basic = FragmentBasic()
-        if (!fragmentList!!.contains(fragment_basic!!))*/
-          //  fragmentList!!.add(fragment_basic!!)
+        /*if (fragment_banan == null)
+               fragment_banan = FragmentBaoAn()
+           if (!fragmentList!!.contains(fragment_banan!!))
+             //  fragmentList!!.add(fragment_banan!!)
+           if (fragment_basic == null)
+               fragment_basic = FragmentBasic()
+           if (!fragmentList!!.contains(fragment_basic!!))*/
+        //  fragmentList!!.add(fragment_basic!!)
 
         if (fragment_check == null)
             fragment_check = FragmentCheck()
@@ -65,17 +69,12 @@ class ActivityFeedCheck : BaseActivity() {
             fragmentList!!.add(fragment_sign!!)
 
 
-        if (fragment_check_sunshi== null)
+        if (fragment_check_sunshi == null)
             fragment_check_sunshi = FragmentCheckSunshi()
         if (!fragmentList!!.contains(fragment_check_sunshi!!))
             fragmentList!!.add(fragment_check_sunshi!!)
-
-
-
-
-
-        var viewPageAdaper = ViewPagerAdapter(supportFragmentManager, fragmentList!!)
-        mViewPage.adapter = viewPageAdaper
+        val viewPageAdapter = ViewPagerAdapter(supportFragmentManager, fragmentList!!)
+        mViewPage.adapter = viewPageAdapter
     }
 
 
@@ -84,8 +83,8 @@ class ActivityFeedCheck : BaseActivity() {
             fenPei = it.getSerializableExtra("FenPei") as FenPei
 
         }
-      //  titleList.add("报案信息")
-      //  titleList.add("承保信息")
+        //  titleList.add("报案信息")
+        //  titleList.add("承保信息")
         titleList.add("1-查勘信息")
         //  titleList.add("耳标查询")
         titleList.add("2-银行卡及签名")
@@ -96,8 +95,6 @@ class ActivityFeedCheck : BaseActivity() {
         commonNavigator.adapter = adapter
         mMagicIndicator.navigator = commonNavigator
         ViewPagerHelper.bind(mMagicIndicator, mViewPage)
-
-
     }
 
     override fun initListner() {

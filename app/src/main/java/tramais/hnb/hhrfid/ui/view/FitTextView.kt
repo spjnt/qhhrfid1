@@ -31,7 +31,7 @@ class FitTextView(context: Context?, attrs: AttributeSet?) : androidx.appcompat.
 
     protected override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         if (w != oldw) {
-            refitText(this.getText().toString(), w)
+            refitText(this.text.toString(), w)
         }
     }
 

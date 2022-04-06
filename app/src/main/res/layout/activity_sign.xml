@@ -1,14 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:background="@color/e6" android:padding="@dimen/size_10" android:layout_width="match_parent" android:layout_height="match_parent">
-    <ImageView android:id="@+id/iv_sign" android:visibility="gone" android:layout_width="match_parent" android:layout_height="match_parent"/>
-    <tramais.hnb.hhrfid.ui.view.LinePathView android:id="@+id/line_path" android:focusableInTouchMode="true" android:layout_width="match_parent" android:layout_height="match_parent"/>
-    <TextView android:textSize="@dimen/text_size_14sp" android:textColor="@color/black" android:gravity="center" android:id="@+id/title" android:padding="@dimen/size_4" android:layout_width="wrap_content" android:layout_height="@dimen/size_30" android:text=""/>
-    <LinearLayout android:orientation="vertical" android:padding="@dimen/size_4" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true" android:layout_alignParentBottom="true">
-        <TextView android:textSize="@dimen/size_14" android:textColor="@color/black" android:gravity="center" android:id="@+id/clear" android:background="@drawable/bottom_no_conner" android:layout_width="@dimen/size_60" android:layout_height="@dimen/size_30" android:text="清除"/>
-        <TextView android:textSize="@dimen/size_14" android:textColor="@color/white" android:gravity="center" android:id="@+id/save" android:background="@drawable/small_conner_new" android:layout_width="@dimen/size_60" android:layout_height="@dimen/size_30" android:layout_marginTop="@dimen/size_10" android:text="保存"/>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/e6"
+    android:padding="@dimen/size_10">
+
+    <ImageView
+        android:id="@+id/iv_sign"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <tramais.hnb.hhrfid.ui.view.LinePathView
+        android:id="@+id/line_path"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:focusableInTouchMode="true" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="@dimen/size_1"
+        android:text=""
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_6sp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:padding="@dimen/size_4">
+
+        <TextView
+            android:id="@+id/clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bottom_no_conner"
+            android:gravity="center"
+            android:padding="@dimen/size_4"
+            android:text="清除"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_6sp" />
+
+        <TextView
+            android:id="@+id/save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/size_5"
+            android:background="@drawable/small_conner_new"
+            android:gravity="center"
+            android:padding="@dimen/size_4"
+            android:text="保存"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_6sp" />
     </LinearLayout>
-    <LinearLayout android:layout_gravity="right" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentBottom="true">
-        <ImageView android:layout_gravity="center_vertical" android:id="@+id/iv_rem_pass" android:layout_width="@dimen/size_20" android:layout_height="@dimen/size_20" android:src="@drawable/remember_pwd"/>
-        <TextView android:textSize="@dimen/text_size_16sp" android:textColor="@color/black" android:layout_gravity="center_vertical" android:id="@+id/about" android:visibility="visible" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="@dimen/size_10" android:text="@string/checkbox_text"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="right">
+
+        <ImageView
+            android:id="@+id/iv_rem_pass"
+            android:layout_width="@dimen/size_10"
+            android:layout_height="@dimen/size_10"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/remember_pwd" />
+
+        <TextView
+            android:id="@+id/about"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/size_4"
+            android:text="@string/checkbox_text"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_6sp"
+            android:visibility="visible" />
     </LinearLayout>
 </RelativeLayout>

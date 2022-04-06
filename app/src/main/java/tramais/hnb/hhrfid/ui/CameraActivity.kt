@@ -63,7 +63,7 @@ class CameraActivity : BaseActivity() {
 
     //private ImageView mIvArrow;
     private val context: Context = this@CameraActivity
-    private var image_total = 0
+//    private var image_total = 0
     private var animal_type: String? = null
     private var allEarTag: MutableList<AnimalSaveCache>? = ArrayList()
     private var mScanTotal: TextView? = null
@@ -310,8 +310,8 @@ class CameraActivity : BaseActivity() {
 
     var era_tag = ""
     override fun initData() {
-        image_total = PreferUtils.getInt(context, Constants.img_total)
-        if (image_total == -1) image_total = 4
+//        image_total = PreferUtils.getInt(context, Constants.img_total)
+//        if (image_total == -1) image_total = 4
 
         if (NetUtil.checkNet(this)) {
             mLocationClient = LocationClient(applicationContext)
@@ -415,7 +415,7 @@ class CameraActivity : BaseActivity() {
                 val s = bitmaps[bitmaps.size - 1]
 
                 Glide.with(this).load(s).into(imv_pic!!)
-                imv_label!!.text = "当前第 " + bitmaps.size + "/" + image_total + " 张"
+                imv_label!!.text = "当前第 " + bitmaps.size + "张"
             }
         }
     }
@@ -486,9 +486,9 @@ class CameraActivity : BaseActivity() {
                 if (!_success) {
                     return
                 }
-                var cdpath = FileUtil.getSDPath() + Constants.sdk_middle_animal + id_nums + "/"
+                val cdpath = FileUtil.getSDPath() + Constants.sdk_middle_animal + id_nums + "/"
                 _file?.let {
-                    var photo_name = era_tag + "_" + bitmaps!!.size + ".jpg"
+                    val photo_name = era_tag + "_" + bitmaps!!.size + ".jpg"
                     // cdpath = "$sdk_path${TimeUtil.getTime(Constants.yyyy__MM__dd)}/"
 
                     val decodeByteArray = decodeBitmap(it, 0, it.size)
@@ -543,7 +543,7 @@ class CameraActivity : BaseActivity() {
                                             if (bitmaps!!.size >= 2) mTvFeiQi!!.text = "重拍"
                                             //  updatePhotos(_file)
                                             if (bitmaps.size == 1) mSacnEarTag!!.text = "按扫描键拍摄照片"
-                                            if (bitmaps.size == image_total) {
+                                            if (bitmaps.size == 4) {
                                                 gotoSaveAnimal()
                                                 mSacnEarTag!!.text = "按扫描键扫描电子耳标"
                                             }
@@ -570,8 +570,8 @@ class CameraActivity : BaseActivity() {
 
     private fun saveWaterMask(waterMaskView: WaterMaskView?, sourBitmap: Bitmap, path_: String, name_: String): String {
         try {
-            var waterBitmap = WaterMaskUtil.loadBitmapFromView(waterMaskView)
-            var watermarkBitmap = WaterMaskUtil.createWaterMaskLeftBottom(this, sourBitmap, waterBitmap, 0, 0)
+            val waterBitmap = WaterMaskUtil.loadBitmapFromView(waterMaskView)
+            val watermarkBitmap = WaterMaskUtil.createWaterMaskLeftBottom(this, sourBitmap, waterBitmap, 0, 0)
             return ImageUtils.saveBitmap(this, watermarkBitmap, path_, name_)
         } catch (e: Exception) {
         }
@@ -590,7 +590,7 @@ class CameraActivity : BaseActivity() {
 
     private fun decodeBitmap(buffer: ByteArray, start: Int, length: Int): Bitmap {
         val bitmap = BitmapFactory.decodeByteArray(buffer, start, length, bitmapOptions)
-        var matrix = Matrix()
+        val matrix = Matrix()
         if (bitmap.width > bitmap.height) {
             matrix.postRotate(90f)
         }
