@@ -1,10 +1,12 @@
 package tramais.hnb.hhrfid.service
 
+import android.annotation.SuppressLint
 import android.app.Service
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.IBinder
 import android.text.TextUtils
+import kotlinx.coroutines.*
 import org.litepal.LitePal
 import tramais.hnb.hhrfid.bean.FenPei
 import tramais.hnb.hhrfid.constant.Constants
@@ -15,19 +17,23 @@ import tramais.hnb.hhrfid.litePalBean.*
 import tramais.hnb.hhrfid.net.RequestUtil
 import tramais.hnb.hhrfid.util.UpLoadFileUtil.upLoadFile
 
-class UpLoadSercie : Service() {
+class UpLoadSercie : Service(), CoroutineScope by MainScope() {
     override fun onBind(intent: Intent): IBinder? {
         return null
     }
 
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        PraseAllData().execute()
+        //  PraseAllData().execute()
+        CoroutineScope(Dispatchers.Main).launch(Dispatchers.IO) { load() }
         return super.onStartCommand(intent, flags, startId)
     }
 
+
+    @SuppressLint("StaticFieldLeak")
     private inner class PraseAllData : AsyncTask<Void?, Void?, Any?>() {
-        override fun doInBackground(vararg params: Void?): Any? {
+        @Deprecated("Deprecated in Java")
+        override fun doInBackground(vararg params: Void?): Any {
             /*上传农户信息 */
             upLoadFarmer { str_farm ->
                 sendBroadCast(str_farm)
@@ -94,6 +100,69 @@ class UpLoadSercie : Service() {
         }
     }
 
+    suspend fun load() {
+        upLoadFarmer { str_farm ->
+            sendBroadCast(str_farm)
+            if (str_farm.contains("养殖户信息上传完成")) {
+                upLoadLable { str_farm_sign ->
+                    sendBroadCast(str_farm_sign)
+                    /*   if (str_farm_sign.contains("养殖户签名上传完成")) {
+                           *//*耳标信息*//*
+                            upLoadLable { str_lable ->
+                                sendBroadCast(str_lable)
+                                *//* if (str_lable.equals("耳标信息上传完成"))
+                                 //投保清单信息
+                                     upLoadDeal { str_deal ->
+                                         sendBroadCast(str_deal)
+                                      *//**//*   if (str_deal.equals("投保清单上传完成"))
+                                        // 报案信息
+                                            upLoadBaoAn { str_baoan ->
+                                                sendBroadCast(str_baoan)
+                                                if (str_baoan.equals("报案信息上传完成")) {
+                                                    //  查勘信息
+                                                    upLoadCheck { str_check ->
+                                                        sendBroadCast(str_check)
+                                                        if (str_check.equals("查勘基础信息上传完成")) {
+                                                            //查勘照片
+                                                            upLoadChakanImgs { str_check_img ->
+                                                                sendBroadCast(str_check_img)
+                                                                if (str_check_img.equals("查勘耳标照片上传完成")) {
+                                                                    //查勘签名
+                                                                    upCheckSign { str_check_sign ->
+                                                                        sendBroadCast(str_check_sign)
+                                                                        if (str_check_sign.equals("查勘银行卡及签名信息上传完成")) {
+                                                                            // 损失情况
+                                                                            upLoadLossInfo { str_loss_info ->
+                                                                                sendBroadCast(str_loss_info)
+                                                                                if (str_loss_info.equals("损失情况上传完成")) {
+                                                                                    // 定损情况
+                                                                                    upLoadLossSure { str_loss_sure ->
+                                                                                        sendBroadCast(str_loss_sure)
+                                                                                        if (str_loss_sure.equals("定损情况上传完成")) {
+                                                                                            //  定损签名
+                                                                                            upLoadLossSign { str_loss_sign ->
+                                                                                                sendBroadCast(str_loss_sign)
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }*//**//*
+                                    }*//*
+                            }
+                        }*/
+                }
+
+            }
+        }
+    }
 
     /*牧户信息*/
     private fun upLoadFarmer(getOneString: GetOneString) {
@@ -197,9 +266,7 @@ class UpLoadSercie : Service() {
     }
 
     var j = 0
-    fun upLoadLableOneByOne(uploadS: MutableList<AnimalSaveCache>,
-                            i: Int, getOneString: GetOneString
-    ) {
+    fun upLoadLableOneByOne(uploadS: MutableList<AnimalSaveCache>, i: Int, getOneString: GetOneString) {
         val img_path: MutableList<String?> = ArrayList()
         val saveCache = uploadS[i]
         img_path.clear()
@@ -224,9 +291,10 @@ class UpLoadSercie : Service() {
                         getOneString.getString("耳标信息:${lableNum}上传成功")
                         cache.updateAll("LableNum =? ", lableNum)
                     } else {
-                        getOneString.getString("耳标信息:${lableNum}上传失败")
+                        getOneString.getString("农户:${saveCache.farmName}耳标信息:${lableNum}上传失败")
                     }
-                     j+= 1
+                    j += 1
+                    //  LogUtils.e("j  $j")
                     if (j < uploadS.size)
                         upLoadLableOneByOne(uploadS, j, getOneString)
                     else {
@@ -239,14 +307,52 @@ class UpLoadSercie : Service() {
     /*耳标信息*/
     private fun upLoadLable(getOneString: GetOneString) {
         LitePal.where("isUpLoad =?", "0").findAsync(AnimalSaveCache::class.java).listen { uploadS ->
+            // LogUtils.e("uploadS  ${uploadS.size}")
             if (uploadS != null && uploadS.size > 0) {
                 upLoadLableOneByOne(uploadS, 0, getOneString)
+                //  val img_path: MutableList<String?> = ArrayList()
+                /* for (index in 0 until uploadS.size) {
+                     LogUtils.e("index  $index")
+                     val saveCache = uploadS[index]
+                     img_path.clear()
+                     val lableNum: String? = saveCache.lableNum
+                     if (saveCache.img1 != null)
+                         img_path.add(saveCache.img1)
+                     if (saveCache.img2 != null)
+                         img_path.add(saveCache.img2)
+                     if (saveCache.img3 != null)
+                         img_path.add(saveCache.img3)
+                     if (saveCache.img4 != null)
+                         img_path.add(saveCache.img4)
+                     upLoadFile(this, "耳标照片", lableNum, img_path, GetList { list_lable ->
+                         if (list_lable.size == img_path.size)
+                             RequestUtil.getInstance(this)!!.saveAnimal(
+                                     saveCache.lableNum, saveCache.farmID, list_lable, saveCache.animalType, saveCache.ageMonth, saveCache.latitude, saveCache.longitude, saveCache.employeeNumber, saveCache.comPanyNumber,
+                             ) { rtnCode: Int, message: String ->
+                                 if (rtnCode >= 0) {
+                                     val cache = AnimalSaveCache()
+                                     cache.isUpLoad = "1"
+                                     cache.statu = "在保"
+                                     getOneString.getString("耳标信息:${lableNum}上传成功")
+                                     cache.updateAll("LableNum =? ", lableNum)
+                                 } else {
+                                     getOneString.getString("耳标信息:${lableNum}上传失败")
+                                 }
+                                 *//* j += 1
+                                 if (j < uploadS.size)
+                                     upLoadLableOneByOne(uploadS, j, getOneString)
+                                 else {
+                                     getOneString.getString("耳标信息上传完成")
+                                 }*//*
+                            }
+                    })
+                }*/
 
             } else {
                 getOneString.getString("耳标信息上传完成")
             }
 
-            // upLoadLableOneByOne(uploadS, 0, getOneString)
+
         }
 
     }
@@ -255,9 +361,9 @@ class UpLoadSercie : Service() {
     private fun upLoadDeal(getOneString: GetOneString) {
         LitePal.where("isUpLoad =?", "0").findAsync(AllBillDetailCache::class.java).listen { uploadS ->
             if (uploadS.size > 0) {
-                var sings: MutableMap<String, String?> = HashMap()
+                val sings: MutableMap<String, String?> = HashMap()
                 for (item_ in 0 until uploadS.size) {
-                    var item = uploadS[item_]
+                    val item = uploadS[item_]
                     sings.clear()
                     sings["签名"] = item.signature.toString()
                     upLoadFile(this, item.farmerNumber, sings) {
@@ -267,7 +373,7 @@ class UpLoadSercie : Service() {
                                 item.FNationbdwf, item.FProvincedwbf, item.FCitydwbf, item.FCountydwbf, "", "") { rtnCode, str ->
                             if (rtnCode >= 0) {
                                 getOneString.getString("投保信息:${item.billNumber}上传成功")
-                                var bean = AllBillDetailCache()
+                                val bean = AllBillDetailCache()
                                 bean.isUpLoad = "1"
                                 bean.billNumber = str
                                 bean.updateAll("BillNumber =?", item.billNumber)
@@ -275,7 +381,7 @@ class UpLoadSercie : Service() {
                                     LitePal.where("number =?", item.billNumber).findAsync(BillListListCache::class.java).listen { list ->
                                         if (list != null && list.size > 0)
                                             list.forEach {
-                                                var list_cache = BillListListCache()
+                                                val list_cache = BillListListCache()
                                                 list_cache.number = str
                                                 list_cache.updateAll("Number =?", item.billNumber)
                                             }
@@ -283,7 +389,7 @@ class UpLoadSercie : Service() {
                                     LitePal.where("number =?", item.billNumber).findAsync(BanAnInfo::class.java).listen { list ->
                                         if (list != null && list.size > 0)
                                             list.forEach {
-                                                var list_cache = BanAnInfo()
+                                                val list_cache = BanAnInfo()
                                                 list_cache.number = str
                                                 list_cache.updateAll("number =?", item.billNumber)
                                             }
@@ -291,7 +397,7 @@ class UpLoadSercie : Service() {
                                     LitePal.where("BaoAnNumber =?", item.billNumber).findAsync(ChaKanDetailListCache::class.java).listen { list ->
                                         if (list != null && list.size > 0)
                                             list.forEach {
-                                                var list_cache = ChaKanDetailListCache()
+                                                val list_cache = ChaKanDetailListCache()
                                                 list_cache.baoAnNumber = str
                                                 list_cache.updateAll("BaoAnNumber =?", item.billNumber)
                                             }
@@ -299,7 +405,7 @@ class UpLoadSercie : Service() {
                                     LitePal.where("baoAnNumber =?", item.billNumber).findAsync(LossListCache::class.java).listen { list ->
                                         if (list != null && list.size > 0)
                                             list.forEach {
-                                                var list_cache = LossListCache()
+                                                val list_cache = LossListCache()
                                                 list_cache.baoAnNumber = str
                                                 list_cache.updateAll("baoAnNumber =?", item.billNumber)
                                             }
@@ -551,9 +657,9 @@ class UpLoadSercie : Service() {
 
         LitePal.where("UpLoad_sign =?", "0").findAsync(LossListCache::class.java).listen { uploadS ->
             if (uploadS.size > 0) {
-                var photo: MutableMap<String, String?> = HashMap()
+                val photo: MutableMap<String, String?> = HashMap()
                 for (item_ in 0 until uploadS.size) {
-                    var item = uploadS[item_]
+                    val item = uploadS[item_]
                     photo.clear()
                     photo["签名"] = item.farmerSignature.toString()
                     photo["签名"] = item.employeeSignature.toString()
@@ -561,7 +667,7 @@ class UpLoadSercie : Service() {
                         RequestUtil.getInstance(this)!!.saveLossSign(item.baoAnNumber, list[0], item.farmerMobile, list[1], item.employeeMobile) { rtnCode, str ->
                             if (rtnCode >= 0) {
                                 getOneString.getString("定损签名:${item.farmerName}上传成功")
-                                var cache = LossListCache()
+                                val cache = LossListCache()
                                 cache.UpLoad_sign = "1"
                                 cache.updateAll("baoAnNumber=?", item.baoAnNumber)
                             } else {
@@ -589,4 +695,11 @@ class UpLoadSercie : Service() {
         inten!!.action = "tramais.hnb.hhrfid.service.UpLoadSercie"
         sendBroadcast(inten)
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        cancel()
+        //  GlobalScope.cancel()
+    }
+
 }

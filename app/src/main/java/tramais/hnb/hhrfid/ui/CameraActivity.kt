@@ -63,7 +63,8 @@ class CameraActivity : BaseActivity() {
 
     //private ImageView mIvArrow;
     private val context: Context = this@CameraActivity
-//    private var image_total = 0
+
+    //    private var image_total = 0
     private var animal_type: String? = null
     private var allEarTag: MutableList<AnimalSaveCache>? = ArrayList()
     private var mScanTotal: TextView? = null
@@ -225,7 +226,7 @@ class CameraActivity : BaseActivity() {
             } else {
                 mBtnAnimalChoice!!.text = animal_Type
             }
-            if (!ifC72()) {
+            if (!ifC72() || ifHC720s()) {
                 et_rfid!!.setText(intent!!.getStringExtra(Constants.ear_tag))
             }
         }
@@ -297,7 +298,7 @@ class CameraActivity : BaseActivity() {
         mRootTitle = findViewById(R.id.title)
         // mRootDelete = findViewById(R.id.delete)
         et_rfid = findViewById(R.id.et_rfid)
-        if (ifC72()) {
+        if (ifC72() || ifHC720s()) {
             rl_et!!.visibility = View.GONE
             imv_tips!!.visibility = View.VISIBLE
         } else {
@@ -341,10 +342,10 @@ class CameraActivity : BaseActivity() {
         iv_dele!!.setOnClickListener { v: View? -> et_rfid!!.setText("") }
         mIvBack!!.setOnClickListener { v: View? -> onBackPressed() }
         btn_showcamera!!.setOnClickListener { view: View? ->
-            if (ifC72()) {
+            if (ifC72() || ifHC720s()) {
                 if (Utils.getText(mBtnAnimalChoice) != "畜种选择") {
                     var text = ""
-                    text = if (ifC72()) {
+                    text = if (ifC72() || ifHC720s()) {
                         Utils.getText(imv_tips)
                     } else {
                         Utils.getEdit(et_rfid)
@@ -422,7 +423,7 @@ class CameraActivity : BaseActivity() {
 
     private fun gotoSaveAnimal() {
         var era_tag: String? = ""
-        era_tag = if (ifC72()) {
+        era_tag = if (ifC72() || ifHC720s()) {
             Utils.getText(imv_tips)
         } else {
             Utils.getEdit(et_rfid)
@@ -469,7 +470,7 @@ class CameraActivity : BaseActivity() {
         }
 
         var era_tag: String? = ""
-        era_tag = if (ifC72()) {
+        era_tag = if (ifC72() || ifHC720s()) {
             Utils.getText(imv_tips)
         } else {
             Utils.getEdit(et_rfid)
@@ -510,8 +511,8 @@ class CameraActivity : BaseActivity() {
                     .concurrent(true)                //(可选)多文件压缩时是否并行,内部优化线程并行数量防止OOM
                     .useDownSample(true)             //(可选)压缩算法 true采用邻近采样,否则使用双线性采样(纯文字图片效果绝佳)
                     .format(Bitmap.CompressFormat.JPEG)//(可选)压缩后输出文件格式 支持 JPG,PNG,WEBP
-                    .ignoreBy(1024)                   //(可选)期望大小,大小和图片呈现质量不能均衡所以压缩后不一定小于此值,
-                    .quality(90)                     //(可选)质量压缩系数  0-100
+                    .ignoreBy(150)                   //(可选)期望大小,大小和图片呈现质量不能均衡所以压缩后不一定小于此值,
+                    .quality(80)                     //(可选)质量压缩系数  0-100
                     // .rename { name_ }             //(可选)文件重命名
                     .filter { it != null }             //(可选)过滤器
                     .compressObserver {
@@ -600,6 +601,7 @@ class CameraActivity : BaseActivity() {
 
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+        //  if (ifC72()) {
         if (keyCode == 139 || keyCode == 280 || keyCode == 293) {
             if (Utils.getText(mBtnAnimalChoice) != "畜种选择" && Utils.getText(mBtnAnimalChoice) != "全部") {
                 val text = Utils.getText(imv_tips)
@@ -609,19 +611,31 @@ class CameraActivity : BaseActivity() {
                         takePhoto()
                     }
                 } else {
-                    if (mReader != null) {
-                        if (isSuccess_) {
-                            isSuccess_ = false
-                            ReadTag(mReader, handler)
-                            mSacnEarTag!!.text = "正在扫描电子耳标..."
+                    //  if (mReader != null) {
+                    if (isSuccess_) {
+                        isSuccess_ = false
+                        if (ifC72() && mReader != null) {
+                            ReadTag(/*mReader, */handler)
                         }
+                        if (ifHC720s()) {
+                            startScan(handler)
+                        }
+                        mSacnEarTag!!.text = "正在扫描电子耳标..."
                     }
+                    // }
                 }
             } else {
                 playSound(R.raw.serror)
                 showStr("请选择畜种")
             }
         }
+        //  }
+        /*  if (ifHC720s()) {
+              if (keyCode == 293 && event.repeatCount == 0) {
+
+              }
+
+          }*/
         return super.onKeyDown(keyCode, event)
     }
 }

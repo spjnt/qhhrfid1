@@ -173,8 +173,6 @@ class ActivityAnimalPayDetail : BaseActivity() {
 //            var qr = "qr"
             if (codeurl.isNullOrBlank()) return@setOnClickListener
             donwloadImg(this)
-
-
         }
         govMuch!!.setOnClickListener {
             isShowDetail = !isShowDetail
@@ -332,14 +330,10 @@ class ActivityAnimalPayDetail : BaseActivity() {
         message.obj = mSaveMessage
         message.what = 2
         messageHandler!!.sendMessage(message)
-
-//        messageHandler.sendMessage(messageHandler.obtainMessage())
     }
 
     fun donwloadImg(contexts: Context?) {
         context = contexts
-
-
         Thread(saveFileRunnable).start()
     }
 }

@@ -1,8 +1,6 @@
 package tramais.hnb.hhrfid.base
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.graphics.Point
 import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
@@ -18,11 +16,14 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.bin.david.form.core.SmartTable
-import com.bin.david.form.data.style.FontStyle
 import com.gyf.immersionbar.ktx.immersionBar
+import com.hc.pda.HcPowerCtrl
+import com.pow.api.cls.RfidPower
 import com.rscja.deviceapi.RFIDWithUHF
 import com.rscja.deviceapi.exception.ConfigurationException
+import com.uhf.api.cls.Reader
+import com.uhf.api.cls.Reader.READER_ERR
+import com.uhf.api.cls.Reader.TAGINFO
 import tramais.hnb.hhrfid.R
 import tramais.hnb.hhrfid.constant.Config
 import tramais.hnb.hhrfid.constant.Constants
@@ -96,14 +97,16 @@ abstract class BaseActivity : AppCompatActivity() {
         if (ifC72()) {
             Thread { initUhf() }.start()
         }
+        if (ifHC720s()) {
+            Thread { initHC720s() }.start()
+        }
         SoundUtil.initSound(this@BaseActivity)
         immersionBar {
-
-            statusBarDarkFont(true,0.2F)
+            statusBarDarkFont(true, 0.2F)
                     .fitsSystemWindows(true)
                     .statusBarColor(R.color.white)
         }
-        //        initSound(BaseActivity.this);
+        //initSound(BaseActivity.this);
     }
 
     override fun setContentView(view: View) {
@@ -199,7 +202,11 @@ abstract class BaseActivity : AppCompatActivity() {
         get() = PreferUtils.getString(this, Constants.UserName)
 
     fun ifC72(): Boolean {
-        return Build.MODEL.contains("HC72") || Build.MODEL.contains("SAH6380")
+        return Build.MODEL.equals("HC720") || Build.MODEL.equals("SAH6380")
+    }
+
+    fun ifHC720s(): Boolean {
+        return Build.MODEL.equals("HC720S")
     }
 
     fun initUhf() {
@@ -212,6 +219,75 @@ abstract class BaseActivity : AppCompatActivity() {
             showStr("请确定是否使用正确的设备")
             ex.printStackTrace()
         }
+    }
+
+    var uhfReader: Reader? = null
+    var power: RfidPower? = null
+    var ctrl: HcPowerCtrl? = null
+    var inventoryEpc: Boolean = false //盘存模式，EPC 或 TID
+    var isReading = false //是否正在扫描
+
+    fun initHC720s() {
+        if (!ifHC720s()) return
+        ctrl = HcPowerCtrl()
+        ctrl!!.identityPower(1)
+        if (uhfReader == null) {
+            uhfReader = Reader()
+            power = RfidPower(RfidPower.PDATYPE.NONE, applicationContext)
+            if (power!!.PowerUp()) {
+                val reader_err = uhfReader!!.InitReader_Notype("/dev/ttysWK0", 1)
+                if (reader_err == Reader.READER_ERR.MT_OK_ERR) {
+                    val apcf = uhfReader!!.AntPowerConf()
+                    apcf.antcnt = 1
+                    uhfReader!!.ParamSet(Reader.Mtr_Param.MTR_PARAM_POTL_GEN2_SESSION, intArrayOf(1))
+                    uhfReader!!.ParamSet(Reader.Mtr_Param.MTR_PARAM_TAG_EMBEDEDDATA, null)
+                }
+            }
+        }
+    }
+
+    open fun startScan(handler: Handler) {
+        if (!isReading) {
+            val ants = intArrayOf(1)
+            var option = 16
+            if (!inventoryEpc) {
+                option = 32768
+            }
+            val reader_err: READER_ERR = uhfReader!!.AsyncStartReading(ants, 1, option)
+            Thread {
+                val tagcnt = IntArray(1)
+                synchronized(this) {
+                    while (isReading) {
+                        //  var er: READER_ERR
+                        var er = uhfReader!!.AsyncGetTagCount(tagcnt)
+                        if (er == READER_ERR.MT_OK_ERR) {
+                            if (tagcnt[0] > 0) {
+                                for (i in 0 until tagcnt[0]) {
+                                    val taginfo: TAGINFO = uhfReader!!.TAGINFO()
+                                    er = uhfReader!!.AsyncGetNextTag(taginfo)
+                                    if (er == READER_ERR.MT_OK_ERR) {
+                                        val epc = Reader.bytes_Hexstr(taginfo.EpcId)
+                                        stopScan()
+                                        reverseTag(epc, handler)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }.start()
+            if (reader_err == READER_ERR.MT_OK_ERR) {
+                isReading = true
+            }
+        } else {
+            stopScan()
+        }
+    }
+
+    open fun stopScan() {
+        isReading = false
+        uhfReader!!.AsyncStopReading()
+
     }
 
     fun stopC72Read(mReader: RFIDWithUHF?) {
@@ -239,35 +315,29 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    fun ReadTag(mReader: RFIDWithUHF?, handler: Handler) {
-        if (mReader == null) return
-        Thread {
-            val srt_tag = mReader.inventorySingleTag()
-            val ep = arrayOf("")
-            getTime { count: Int ->
-                if (count < 5) {
-                    if (!TextUtils.isEmpty(srt_tag)) {
-                        if (srt_tag.length >= 16) {
-                            ep[0] = srt_tag.substring(srt_tag.length - 15)
-                        } else {
-                            ep[0] = srt_tag
-                        }
-                        if (timer != null) {
-                            timer!!.cancel()
-                            timer = null
-                        }
-                        if (task != null) {
-                            task!!.cancel()
-                            task = null
-                        }
-                        playSound(R.raw.barcodebeep)
-                        //                        SoundUtil.playSound(1);
-                        val msg = handler.obtainMessage()
-                        msg.obj = ep[0]
-                        msg.what = GET_EPC_C72
-                        handler.sendMessage(msg)
+    fun ReadTag(handler: Handler) {
+        if (ifC72()) {
+            if (mReader == null) return
+            Thread {
+                val srt_tag = mReader!!.inventorySingleTag()
+                reverseTag(srt_tag, handler)
+            }.start()
+        }
+        if (ifHC720s()) {
+            startScan(handler)
+        }
+    }
+
+    private fun reverseTag(srt_tag: String, handler: Handler) {
+        val ep = arrayOf("")
+        getTime { count: Int ->
+            if (count < 5) {
+                if (!TextUtils.isEmpty(srt_tag)) {
+                    if (srt_tag.length >= 16) {
+                        ep[0] = srt_tag.substring(srt_tag.length - 15)
+                    } else {
+                        ep[0] = srt_tag
                     }
-                } else if (count == 5) {
                     if (timer != null) {
                         timer!!.cancel()
                         timer = null
@@ -276,14 +346,28 @@ abstract class BaseActivity : AppCompatActivity() {
                         task!!.cancel()
                         task = null
                     }
-                    val msg = handler.obtainMessage(GET_EPC_C72)
-                    msg.obj = "停止扫描,请重新按键"
-                    handler.sendMessageDelayed(msg, 5000)
+                    playSound(R.raw.barcodebeep)
+                    //                        SoundUtil.playSound(1);
+                    val msg = handler.obtainMessage()
+                    msg.obj = ep[0]
+                    msg.what = GET_EPC_C72
+                    handler.sendMessage(msg)
                 }
+            } else if (count == 5) {
+                if (timer != null) {
+                    timer!!.cancel()
+                    timer = null
+                }
+                if (task != null) {
+                    task!!.cancel()
+                    task = null
+                }
+                val msg = handler.obtainMessage(GET_EPC_C72)
+                msg.obj = "停止扫描,请重新按键"
+                handler.sendMessageDelayed(msg, 4000)
             }
-        }.start()
+        }
     }
-
 
     fun getTime(getInt: GetInt) {
         val count = intArrayOf(0)

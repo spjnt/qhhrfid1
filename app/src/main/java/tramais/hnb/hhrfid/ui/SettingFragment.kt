@@ -15,15 +15,17 @@ import com.alibaba.fastjson.JSONObject
 import com.gyf.immersionbar.ktx.immersionBar
 import com.rscja.deviceapi.RFIDWithUHF
 import com.rscja.deviceapi.exception.ConfigurationException
+import com.uhf.api.cls.Reader.*
 import tramais.hnb.hhrfid.R
+import tramais.hnb.hhrfid.base.BaseActivity
 import tramais.hnb.hhrfid.base.BaseFragment
 import tramais.hnb.hhrfid.bean.ColorChoiceBean
 import tramais.hnb.hhrfid.constant.Constants
 import tramais.hnb.hhrfid.interfaces.GetCommon
 import tramais.hnb.hhrfid.service.DownloadService
 import tramais.hnb.hhrfid.ui.dialog.DialogFeedBack
-import tramais.hnb.hhrfid.ui.popu.PopuChoice
 import tramais.hnb.hhrfid.ui.popu.PopColorChoice
+import tramais.hnb.hhrfid.ui.popu.PopuChoice
 import tramais.hnb.hhrfid.util.NetUtil
 import tramais.hnb.hhrfid.util.PreferUtils
 import tramais.hnb.hhrfid.util.TimeUtil
@@ -70,10 +72,15 @@ class SettingFragment : BaseFragment() {
             mColorChoice = it.findViewById(R.id.rl_color)
 //            mTvVersion = it.findViewById(R.id.tv_version)
             // mTvVersion!!.text = "V " + PackageUtils.getVersionName(requireContext())
-            val power = PreferUtils.getString(context, Constants.c72_power)
-
-            if (!TextUtils.isEmpty(power) && Integer.valueOf(power) >= 0) mTvRef!!.text = power + "dbm"
-
+            if (ifC72()) {
+                Thread { initUhf() }.start()
+                val power = PreferUtils.getString(context, Constants.c72_power)
+                if (!TextUtils.isEmpty(power) && Integer.valueOf(power) >= 0) mTvRef!!.text = power + "dbm"
+            }
+            if (ifHC720s()) {
+                val power = getPower()
+                mTvRef!!.text = power.toString() + "dbm"
+            }
 
             mTvCacheTime = it.findViewById(R.id.tv_cache_time)
             val cache_time = PreferUtils.getString(context, Constants.cache_time)
@@ -111,20 +118,13 @@ class SettingFragment : BaseFragment() {
             mTvPhone!!.text = "手机: $mobile"
             mTvCompany!!.text = "公司: $companName"
         }
-        if (ifC72()) {
-            Thread { initUhf() }.start()
-        }
+
         val color_str = PreferUtils.getString(context, Constants.color_str)
         val color_int = PreferUtils.getInt(context, Constants.color_int)
         if (color_str.isNullOrEmpty() && color_int == -1) {
             mTvColor!!.text = colors[0].colorStr
             mTvCologBg!!.setBackgroundColor(resources.getColor(colors[0].colorInt))
         } else {
-          /*  if (color_str == "白色") {
-                mLlColor!!.setBackgroundColor(resources.getColor(R.color.gray))
-            } else {
-                mLlColor!!.setBackgroundColor(resources.getColor(R.color.white))
-            }*/
             mTvColor!!.text = color_str
             mTvCologBg!!.setBackgroundColor(resources.getColor(color_int))
         }
@@ -141,9 +141,7 @@ class SettingFragment : BaseFragment() {
         }
     }
 
-
     var mReader: RFIDWithUHF? = null
-
     fun initUhf() {
         try {
             if (mReader == null) {
@@ -151,8 +149,6 @@ class SettingFragment : BaseFragment() {
                 mReader!!.init()
             }
         } catch (ex: ConfigurationException) {
-            //   "请确定是否使用正确的设备".showStr()
-
             ex.printStackTrace()
         }
     }
@@ -167,11 +163,6 @@ class SettingFragment : BaseFragment() {
             PopColorChoice(requireActivity(), mColorChoice!!, "请选择颜色", colors, object : GetCommon<ColorChoiceBean> {
                 override fun getCommon(t: ColorChoiceBean) {
                     val color_str = t.colorStr
-                   /* if (color_str == "白色") {
-                        mLlColor!!.setBackgroundColor(resources.getColor(R.color.gray))
-                    } else {
-                        mLlColor!!.setBackgroundColor(resources.getColor(R.color.white))
-                    }*/
                     mTvColor!!.text = color_str
                     mTvCologBg!!.setBackgroundColor(resources.getColor(t.colorInt))
                     PreferUtils.putString(requireContext(), Constants.color_str, color_str)
@@ -179,23 +170,27 @@ class SettingFragment : BaseFragment() {
                 }
             })
         }
-        /*设置照片数量*/
-      /*  mRlPhotoChoice!!.setOnClickListener { view: View? ->
-            PopuChoice(activity, mRlPhotoChoice, "请选择照片数量", data_img) { str: String ->
-                mIvPhotos!!.text = str + "张"
-                PreferUtils.putInt(context, Constants.img_total, Integer.valueOf(str))
-            }
-        }*/
         /*设置功率*/mIvRefChoice!!.setOnClickListener { view: View? ->
-            if (ifC72()) {
-                PopuChoice(activity, mIvRefChoice, "请设置功率", data_rfid) { str: String ->
-                    mTvRef!!.text = str + "dbm"
-                    mReader!!.power = Integer.valueOf(str)
-                    PreferUtils.putString(context, Constants.c72_power, str)
+            when {
+                ifC72() -> {
+                    PopuChoice(activity, mIvRefChoice, "请设置功率", data_rfid) { str: String ->
+                        mTvRef!!.text = str + "dbm"
+                        mReader!!.power = Integer.valueOf(str)
+                        PreferUtils.putString(context, Constants.c72_power, str)
+                    }
                 }
-            } else {
-                "仅专用设备支持功率设置".showStr()
+                ifHC720s() -> {
+                    PopuChoice(activity, mIvRefChoice, "请设置功率", data_rfid) { str: String ->
+                        mTvRef!!.text = str + "dbm"
+                        //  mReader!!.power = Integer.valueOf(str)
+                        setPower(str.toInt() * 100)
+                        //  PreferUtils.putString(context, Constants.c72_power, str)
+                    }
+                }
+                else -> {
+                    "仅专用设备支持功率设置".showStr()
 
+                }
             }
         }
         /*更新缓存*/mRlCache!!.setOnClickListener { view: View? ->
@@ -223,7 +218,7 @@ class SettingFragment : BaseFragment() {
         requireActivity().startService(intent)
         showAvi("正在下载,请稍等")
         //注册广播接收器
-       // DownloadService().javaClass.toString()
+        // DownloadService().javaClass.toString()
         if (receiver == null) receiver = MyReceiver()
         val filter = IntentFilter()
         filter.addAction("tramais.hnb.hhrfid.service.DownLoadService")
@@ -256,6 +251,37 @@ class SettingFragment : BaseFragment() {
                 PreferUtils.putString(context, Constants.cache_time, TimeUtil.getTime(Constants.yyyy_MM_ddHHmmss))
                 hideAvi()
             }
+        }
+    }
+
+    //获取功率
+    fun getPower(): Int {
+        val apcf2: AntPowerConf = (activity as BaseActivity).uhfReader!!.AntPowerConf()
+        val er: READER_ERR = (activity as BaseActivity).uhfReader!!.ParamGet(
+                Mtr_Param.MTR_PARAM_RF_ANTPOWER, apcf2)
+        return if (er == READER_ERR.MT_OK_ERR) {
+            (apcf2.Powers[0].readPower) / 100
+
+        } else {
+            0
+        }
+    }
+
+    //设置功率
+    fun setPower(setPower: Int) {
+        val apcf: AntPowerConf = (activity as BaseActivity).uhfReader!!.AntPowerConf()
+        apcf.antcnt = 1
+        val jaap: AntPower = (activity as BaseActivity).uhfReader!!.AntPower()
+        jaap.antid = 1
+        jaap.readPower = setPower.toShort()
+        jaap.writePower = setPower.toShort()
+        apcf.Powers[0] = jaap
+        val powerSet: READER_ERR = (activity as BaseActivity).uhfReader!!.ParamSet(Mtr_Param.MTR_PARAM_RF_ANTPOWER, apcf)
+        if (powerSet == READER_ERR.MT_OK_ERR) {
+            "设置成功".showStr()
+        } else {
+            "设置失败".showStr()
+            // toast("设置失败 $powerSet")
         }
     }
 

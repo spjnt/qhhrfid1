@@ -29,7 +29,6 @@ import tramais.hnb.hhrfid.ui.dialog.DialogImg
 import tramais.hnb.hhrfid.util.NetUtil
 import tramais.hnb.hhrfid.util.Utils
 import java.io.File
-import java.util.*
 
 class ActivitySearchByEarTag : BaseActivity() {
     var lables: MutableList<String?>? = ArrayList()
@@ -145,7 +144,13 @@ class ActivitySearchByEarTag : BaseActivity() {
                 doSearch(Utils.getEdit(mEtEarTag))
             }
         }
-        mIvRfidScan!!.setOnClickListener { view: View? -> if (ifC72()) ReadTag(mReader, handler!!) }
+        mIvRfidScan!!.setOnClickListener { view: View? ->
+            if (ifC72()) ReadTag(/*mReader,*/ handler!!)
+
+            if (ifHC720s()) {
+                startScan(handler!!)
+            }
+        }
     }
 
     private fun getAllLables(): MutableList<String?>? {
@@ -234,7 +239,13 @@ class ActivitySearchByEarTag : BaseActivity() {
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
         if (keyCode == 139 || keyCode == 280) {
-            ReadTag(mReader, handler!!)
+            if (ifC72())
+                ReadTag(/*mReader,*/ handler!!)
+        }
+        if (ifHC720s()) {
+            if (keyCode == 293 && event.repeatCount == 0) {
+                startScan(handler!!)
+            }
         }
         return super.onKeyDown(keyCode, event)
     }

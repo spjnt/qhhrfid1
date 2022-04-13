@@ -2,6 +2,7 @@ package tramais.hnb.hhrfid.base
 
 import android.app.Activity
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -45,21 +46,20 @@ abstract class BaseFragment : ImmersionFragment() /*Fragment()*/ {
 
     fun String?.showStr() {
         if (this?.isNotEmpty() == true) {
-
             requireActivity().runOnUiThread { Toast.makeText(context, this, Toast.LENGTH_SHORT).show() }
         }
     }
 
     fun haveRoles(roles: List<Roles>?, type: String, FObjSubGroup: String, FObjectName: String): Boolean {
         return roles!!.isNotEmpty() && roles!!.filter { it.fObjGroup.equals(type) && it.fObjSubGroup.equals(FObjSubGroup) && it.fObjectName.equals(FObjectName) }.isNotEmpty()
-
     }
 
     fun ifC72(): Boolean {
-        //// return Build.MODEL.contains("HC72");
-        return true
+         return Build.MODEL.equals("HC720");
     }
-
+    fun ifHC720s(): Boolean {
+        return Build.MODEL.equals("HC720S")
+    }
     @JvmOverloads
     fun showAvi(str: String? = "") {
         if (dialogAvi == null) {
@@ -82,13 +82,12 @@ abstract class BaseFragment : ImmersionFragment() /*Fragment()*/ {
         }
     }
 
-    fun netTips() {
-        if (!NetUtil.checkNet(context!!)) {
-            "请在联网环境下操作".showStr()
-            return
-        }
-
-    }
+//    fun netTips() {
+//        if (!NetUtil.checkNet(requireContext())) {
+//            "请在联网环境下操作".showStr()
+//            return
+//        }
+//    }
 
     val companyNum: String
         get() = PreferUtils.getString(context, Constants.companyNumber)

@@ -133,30 +133,7 @@
 
         <include layout="@layout/gray_line" />
 
-        <RelativeLayout
-            android:id="@+id/rl_version"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/size_40"
-            android:background="@color/white">
 
-            <TextView
-                style="@style/text_left_ll_big"
-                android:text="版本信息" />
-
-            <TextView
-                android:id="@+id/tv_version"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/size_10"
-                android:drawableRight="@mipmap/arrow_right_small"
-                android:text=""
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_14sp" />
-        </RelativeLayout>
-
-        <include layout="@layout/gray_line" />
 
         <RelativeLayout
             android:id="@+id/rl_cache"
@@ -240,7 +217,30 @@
         </RelativeLayout>
 
         <include layout="@layout/gray_line" />
+        <RelativeLayout
+            android:id="@+id/rl_version"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_40"
+            android:background="@color/white">
 
+            <TextView
+                style="@style/text_left_ll_big"
+                android:text="版本信息" />
+
+            <TextView
+                android:id="@+id/tv_version"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/size_10"
+                android:drawableRight="@mipmap/arrow_right_small"
+                android:text=""
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_14sp" />
+        </RelativeLayout>
+
+        <include layout="@layout/gray_line" />
         <RelativeLayout
             android:id="@+id/rl_feedback"
             android:layout_width="match_parent"

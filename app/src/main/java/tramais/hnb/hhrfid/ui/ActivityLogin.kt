@@ -23,6 +23,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.hailong.biometricprompt.fingerprint.FingerprintCallback
 import com.hailong.biometricprompt.fingerprint.FingerprintVerifyManager
+import org.litepal.LitePal
 import org.litepal.LitePal.findAllAsync
 import tramais.hnb.hhrfid.R
 import tramais.hnb.hhrfid.base.BaseActivity
@@ -32,13 +33,18 @@ import tramais.hnb.hhrfid.constant.Config
 import tramais.hnb.hhrfid.constant.Constants
 import tramais.hnb.hhrfid.interfaces.GetResultJsonObject
 import tramais.hnb.hhrfid.interfaces.OkResponseInterface
+import tramais.hnb.hhrfid.litePalBean.AnimalSaveCache
+import tramais.hnb.hhrfid.litePalBean.EarTagCache
 import tramais.hnb.hhrfid.litePalBean.RoleCache
 import tramais.hnb.hhrfid.net.OkhttpUtil
 import tramais.hnb.hhrfid.net.Params
 import tramais.hnb.hhrfid.net.RequestUtil
 import tramais.hnb.hhrfid.ui.dialog.BaseDialog
-import tramais.hnb.hhrfid.util.*
 import tramais.hnb.hhrfid.util.GsonUtil.Companion.instant
+import tramais.hnb.hhrfid.util.NetUtil
+import tramais.hnb.hhrfid.util.PackageUtils
+import tramais.hnb.hhrfid.util.PreferUtils
+import tramais.hnb.hhrfid.util.Utils
 import java.io.File
 
 
@@ -83,7 +89,8 @@ class ActivityLogin : BaseActivity() {
         Glide.with(this).load(R.mipmap.new_logo) //图片地址
                 .apply(options)
                 .into(logo!!)
-
+//        LitePal.deleteAll(EarTagCache::class.java)
+//        LitePal.deleteAll(AnimalSaveCache::class.java)
     }
 
     override fun initData() {
@@ -116,7 +123,7 @@ class ActivityLogin : BaseActivity() {
     }
 
     var timer_: CountDownTimer? = null
-    fun countDown() {
+    private fun countDown() {
         timer_ = object : CountDownTimer(5000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 //    LogUtils.e("倒计时" + millisUntilFinished / 1000 + "秒")
@@ -135,7 +142,7 @@ class ActivityLogin : BaseActivity() {
     }
 
     //"Username":"19924940597","Password":"picc2021!"
-    fun addFinger() {
+    private fun addFinger() {
 
         val builder = FingerprintVerifyManager.Builder(this@ActivityLogin)
         builder.callback(object : FingerprintCallback {
@@ -181,7 +188,7 @@ class ActivityLogin : BaseActivity() {
     }
 
     fun goToForget(module_name: String) {
-        var intent = Intent(context, ActivityForgetPsw::class.java)
+        val intent = Intent(context, ActivityForgetPsw::class.java)
         intent.putExtra(Constants.MODULE_NAME, module_name)
         startActivity(intent)
     }

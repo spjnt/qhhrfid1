@@ -8,22 +8,18 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
-import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.ScrollView
 import android.widget.TextView
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.runBlocking
 import org.litepal.LitePal.where
 import tramais.hnb.hhrfid.R
 import tramais.hnb.hhrfid.base.BaseActivity
 import tramais.hnb.hhrfid.constant.Constants
-import tramais.hnb.hhrfid.litePalBean.*
+import tramais.hnb.hhrfid.litePalBean.AnimalSaveCache
+import tramais.hnb.hhrfid.litePalBean.FarmListCache
 import tramais.hnb.hhrfid.service.UpLoadSercie
 import tramais.hnb.hhrfid.util.NetUtil
 import tramais.hnb.hhrfid.util.Utils
@@ -100,7 +96,7 @@ class ActivityFile : BaseActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun deal() {
-        upload_i=0
+        upload_i = 0
         val find = where("isUpLoad=?", "0").find(FarmListCache::class.java)
         mTvFarm!!.text = "待上传数量 " + find.size
         upload_i += find.size
@@ -122,6 +118,7 @@ class ActivityFile : BaseActivity() {
         upLoad_desc = ""
         runOnUiThread { mTvDesc!!.text = " " }
         if (!isFinishing) showAvi("正在上传")
+
         val intent = Intent(this, UpLoadSercie::class.java)
         startService(intent)
         //注册广播接收器
@@ -129,7 +126,7 @@ class ActivityFile : BaseActivity() {
         val filter = IntentFilter()
         filter.addAction("tramais.hnb.hhrfid.service.UpLoadSercie")
         registerReceiver(receiver, filter)
-       // upload_i = 0
+        // upload_i = 0
     }
 
     override fun onDestroy() {
