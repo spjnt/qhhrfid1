@@ -7,10 +7,10 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.text.Editable
-import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.View
-import android.widget.*
+import android.widget.EditText
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +18,7 @@ import com.alibaba.fastjson.JSONArray
 import com.apkfuns.logutils.LogUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
+import com.google.gson.Gson
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import org.litepal.FluentQuery
 import org.litepal.LitePal
@@ -33,8 +34,6 @@ import tramais.hnb.hhrfid.util.GsonUtil.Companion.instant
 import tramais.hnb.hhrfid.util.NetUtil
 import tramais.hnb.hhrfid.util.Utils
 import java.io.Serializable
-import java.util.*
-import kotlin.collections.ArrayList
 
 
 class ActivityFarmList : BaseActivity() {
@@ -58,6 +57,7 @@ class ActivityFarmList : BaseActivity() {
             super.handleMessage(msg)
             when (msg.what) {
                 UNDER_LIST -> {
+                    //underWrites?.clear()
                     underWrites = msg.obj as MutableList<FarmList?>
 
                     setUnderAdapter(underWrites!!, isRefresh)
@@ -115,7 +115,7 @@ class ActivityFarmList : BaseActivity() {
     override fun initData() {
         val intent = intent
         module_name = intent.getStringExtra(Constants.MODULE_NAME)
-       // LogUtils.e("module_name  $module_name")
+        // LogUtils.e("module_name  $module_name")
         if (!module_name.isNullOrEmpty()) {
             if (module_name == "养殖户登记") {
                 setRightText("新增农户")
@@ -247,7 +247,7 @@ class ActivityFarmList : BaseActivity() {
             }
         mCustomTitle!!.mRootDelete!!.setOnClickListener { view: View? ->
             if (module_name == "养殖户登记") {
-                var intent = Intent(this, ActivitySaveFram::class.java)
+                val intent = Intent(this, ActivitySaveFram::class.java)
                 intent.putExtra("type", "new")
                 startActivity(intent)
             } else if (module_name == "种植险") {
@@ -259,32 +259,33 @@ class ActivityFarmList : BaseActivity() {
     }
 
     private fun getListCache(input: String, pagIndex: Int) {
-        var _cache_to: MutableList<FarmListCache> = ArrayList()
+        val _cache_to: MutableList<FarmListCache> = ArrayList()
         val strArr: Array<String>? = if (input.isEmpty()) {
             null
         } else if (!Utils.isNumeric(input)) {
-            arrayOf("Name like ?", "%$input%")
+            arrayOf("name like ?", "%$input%")
         } else {
-            arrayOf("Mobile like ?", "%$input%")
+            arrayOf("mobile like ?", "%$input%")
         }
 
         var fluentQuery: FluentQuery?
 
-        if (strArr != null && strArr.isNotEmpty()) {
-            fluentQuery = LitePal.where(*strArr)
+        fluentQuery = if (strArr != null && strArr.isNotEmpty()) {
+            LitePal.where(*strArr)
         } else {
-            fluentQuery = LitePal.where(null)
+            LitePal.where(null)
         }
         if (fluentQuery != null)
-            if (pagIndex != 1) {
-                fluentQuery = fluentQuery.order("CreatTime desc").offset(20).limit(20)
+            fluentQuery = if (pagIndex != 1) {
+                fluentQuery.order("creatTime desc").offset(20).limit(20)
             } else {
-                fluentQuery = fluentQuery.order("CreatTime desc").limit(20)
+                fluentQuery.order("creatTime desc").limit(20)
             }
-        _cache_to?.clear()
+        _cache_to.clear()
         fluentQuery.findAsync(FarmListCache::class.java).listen { list: List<FarmListCache> ->
             total = list.size
             _cache_to.addAll(list.toMutableList())
+
             // LogUtils.e("total  $total  ${_cache_to.size}")
             cacheToLine(_cache_to)
         }
@@ -315,10 +316,15 @@ class ActivityFarmList : BaseActivity() {
                 list.zjNumber = item.zjNumber
                 list.signPicture = item.singPic
                 list.fValidate = item.overdueTime
-                list.isPoor = item.isPoor!!.toInt()
+                list.isPoor = if (item.isPoor.isNullOrEmpty()) {
+                    0
+                } else {
+                    item.isPoor!!.toInt()
+                }
                 list.remark = item.remark
                 writes!!.add(list)
             }
+
             val message = Message()
             message.obj = writes
             message.what = UNDER_LIST
@@ -330,13 +336,13 @@ class ActivityFarmList : BaseActivity() {
     private fun getUnderList(input: String, PageIndex: Int, module_name: String) {
         // if (writes != null) writes!!.clear()
         showAvi()
-        var flag = if (module_name == "种植险") {
+        val flag = if (module_name == "种植险") {
             module_name
         } else {
             "养殖险"
         }
         if (NetUtil.checkNet(this)) {
-
+           // LogUtils.e("come in  with  net  $input")
             RequestUtil.getInstance(context)!!.getUnderList(input, PageIndex, flag, module_name) { rtnCode: Int, meg: String?, totalNums: Int, datas: JSONArray? ->
                 hideAvi()
                 total = totalNums
@@ -356,23 +362,24 @@ class ActivityFarmList : BaseActivity() {
 
             }
         } else {
+          //  LogUtils.e("come in  no  net  $input")
             getListCache(input, PageIndex)
         }
 
     }
 
     private fun setUnderAdapter(underWrites: MutableList<FarmList?>, isReresh: Boolean) {
-        //  LogUtils.e("under  ${underWrites.size}  ${isReresh}")
-        if (!isReresh)
-            if (underWrites == null || underWrites.size == 0) {
-                showStr("暂无数据展示")
-                mAdapter!!.setList(null)
-                return
-            }
+       // LogUtils.e("under  ${Gson().toJson(underWrites)}  ${isReresh}")
+        /* if (!isReresh)
+             if (underWrites.isNullOrEmpty() || underWrites.size == 0) {
+                 showStr("暂无数据展示")
+                 mAdapter!!.setList(null)
+                 return
+             }*/
         if (isReresh) {
-            if (underWrites != null && underWrites.isNotEmpty())
+            if (underWrites.isNotEmpty())
                 mAdapter!!.addData(underWrites)
-        } else mAdapter!!.setNewInstance(underWrites)
+        } else mAdapter!!.setList(underWrites)
     }
 
     companion object {
@@ -390,7 +397,7 @@ class ActivityFarmList : BaseActivity() {
                 } else {
                     holder.setText(R.id.tv_category_name, farmer_.area)
                 }
-
+               // LogUtils.e("${farmer_.name}")
                 holder.setText(R.id.tv_category, farmer_.zjNumber)
                 holder.setText(R.id.tv_phone_num, farmer_.mobile)
                 holder.setText(R.id.tv_name, farmer_.name)

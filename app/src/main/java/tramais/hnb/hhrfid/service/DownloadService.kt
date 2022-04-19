@@ -79,7 +79,7 @@ class DownloadService : Service() {
             override fun getCommon(t: Dept) {
                 t.data.let {
                     for (item in it!!) {
-                        var cache = DeptCache()
+                        val cache = DeptCache()
                         cache.fCompanyDept = item.fCompanyDept
                         cache.fCompanyDeptCode = item.fCompanyDeptCode
                         cache.save()
@@ -94,7 +94,7 @@ class DownloadService : Service() {
             override fun getNature(nature: Naturean?) {
                 nature?.let {
                     for (item in it.dATA!!) {
-                        var cache = NatureanCache(item.fCode.toString(), item.fName.toString())
+                        val cache = NatureanCache(item.fCode.toString(), item.fName.toString())
                         cache.save()
                     }
                 }
@@ -107,7 +107,7 @@ class DownloadService : Service() {
             override fun bankInfo(info: BankInfoDetail?) {
                 val toJSONString = JSON.toJSONString(info)
                 // LogUtils.e("toJSONString  $toJSONString")
-                var cache = BankInfoCache()
+                val cache = BankInfoCache()
                 cache.jsonString = toJSONString
                 cache.save()
 
@@ -156,7 +156,7 @@ class DownloadService : Service() {
      }
  */
     private val regions: Unit
-        private get() {
+         get() {
             deleteAll(RegionCache::class.java)
             val params = Params.createParams()
             params.add("fnumber", PreferUtils.getString(this, Constants.FXZCode))
@@ -187,7 +187,7 @@ class DownloadService : Service() {
                             datas.add(dataBean)
                         }
                         cache.data = datas
-                        val save = cache.save()
+                       cache.save()
                     }
 
 

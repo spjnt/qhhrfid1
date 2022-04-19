@@ -14,13 +14,14 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.ScrollView
 import android.widget.TextView
-import org.litepal.LitePal.where
+import com.apkfuns.logutils.LogUtils
+import org.litepal.LitePal
 import tramais.hnb.hhrfid.R
 import tramais.hnb.hhrfid.base.BaseActivity
 import tramais.hnb.hhrfid.constant.Constants
 import tramais.hnb.hhrfid.litePalBean.AnimalSaveCache
 import tramais.hnb.hhrfid.litePalBean.FarmListCache
-import tramais.hnb.hhrfid.service.UpLoadSercie
+import tramais.hnb.hhrfid.service.UpLoadSeries
 import tramais.hnb.hhrfid.util.NetUtil
 import tramais.hnb.hhrfid.util.Utils
 
@@ -31,43 +32,44 @@ class ActivityFile : BaseActivity() {
     private var mBtnLoad: Button? = null
     private var mTvFarm: TextView? = null
     private var mEarNum: TextView? = null
-
-    //    private var mTouBao: TextView? = null
-//    private var mChuxian: TextView? = null
-//    private var mChakan: TextView? = null
-//    private var mDingsun: TextView? = null
     private var mScrollView: ScrollView? = null
-    private val handler: Handler = object : Handler() {
+    private val handler: Handler = @SuppressLint("HandlerLeak")
+    object : Handler() {
         override fun handleMessage(msg: Message) {
             super.handleMessage(msg)
             when (msg.what) {
                 3 -> {
                     val message = msg.obj as String
                     if (message.contains("耳标信息上传完成")) {
-                        stopService(Intent(this@ActivityFile, UpLoadSercie::class.java))
+                        stopService(Intent(this@ActivityFile, UpLoadSeries::class.java))
                         hideAvi()
                         delay(upload_i)
                     }
-                    deal()
+
+                    deal(isDeal = false)
 
                 }
+                /*4 -> {
+                    val mes = msg.obj as String
+                    LogUtils.e("currentIndex   $mes   ${Thread.currentThread().name}")
+                    mEarNum!!.text = "待上传数量 (${mes}/${animalSize})"
+                }*/
             }
         }
     }
     private var mTvDesc: TextView? = null
-    private var receiver: MyReceiver? = null
+    private var receiver: MyBReceiver? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_file)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        // EventBus.getDefault().register(this)
     }
 
     fun delay(total: Int) {
         if (total == 0) {
             showStr("数据上传完成")
             handler.postDelayed({ Utils.goToNextUI(MainActivity::class.java) }, 300)
-
-
         }
     }
 
@@ -77,31 +79,34 @@ class ActivityFile : BaseActivity() {
         mBtnLoad = findViewById(R.id.btn_load)
         mTvFarm = findViewById(R.id.tv_farm)
         mEarNum = findViewById(R.id.ear_num)
-//        mTouBao = findViewById(R.id.tou_bao)
-//        mChuxian = findViewById(R.id.chuxian)
-//        mChakan = findViewById(R.id.chakan)
-//        mDingsun = findViewById(R.id.dingsun)
         mScrollView = findViewById(R.id.scroll_view)
     }
 
     override fun initData() {
-        mBtnLoad!!.setOnClickListener { v: View? -> upLoad() }
+        mBtnLoad!!.setOnClickListener { upLoad() }
     }
 
     override fun initListner() {}
     override fun onResume() {
         super.onResume()
-        deal()
+        deal(true)
     }
 
+    var farmSize = 0
+    var animalSize = 0
+
     @SuppressLint("SetTextI18n")
-    private fun deal() {
+    private fun deal(isDeal: Boolean) {
         upload_i = 0
-        val find = where("isUpLoad=?", "0").find(FarmListCache::class.java)
-        mTvFarm!!.text = "待上传数量 " + find.size
+        val find = LitePal.where("isUpLoad=?", "0").find(FarmListCache::class.java)
+        if (isDeal)
+            farmSize = find.size
+        mTvFarm!!.text = "待上传数量 ${find.size}"
         upload_i += find.size
-        val find1 = where("isUpLoad=?", "0").find(AnimalSaveCache::class.java)
-        mEarNum!!.text = "待上传数量 " + find1.size
+        val find1 = LitePal.where("isUpLoad=?", "0").find(AnimalSaveCache::class.java)
+        if (isDeal)
+            animalSize = find1.size
+        mEarNum!!.text = "待上传数量 ${find1.size}"
         upload_i += find1.size
     }
 
@@ -119,28 +124,42 @@ class ActivityFile : BaseActivity() {
         runOnUiThread { mTvDesc!!.text = " " }
         if (!isFinishing) showAvi("正在上传")
 
-        val intent = Intent(this, UpLoadSercie::class.java)
+        val intent = Intent(this, UpLoadSeries::class.java)
         startService(intent)
         //注册广播接收器
-        if (receiver == null) receiver = MyReceiver()
+        if (receiver == null) receiver = MyBReceiver()
         val filter = IntentFilter()
         filter.addAction("tramais.hnb.hhrfid.service.UpLoadSercie")
         registerReceiver(receiver, filter)
+
         // upload_i = 0
     }
 
     override fun onDestroy() {
         //结束服务
-        stopService(Intent(this, UpLoadSercie::class.java))
+        stopService(Intent(this, UpLoadSeries::class.java))
         if (receiver != null) unregisterReceiver(receiver)
         super.onDestroy()
     }
 
-    inner class MyReceiver : BroadcastReceiver() {
+    /* @Subscribe
+     public fun onEvent(message: MessageEvent) {
+         val texg = message.data
+         LogUtils.e("textg  $texg")
+
+         runOnUiThread { mEarNum!!.text = "待上传数量 (${texg}/${animalSize})" }
+     }
+ */
+
+
+    inner class MyBReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             upLoad_desc = intent.getStringExtra(Constants.upLoad_desc)
             buffer.append(upLoad_desc)
             buffer.append("\n")
+            LogUtils.e("upLoad_desc   $upLoad_desc")
+            if (upLoad_desc == "养殖户信息上传完成")
+                buffer.append("耳标信息上传中...\n")
             runOnUiThread { mTvDesc!!.text = buffer.toString() }
             scroll2Bottom(mScrollView, mTvDesc)
             val message = Message()

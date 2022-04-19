@@ -7,71 +7,12 @@ import android.media.ExifInterface
 import android.net.Uri
 import android.text.TextUtils
 import android.util.Base64
-import android.util.Log
 import com.apkfuns.logutils.LogUtils
 import tramais.hnb.hhrfid.constant.Constants
-import kotlin.Throws
-import tramais.hnb.hhrfid.util.TimeUtil
-import tramais.hnb.hhrfid.util.PreferUtils
 import java.io.*
-import java.lang.Exception
 
 object ImageUtils {
-    /*  */
-    /**
-     * 读取照片旋转角度
-     *
-     * @param path 照片路径
-     * @return 角度
-     */
-    /*
-    public static int readPictureDegree(String path) {
-        int degree = 0;
-        try {
-            ExifInterface exifInterface = new ExifInterface(path);
-            int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-            Log.e("TAG", "原图被旋转角度： ========== " + orientation );
-            switch (orientation) {
-                case ExifInterface.ORIENTATION_ROTATE_90:
-                    degree = 90;
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_180:
-                    degree = 180;
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_270:
-                    degree = 270;
-                    break;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return degree;
-    }*/
-    /**
-     * 旋转图片
-     *
-     * @param angle  被旋转角度
-     * @param bitmap 图片对象
-     * @return 旋转后的图片
-     */
-    fun rotaingImageView(angle: Int, bitmap: Bitmap): Bitmap? {
-        var returnBm: Bitmap? = null
-        // 根据旋转角度，生成旋转矩阵
-        val matrix = Matrix()
-        matrix.postRotate(angle.toFloat())
-        try {
-            // 将原始图片按照旋转矩阵进行旋转，并得到新的图片
-            returnBm = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
-        } catch (e: OutOfMemoryError) {
-        }
-        if (returnBm == null) {
-            returnBm = bitmap
-        }
-        if (bitmap != returnBm) {
-            bitmap.recycle()
-        }
-        return returnBm
-    }
+
 
     @Throws(IOException::class)
     fun getBitmapFormUri(context: Context, uri: Uri?): Bitmap? {
@@ -111,23 +52,67 @@ object ImageUtils {
         return compressImage(bitmap) //再进行质量压缩
     }
 
+    fun getStreamT(photoPathurl: String?): String? {
+        if (TextUtils.isEmpty(photoPathurl)) {
+            return null
+        }
+        var isI: InputStream? = null
+        var data: ByteArray? = null
+        var result: String? = null
+        try {
+            isI = FileInputStream(photoPathurl)
+            //创建一个字符流大小的数组。
+            data = ByteArray(isI.available())
+            //写入数组
+            isI.read(data)
+            //用默认的编码格式进行编码
+            result = Base64.encodeToString(data, Base64.DEFAULT)
+        } catch (e: java.lang.Exception) {
+            LogUtils.e("expr " + e.message)
+            e.printStackTrace()
+        } finally {
+            if (null != isI) {
+                try {
+                    isI.close()
+                    System.gc()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                    LogUtils.e("e " + e.message)
+                }
+            }
+        }
+        return result
+    }
+
     fun getStream(photoPathurl: String?): String {
         if (TextUtils.isEmpty(photoPathurl) || photoPathurl === "null") return ""
-        var uploadBuffer: String = ""
+        if (!File(photoPathurl).isFile) return ""
+        val decodeFile = getimageOnly(BitmapFactory.decodeFile(photoPathurl))
+        return bitmapToBase64(decodeFile)!!
+        /*var uploadBuffer: String = ""
+
         var fin: FileInputStream? = null
+        val baos = ByteArrayOutputStream()
         try {
             fin = FileInputStream(photoPathurl)
-            val baos = ByteArrayOutputStream()
+
             val buffer = ByteArray(1024)
+
             var count = 0
-            while (fin.read(buffer).also { count = it } >= 0) {
+            while (fin.read(buffer).also { count = it } != -1) {
                 baos.write(buffer, 0, count)
             }
+            baos.flush()
+            baos.close()
+            fin.close()
             uploadBuffer = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT)
+
         } catch (e: Exception) {
+            LogUtils.e("bitmapToBase64  e" + e.message)
             e.printStackTrace()
+
         }
-        return uploadBuffer
+        return uploadBuffer*/
     }
 
     fun bitmapToBase64(bitmap: Bitmap?): String? {
@@ -136,7 +121,7 @@ object ImageUtils {
         try {
             if (bitmap != null) {
                 baos = ByteArrayOutputStream()
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 60, baos)
                 baos.flush()
                 baos.close()
                 val bitmapBytes = baos.toByteArray()
@@ -212,27 +197,23 @@ object ImageUtils {
     }
 
     @JvmStatic
-    fun saveBitmap(context: Context?, bitmap: Bitmap?, path: String?, photoName: String?): String {
+    fun saveBitmap(context: Context?, bitmap: Bitmap?, path: String?, photoName: String?, quality: Int? = 80): String {
         // 首先保存图片
         val appDir = File(path)
         if (!appDir.exists()) {
             appDir.mkdir()
         }
+        //LogUtils.e("quality  $quality")
         val file = File(appDir, photoName)
         if (!file.parentFile.exists()) file.parentFile.mkdirs()
         try {
             val fos = FileOutputStream(file)
-            bitmap!!.compress(Bitmap.CompressFormat.JPEG, 80, fos)
+            bitmap!!.compress(Bitmap.CompressFormat.JPEG, quality!!, fos)
             fos.flush()
             fos.close()
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        //        try {
-//            MediaStore.Images.Media.insertImage(context.getContentResolver(), file.getAbsolutePath(), photoName, null);
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        }
         context!!.sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + file.absolutePath)))
         return file.absolutePath
     }
@@ -247,7 +228,7 @@ object ImageUtils {
             val w = newOpts.outWidth
             val h = newOpts.outHeight
             // 现在主流手机比较多是800*480分辨率，所以高和宽我们设置为
-            val hh = 800f // 这里设置高度为800f
+            val hh = 2160f // 这里设置高度为800f
             val ww = 480f // 这里设置宽度为480f
             // 缩放比。由于是固定比例缩放，只用高或者宽其中一个数据进行计算即可
             var be = 2 // be=1表示不缩放
@@ -270,7 +251,7 @@ object ImageUtils {
     fun getimageOnly(image: Bitmap?): Bitmap? {
         if (image != null) {
             val baos = ByteArrayOutputStream()
-            image.compress(Bitmap.CompressFormat.JPEG, 65, baos) //质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
+            image.compress(Bitmap.CompressFormat.JPEG, 60, baos) //质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
             var options = 100
             while (baos.toByteArray().size / 1024 > 1024) {  //循环判断如果压缩后图片是否大于100kb,大于继续压缩
                 baos.reset() //重置baos即清空baos

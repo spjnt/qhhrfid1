@@ -20,7 +20,8 @@ import tramais.hnb.hhrfid.base.BaseActivity
 import tramais.hnb.hhrfid.bean.Roles
 import tramais.hnb.hhrfid.constant.Constants
 import tramais.hnb.hhrfid.interfaces.GetBool
-import tramais.hnb.hhrfid.litePalBean.*
+import tramais.hnb.hhrfid.litePalBean.AnimalSaveCache
+import tramais.hnb.hhrfid.litePalBean.FarmListCache
 import tramais.hnb.hhrfid.ui.dialog.DialogUpLoad
 import tramais.hnb.hhrfid.ui.table.TabConst
 import tramais.hnb.hhrfid.ui.table.TabItem
@@ -29,7 +30,6 @@ import tramais.hnb.hhrfid.ui.table.TabSelectListener
 import tramais.hnb.hhrfid.util.NetUtil
 import tramais.hnb.hhrfid.util.PreferUtils
 import tramais.hnb.hhrfid.util.Utils
-import java.util.*
 
 class MainActivity : BaseActivity() {
     private var layout: FrameLayout? = null
@@ -196,7 +196,7 @@ class MainActivity : BaseActivity() {
                     object : AcpListener {
                         override fun onGranted() {}
                         override fun onDenied(permissions: List<String>) {
-                            showStr( "相机相册，内存读写，定位权限被拒绝")
+                            showStr("相机相册，内存读写，定位权限被拒绝")
                         }
                     })
         }
@@ -224,8 +224,7 @@ class MainActivity : BaseActivity() {
 
     private var exitTime: Long = 0 // 用来计算返回键的点击间隔时间
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_BACK
-                && event.action === KeyEvent.ACTION_DOWN) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (System.currentTimeMillis() - exitTime > 2000) {
                 showStr("再按一次退出程序")
                 exitTime = System.currentTimeMillis()

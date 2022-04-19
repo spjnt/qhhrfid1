@@ -28,7 +28,6 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import tramais.hnb.hhrfid.bean.FarmBackBean;
 import tramais.hnb.hhrfid.bean.HttpBean;
-import tramais.hnb.hhrfid.constant.Config;
 import tramais.hnb.hhrfid.interfaces.GetOneString;
 import tramais.hnb.hhrfid.interfaces.OkResponseInterface;
 
@@ -154,7 +153,7 @@ public class OkhttpUtil {
         getBuilder.build().execute(new StringCallback() {
             @Override
             public void onError(okhttp3.Call call, Exception e, int id) {
-                Log.e("onError :--->", params.getParams() + "   " + url + "   " + e.toString());
+             //   Log.e("onError :--->", params.getParams() + "   " + url + "   " + e.toString());
                 responseInterface.onError(e);
             }
 

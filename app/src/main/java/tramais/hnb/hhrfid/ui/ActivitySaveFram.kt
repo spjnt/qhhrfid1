@@ -868,6 +868,10 @@ class ActivitySaveFram : BaseActivity(), ChoicePhoto {
                             return@saveFarmer
                         }
                         goToCamer(Name, EtUnderIdNums, EtPhoneNum, EtTogetherName, finalCatetory2, EtUnderAddress, message, "")
+                        saveFarmerCache(fRegionNumber, false, isSelf, Name, category,
+                                EtUnderIdNums, EtUnderIdNums, EtUnderIdAddress, EtCardBank, EtCardAcc,
+                                EtCardNum, EtPhoneNum, togetherName, EtUnderAddress, finalCatetory, TimeUtil.getTime(Constants.yyyy_MM_ddHHmmss), idCard_path, backCard_path, Utils.getEdit(mInputInfo), idCard_path_back, isPoor, overTime,
+                                farmer_sign.toString(), FBankCode, FBankRelatedCode, startTime, natureCode, natureName)
                     }
                 }
             }

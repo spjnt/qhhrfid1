@@ -99,7 +99,7 @@ object Config {
     @JvmField
     var SaveBaoAn = BASE_URL + "LiPeiBaoAn/SaveBaoAn"
 
-    //  出险原因列表
+    //出险原因列表
     @JvmField
     var GetRiskReason = BASE_URL + "System/GetRiskReason"
 

@@ -158,9 +158,9 @@ class CameraActivity : BaseActivity() {
                         }
                     }
                 }
-                if (animals != null && animals.size > 0) {
-                    mBtnAnimalChoice!!.text = animals[0]
-                }
+//                if (animals != null && animals.size > 0) {
+//                    mBtnAnimalChoice!!.text = animals[0]
+//                }
                 getIntentData(animals)
             }
         } else {
@@ -511,8 +511,8 @@ class CameraActivity : BaseActivity() {
                     .concurrent(true)                //(可选)多文件压缩时是否并行,内部优化线程并行数量防止OOM
                     .useDownSample(true)             //(可选)压缩算法 true采用邻近采样,否则使用双线性采样(纯文字图片效果绝佳)
                     .format(Bitmap.CompressFormat.JPEG)//(可选)压缩后输出文件格式 支持 JPG,PNG,WEBP
-                    .ignoreBy(150)                   //(可选)期望大小,大小和图片呈现质量不能均衡所以压缩后不一定小于此值,
-                    .quality(80)                     //(可选)质量压缩系数  0-100
+                    .ignoreBy(70)                   //(可选)期望大小,大小和图片呈现质量不能均衡所以压缩后不一定小于此值,
+                    .quality(60)                     //(可选)质量压缩系数  0-100
                     // .rename { name_ }             //(可选)文件重命名
                     .filter { it != null }             //(可选)过滤器
                     .compressObserver {
@@ -573,7 +573,7 @@ class CameraActivity : BaseActivity() {
         try {
             val waterBitmap = WaterMaskUtil.loadBitmapFromView(waterMaskView)
             val watermarkBitmap = WaterMaskUtil.createWaterMaskLeftBottom(this, sourBitmap, waterBitmap, 0, 0)
-            return ImageUtils.saveBitmap(this, watermarkBitmap, path_, name_)
+            return ImageUtils.saveBitmap(this, watermarkBitmap, path_, name_,60)
         } catch (e: Exception) {
         }
         return ""

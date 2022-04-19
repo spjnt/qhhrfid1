@@ -160,6 +160,7 @@ class RequestUtil(var context: Context) {
         get() = PreferUtils.getString(context, Constants.UserName)
     val fXZCode: String
         get() = PreferUtils.getString(context, Constants.FXZCode)
+
     fun getIndefiyCategory(cardCategory: GetIdCardCategory) {
         list_indefiy?.clear()
         map_indefiy?.clear()
@@ -235,9 +236,20 @@ class RequestUtil(var context: Context) {
         }
         val params = Params.createParams()
         params.add("LblNumber", epc)
-        params.add("CompanyNumber", companyNum)
+        val com = if (companyNum.isNullOrEmpty()) {
+            PreferUtils.getString(context, Constants.companyNumber)
+        } else {
+            companyNum
+        }
+
+        val em = if (employeeNum.isNullOrEmpty()) {
+            PreferUtils.getString(context, Constants.userNumber)
+        } else {
+            employeeNum
+        }
+        params.add("CompanyNumber", com)
         params.add("FarmerNumber", id_nums)
-        params.add("EmployeeNumber", employeeNum)
+        params.add("EmployeeNumber", em)
         params.add("DeviceNo", Build.SERIAL)
         params.add("CheckTime", TimeUtil.getTime(Constants.yyyy_MM_ddHHmmss))
         params.add("LotNO", UUID.randomUUID().toString())
@@ -247,7 +259,14 @@ class RequestUtil(var context: Context) {
         params.add("ImgFile4", buffer4)
         params.add("Longitude", longitude)
         params.add("Latitude", latitude)
-        params.add("Category", category)
+        var category_ = if (category == "藏系牦牛") {
+            "藏系牦牛~IXO~990319~140248"
+        } else if (category == "藏系羊") {
+            "藏系羊~IXO~990320~140248"
+        } else {
+            category
+        }
+        params.add("Category", category_)
         params.add("BornDate", TimeUtil.getPastDate(date))
         OkhttpUtil.getInstance(context).doPosts(Config.SaveAnimal, params, object : OkResponseInterface {
             override fun onSuccess(bean: HttpBean, id: Int) {
@@ -424,10 +443,10 @@ class RequestUtil(var context: Context) {
     fun SaveBill(
             number: String?, date: String?, status: String?, begignDate: String?, endDate: String?, farmernumber: String?, raiseQty: String?,
             insureQty: String?, earNoStart: String?, earNoEnd: String?, unitAmout: Double, sumOunt: Double, url: String?,
-            loginName: String?, time: String?, updateTime: String?, EarList: String?, RiskType: String?, lableRess: String?,FAddress2:String?, FSubsidies: String?, FOwnAmount: String?,
+            loginName: String?, time: String?, updateTime: String?, EarList: String?, RiskType: String?, lableRess: String?, FAddress2: String?, FSubsidies: String?, FOwnAmount: String?,
             FShowTime: String?, FUnitPremium: String?, FRiskRate: String?,
             FNationbdwf: String?, FProvincedwbf: String?, FCitydwbf: String?, FCountydwbf: String?,
-            FCompanyDeptCode:String?,FCompanyDept:String?,
+            FCompanyDeptCode: String?, FCompanyDept: String?,
             getString: GetRtnMessage,
     ) {
         val params = Params.createParams()
@@ -1007,7 +1026,7 @@ class RequestUtil(var context: Context) {
             signature: String?, Subsidies: String?, OwnAmount: String?, SealPicture: String?, creator: String?, updator: String?, createtime: String?,
             updatetime: String?, FLandCategoryId: String?, fproductCode: String?, FShowTime: String?, InsureType: String?,
             FNationbdwf: String?, FProvincedwbf: String?, FCitydwbf: String?, FCountydwbf: String?,
-            FCompanyDeptCode:String?,FCompanyDept:String?,
+            FCompanyDeptCode: String?, FCompanyDept: String?,
             getRtnMessage: GetRtnMessage,
     ) {
         val params = Params.createParams()
@@ -1381,7 +1400,7 @@ class RequestUtil(var context: Context) {
         })
     }
 
-    fun getitem( FCategory: String?, getitemBean: GetitemBean) {
+    fun getitem(FCategory: String?, getitemBean: GetitemBean) {
         val params = Params.createParams()
         //  params.add("FType", FType);
         params.add("Fcategoryid", FCategory)
@@ -1887,6 +1906,7 @@ class RequestUtil(var context: Context) {
             override fun onSuccess(bean: HttpBean, id: Int) {
                 getCore.getCore(JSONObject.parseObject(bean.response, SubmitCoreBean::class.java))
             }
+
             override fun onError(e: Exception) {}
         })
     }
@@ -1972,6 +1992,7 @@ class RequestUtil(var context: Context) {
         })
 
     }
+
     fun address(getCommon: GetCommon<Address>) {
         val params = Params.createParams()
         params.add("FCompanyNumber", fXZCode)

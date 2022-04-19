@@ -23,8 +23,13 @@
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
-
+    <!--
+    android:largeHeap="true"
+     android:hardwareAccelerated="false"
+    -->
     <application
+        android:largeHeap="true"
+        android:hardwareAccelerated="false"
         android:name=".base.QhApplication"
         android:allowBackup="true"
         android:icon="@mipmap/new_logo"
@@ -34,9 +39,9 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:windowSoftInputMode="stateHidden|adjustPan"
         tools:replace="android:name">
-       <!-- <activity
-            android:name=".ui.SettingsActivity"
-            android:label="@string/title_activity_settings"></activity>-->
+        <!-- <activity
+             android:name=".ui.SettingsActivity"
+             android:label="@string/title_activity_settings"></activity>-->
         <activity android:name=".ui.ActivityLogin">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -82,7 +87,7 @@
         <!--<activity android:name=".ui.ActivityBaoAn" />-->
         <activity android:name=".ui.ActivityTouBaoList" />
         <activity android:name=".ui.ActivityFeedCheck" />
-      <!--  <activity android:name=".ui.ActivityFeedCheck2" />-->
+        <!--  <activity android:name=".ui.ActivityFeedCheck2" />-->
         <activity android:name=".ui.ActivityUnderWriteDeal" />
         <activity android:name=".ui.ActivityFenPei" />
         <activity
@@ -126,7 +131,7 @@
         <activity android:name=".ui.ActivityAnimalPay" />
         <activity android:name=".ui.ActivityAnimalPayDetail" />
         <activity android:name=".ui.ActivityForgetPsw" />
-     <!--   <activity android:name=".ui.ActivityBaoAnDetailInfo" />-->
+        <!--   <activity android:name=".ui.ActivityBaoAnDetailInfo" />-->
         <activity android:name=".ui.ActivityGoToCamera" />
         <!--<activity android:name=".ui.ActivitySubmitScore" />-->
         <activity android:name=".ui.crop.ActivitySaveBankInfo" />
@@ -137,8 +142,8 @@
         <activity android:name=".ui.ActivityVersion" />
         <!--<activity android:name=".camerutils.Camer2Activity" />-->
         <activity android:name=".ui.CameraOnlyActivity" />
-     <!--   <activity android:name=".camerutils.Camer2Activity2" />
--->
+        <!--   <activity android:name=".camerutils.Camer2Activity2" />
+   -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -164,7 +169,7 @@
             android:value="7rwVogrGjIDS8nraoB1GEQnBhb7pnQFk" />
 
         <service android:name=".service.DownloadService" />
-        <service android:name=".service.UpLoadSercie" />
+        <service android:name=".service.UpLoadSeries" />
     </application>
 
 </manifest>

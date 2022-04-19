@@ -329,6 +329,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     private fun reverseTag(srt_tag: String, handler: Handler) {
+        if (srt_tag.isEmpty()) return
         val ep = arrayOf("")
         getTime { count: Int ->
             if (count < 5) {

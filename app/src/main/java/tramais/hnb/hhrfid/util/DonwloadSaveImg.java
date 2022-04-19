@@ -46,7 +46,7 @@ public class DonwloadSaveImg {
                     mBitmap = BitmapFactory.decodeStream(inputStream);
                     inputStream.close();
                 }
-                ImageUtils.saveBitmap(context, mBitmap, FileUtil.getSDPath() + Constants.sdk_qr, "qr" + ".jpg");
+                ImageUtils.saveBitmap(context, mBitmap, FileUtil.getSDPath() + Constants.sdk_qr, "qr" + ".jpg",80);
                 mSaveMessage = "图片保存成功！";
             } catch (IOException e) {
                 mSaveMessage = "图片保存失败！";

@@ -23,7 +23,10 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.hailong.biometricprompt.fingerprint.FingerprintCallback
 import com.hailong.biometricprompt.fingerprint.FingerprintVerifyManager
-import org.litepal.LitePal
+import kotlinx.coroutines.asCoroutineDispatcher
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.litepal.LitePal.findAllAsync
 import tramais.hnb.hhrfid.R
 import tramais.hnb.hhrfid.base.BaseActivity
@@ -33,8 +36,6 @@ import tramais.hnb.hhrfid.constant.Config
 import tramais.hnb.hhrfid.constant.Constants
 import tramais.hnb.hhrfid.interfaces.GetResultJsonObject
 import tramais.hnb.hhrfid.interfaces.OkResponseInterface
-import tramais.hnb.hhrfid.litePalBean.AnimalSaveCache
-import tramais.hnb.hhrfid.litePalBean.EarTagCache
 import tramais.hnb.hhrfid.litePalBean.RoleCache
 import tramais.hnb.hhrfid.net.OkhttpUtil
 import tramais.hnb.hhrfid.net.Params
@@ -46,6 +47,7 @@ import tramais.hnb.hhrfid.util.PackageUtils
 import tramais.hnb.hhrfid.util.PreferUtils
 import tramais.hnb.hhrfid.util.Utils
 import java.io.File
+import java.util.concurrent.Executors
 
 
 class ActivityLogin : BaseActivity() {
@@ -91,7 +93,23 @@ class ActivityLogin : BaseActivity() {
                 .into(logo!!)
 //        LitePal.deleteAll(EarTagCache::class.java)
 //        LitePal.deleteAll(AnimalSaveCache::class.java)
+
+        // 默认5个线程
+       /* val resultList = (1..10).mapMultithreading {
+            Thread.sleep(1000)
+            Thread.currentThread().name
+        }
+// 自定义线程数，并在执行完毕后变量输出结果
+        val resultList2 = (1..10).mapMultithreading(6) {
+            Thread.sleep(1000)
+            return@mapMultithreading Thread.currentThread().name
+        }
+        resultList.forEach {
+            LogUtils.e("it  $it")
+        }*/
     }
+
+
 
     override fun initData() {
         // LogUtils.e("context.getPackageName()   ${context.packageName}")

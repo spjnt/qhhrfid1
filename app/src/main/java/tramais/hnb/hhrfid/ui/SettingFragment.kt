@@ -114,7 +114,8 @@ class SettingFragment : BaseFragment() {
             val userName = jsonObject.getString("UserName")
             val mobile = jsonObject.getString("Mobile")
             val companName = jsonObject.getString("CompanName")
-            mTvAccount!!.text = userName
+            val role = jsonObject.getString("UserRole")
+            mTvAccount!!.text = "$userName  [$role]"
             mTvPhone!!.text = "手机: $mobile"
             mTvCompany!!.text = "公司: $companName"
         }

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.AsyncTask
 import android.os.IBinder
 import android.text.TextUtils
+import com.apkfuns.logutils.LogUtils
 import kotlinx.coroutines.*
 import org.litepal.LitePal
 import tramais.hnb.hhrfid.bean.FenPei
@@ -16,8 +17,10 @@ import tramais.hnb.hhrfid.interfaces.GetRtnMessage
 import tramais.hnb.hhrfid.litePalBean.*
 import tramais.hnb.hhrfid.net.RequestUtil
 import tramais.hnb.hhrfid.util.UpLoadFileUtil.upLoadFile
+import java.util.concurrent.Executors
+import kotlin.system.measureTimeMillis
 
-class UpLoadSercie : Service(), CoroutineScope by MainScope() {
+class UpLoadSercie2 : Service(), CoroutineScope by MainScope() {
     override fun onBind(intent: Intent): IBinder? {
         return null
     }
@@ -26,29 +29,30 @@ class UpLoadSercie : Service(), CoroutineScope by MainScope() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         //  PraseAllData().execute()
         CoroutineScope(Dispatchers.Main).launch(Dispatchers.IO) { load() }
+//        load()
         return super.onStartCommand(intent, flags, startId)
     }
 
 
-    @SuppressLint("StaticFieldLeak")
+   /* @SuppressLint("StaticFieldLeak")
     private inner class PraseAllData : AsyncTask<Void?, Void?, Any?>() {
         @Deprecated("Deprecated in Java")
         override fun doInBackground(vararg params: Void?): Any {
-            /*上传农户信息 */
+            *//*上传农户信息 *//*
             upLoadFarmer { str_farm ->
                 sendBroadCast(str_farm)
                 if (str_farm.contains("养殖户信息上传完成")) {
                     upLoadLable { str_farm_sign ->
                         sendBroadCast(str_farm_sign)
-                        /*   if (str_farm_sign.contains("养殖户签名上传完成")) {
-                               *//*耳标信息*//*
+                        *//*   if (str_farm_sign.contains("养殖户签名上传完成")) {
+                               *//**//*耳标信息*//**//*
                             upLoadLable { str_lable ->
                                 sendBroadCast(str_lable)
-                                *//* if (str_lable.equals("耳标信息上传完成"))
+                                *//**//* if (str_lable.equals("耳标信息上传完成"))
                                  //投保清单信息
                                      upLoadDeal { str_deal ->
                                          sendBroadCast(str_deal)
-                                      *//**//*   if (str_deal.equals("投保清单上传完成"))
+                                      *//**//**//**//*   if (str_deal.equals("投保清单上传完成"))
                                         // 报案信息
                                             upLoadBaoAn { str_baoan ->
                                                 sendBroadCast(str_baoan)
@@ -88,77 +92,28 @@ class UpLoadSercie : Service(), CoroutineScope by MainScope() {
                                                         }
                                                     }
                                                 }
-                                            }*//**//*
-                                    }*//*
+                                            }*//**//**//**//*
+                                    }*//**//*
                             }
-                        }*/
+                        }*//*
                     }
 
                 }
             }
             return 0
         }
-    }
+    }*/
 
-    suspend fun load() {
+    fun load() {
         upLoadFarmer { str_farm ->
             sendBroadCast(str_farm)
             if (str_farm.contains("养殖户信息上传完成")) {
+                //  CoroutineScope(Dispatchers.Main).launch(Dispatchers.IO) {
                 upLoadLable { str_farm_sign ->
                     sendBroadCast(str_farm_sign)
-                    /*   if (str_farm_sign.contains("养殖户签名上传完成")) {
-                           *//*耳标信息*//*
-                            upLoadLable { str_lable ->
-                                sendBroadCast(str_lable)
-                                *//* if (str_lable.equals("耳标信息上传完成"))
-                                 //投保清单信息
-                                     upLoadDeal { str_deal ->
-                                         sendBroadCast(str_deal)
-                                      *//**//*   if (str_deal.equals("投保清单上传完成"))
-                                        // 报案信息
-                                            upLoadBaoAn { str_baoan ->
-                                                sendBroadCast(str_baoan)
-                                                if (str_baoan.equals("报案信息上传完成")) {
-                                                    //  查勘信息
-                                                    upLoadCheck { str_check ->
-                                                        sendBroadCast(str_check)
-                                                        if (str_check.equals("查勘基础信息上传完成")) {
-                                                            //查勘照片
-                                                            upLoadChakanImgs { str_check_img ->
-                                                                sendBroadCast(str_check_img)
-                                                                if (str_check_img.equals("查勘耳标照片上传完成")) {
-                                                                    //查勘签名
-                                                                    upCheckSign { str_check_sign ->
-                                                                        sendBroadCast(str_check_sign)
-                                                                        if (str_check_sign.equals("查勘银行卡及签名信息上传完成")) {
-                                                                            // 损失情况
-                                                                            upLoadLossInfo { str_loss_info ->
-                                                                                sendBroadCast(str_loss_info)
-                                                                                if (str_loss_info.equals("损失情况上传完成")) {
-                                                                                    // 定损情况
-                                                                                    upLoadLossSure { str_loss_sure ->
-                                                                                        sendBroadCast(str_loss_sure)
-                                                                                        if (str_loss_sure.equals("定损情况上传完成")) {
-                                                                                            //  定损签名
-                                                                                            upLoadLossSign { str_loss_sign ->
-                                                                                                sendBroadCast(str_loss_sign)
-                                                                                            }
-                                                                                        }
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }*//**//*
-                                    }*//*
-                            }
-                        }*/
                 }
+                //  }
+
 
             }
         }
@@ -266,9 +221,9 @@ class UpLoadSercie : Service(), CoroutineScope by MainScope() {
     }
 
     var j = 0
-    fun upLoadLableOneByOne(uploadS: MutableList<AnimalSaveCache>, i: Int, getOneString: GetOneString) {
+    fun upLoadLableOneByOne(uploadS: MutableList<AnimalSaveCache>, animalSaveCache: AnimalSaveCache, getOneString: GetOneString) {
         val img_path: MutableList<String?> = ArrayList()
-        val saveCache = uploadS[i]
+        val saveCache = animalSaveCache
         img_path.clear()
         val lableNum: String? = saveCache.lableNum
         if (saveCache.img1 != null)
@@ -284,24 +239,43 @@ class UpLoadSercie : Service(), CoroutineScope by MainScope() {
                 RequestUtil.getInstance(this)!!.saveAnimal(
                         saveCache.lableNum, saveCache.farmID, list_lable, saveCache.animalType, saveCache.ageMonth, saveCache.latitude, saveCache.longitude, saveCache.employeeNumber, saveCache.comPanyNumber,
                 ) { rtnCode: Int, message: String ->
+
                     if (rtnCode >= 0) {
                         val cache = AnimalSaveCache()
-                        cache.isUpLoad = "1"
+                        //  cache.isUpLoad = "1"
                         cache.statu = "在保"
                         getOneString.getString("耳标信息:${lableNum}上传成功")
                         cache.updateAll("LableNum =? ", lableNum)
                     } else {
                         getOneString.getString("农户:${saveCache.farmName}耳标信息:${lableNum}上传失败")
                     }
+
                     j += 1
-                    //  LogUtils.e("j  $j")
-                    if (j < uploadS.size)
-                        upLoadLableOneByOne(uploadS, j, getOneString)
-                    else {
+                    LogUtils.e("j:  $j")
+                    if (j == uploadS.size) {
                         getOneString.getString("耳标信息上传完成")
                     }
                 }
         })
+    }
+
+    private inline fun <T> Iterable<T>.mapMultithreading(nThreads: Int = 5, crossinline funWorker: (T) -> Any?)/*: Iterable<Any?>*/ {
+        //  val results = arrayOfNulls<Any>(count())
+        val coroutineDispatcher = Executors.newFixedThreadPool(nThreads).asCoroutineDispatcher()
+        runBlocking {
+            coroutineDispatcher.use {
+                launch {
+                    forEachIndexed { index, arg ->
+                        async(coroutineDispatcher) {
+                            funWorker(arg).let {
+                                // results[index] = it
+                            }
+                        }
+                    }
+                }.join()
+            }
+        }
+        // return results.asIterable()
     }
 
     /*耳标信息*/
@@ -309,44 +283,66 @@ class UpLoadSercie : Service(), CoroutineScope by MainScope() {
         LitePal.where("isUpLoad =?", "0").findAsync(AnimalSaveCache::class.java).listen { uploadS ->
             // LogUtils.e("uploadS  ${uploadS.size}")
             if (uploadS != null && uploadS.size > 0) {
-                upLoadLableOneByOne(uploadS, 0, getOneString)
-                //  val img_path: MutableList<String?> = ArrayList()
+                val threadCount: Int = when {
+                    uploadS.size <= 200 -> {
+                        5
+                    }
+                    uploadS.size in 201..500 -> {
+                        8
+                    }
+                    uploadS.size > 500 -> {
+                        10
+                    }
+                    else -> {
+                        10
+                    }
+                }
+                val measureTimeMillis = measureTimeMillis {
+                    uploadS.mapMultithreading(threadCount) {
+                        upLoadLableOneByOne(uploadS, it, getOneString)
+                    }
+                }
+                LogUtils.e("measureTimeMillis  $measureTimeMillis")
                 /* for (index in 0 until uploadS.size) {
+                     upLoadLableOneByOne(uploadS, index, getOneString)
+                 }*/
+
+
+                /*  val img_path: MutableList<String?> = ArrayList()
+                 for (index in 0 until uploadS.size) {
                      LogUtils.e("index  $index")
-                     val saveCache = uploadS[index]
-                     img_path.clear()
-                     val lableNum: String? = saveCache.lableNum
-                     if (saveCache.img1 != null)
-                         img_path.add(saveCache.img1)
-                     if (saveCache.img2 != null)
-                         img_path.add(saveCache.img2)
-                     if (saveCache.img3 != null)
-                         img_path.add(saveCache.img3)
-                     if (saveCache.img4 != null)
-                         img_path.add(saveCache.img4)
-                     upLoadFile(this, "耳标照片", lableNum, img_path, GetList { list_lable ->
-                         if (list_lable.size == img_path.size)
-                             RequestUtil.getInstance(this)!!.saveAnimal(
-                                     saveCache.lableNum, saveCache.farmID, list_lable, saveCache.animalType, saveCache.ageMonth, saveCache.latitude, saveCache.longitude, saveCache.employeeNumber, saveCache.comPanyNumber,
-                             ) { rtnCode: Int, message: String ->
-                                 if (rtnCode >= 0) {
-                                     val cache = AnimalSaveCache()
-                                     cache.isUpLoad = "1"
-                                     cache.statu = "在保"
-                                     getOneString.getString("耳标信息:${lableNum}上传成功")
-                                     cache.updateAll("LableNum =? ", lableNum)
-                                 } else {
-                                     getOneString.getString("耳标信息:${lableNum}上传失败")
-                                 }
-                                 *//* j += 1
-                                 if (j < uploadS.size)
-                                     upLoadLableOneByOne(uploadS, j, getOneString)
-                                 else {
-                                     getOneString.getString("耳标信息上传完成")
-                                 }*//*
-                            }
-                    })
-                }*/
+
+
+                             val saveCache = uploadS[index]
+                             img_path.clear()
+                             val lableNum: String? = saveCache.lableNum
+                             if (saveCache.img1 != null)
+                                 img_path.add(saveCache.img1)
+                             if (saveCache.img2 != null)
+                                 img_path.add(saveCache.img2)
+                             if (saveCache.img3 != null)
+                                 img_path.add(saveCache.img3)
+                             if (saveCache.img4 != null)
+                                 img_path.add(saveCache.img4)
+                             upLoadFile(this, "耳标照片", lableNum, img_path, GetList { list_lable ->
+                                 if (list_lable.size == img_path.size)
+
+                                     RequestUtil.getInstance(this)!!.saveAnimal(
+                                             saveCache.lableNum, saveCache.farmID, list_lable, saveCache.animalType, saveCache.ageMonth, saveCache.latitude, saveCache.longitude, saveCache.employeeNumber, saveCache.comPanyNumber,
+                                     ) { rtnCode: Int, message: String ->
+                                         if (rtnCode >= 0) {
+                                             val cache = AnimalSaveCache()
+                                             cache.isUpLoad = "1"
+                                             cache.statu = "在保"
+                                             getOneString.getString("耳标信息:${lableNum}上传成功")
+                                             cache.updateAll("LableNum =? ", lableNum)
+                                         } else {
+                                             getOneString.getString("农户:${saveCache.farmName}耳标信息:${lableNum}上传失败")
+                                         }
+
+                                     }
+                             })
+            }*/
 
             } else {
                 getOneString.getString("耳标信息上传完成")
