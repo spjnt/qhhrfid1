@@ -14,8 +14,9 @@ import tramais.hnb.hhrfid.bean.ModuleBean
 import tramais.hnb.hhrfid.bean.Roles
 import tramais.hnb.hhrfid.constant.Constants
 import tramais.hnb.hhrfid.interfaces.RecyclerItemClickListener
-import tramais.hnb.hhrfid.util.Utils
 import tramais.hnb.hhrfid.lv.MainModuleAdapter
+import tramais.hnb.hhrfid.util.PreferUtils
+import tramais.hnb.hhrfid.util.Utils
 
 class AnimalInsureFragment : BaseFragment() {
     private var rv: RecyclerView? = null
@@ -88,7 +89,7 @@ class AnimalInsureFragment : BaseFragment() {
                     }
                     "智能点数" -> {
                         goToFarmList(name)
-                       // Utils.goToNextUI(ActivityNumber::class.java)
+                        // Utils.goToNextUI(ActivityNumber::class.java)
                     }
                     "同步缴费" -> {
                         if (haveRoles("承保", "新建投保单"))
@@ -155,9 +156,14 @@ class AnimalInsureFragment : BaseFragment() {
                     }
                     "AI理赔" -> {
 
-                         Utils.goToNextUI(ActivityWeightBody::class.java)
+                        Utils.goToNextUI(ActivityWeightBody::class.java)
                     }
                     "理赔拍照" -> {
+                        val fxzCode = PreferUtils.getString(requireContext(), Constants.FXZCode)
+                        if (fxzCode.isNotEmpty() && fxzCode.endsWith("00")) {
+                            "该账号,不可理赔拍照".showStr()
+                            return
+                        }
                         Utils.goToNextUI(ActivityGoToCamera::class.java)
                     }
                 }
@@ -171,18 +177,16 @@ class AnimalInsureFragment : BaseFragment() {
         adapter_serch.setListener(object : RecyclerItemClickListener {
             override fun onClick(view: View?, position: Int, name: String?) {
                 when (name) {
-
-
                     "养殖户查询" -> {
                         if (haveRoles("数据查询", name))
                             goToFarmList(name)
                         else
                             tips()
-                      /*  if (haveRoles("数据查询", "养殖户查询"))
-                            Utils.goToNextUI(ActtivitySearchByFarmerOrTel::class.java)
-                        else
-                            tips()
-*/
+                        /*  if (haveRoles("数据查询", "养殖户查询"))
+                              Utils.goToNextUI(ActtivitySearchByFarmerOrTel::class.java)
+                          else
+                              tips()
+  */
                     }
                     "按耳标查询" -> {
                         if (haveRoles("数据查询", "按耳标查询"))
@@ -247,7 +251,8 @@ class AnimalInsureFragment : BaseFragment() {
             ints.add(ModuleBean("同步缴费", R.mipmap.a_money))
         else
             ints.add(ModuleBean("同步缴费", R.mipmap.a_money_gray))
-          ints.add(ModuleBean("智能点数", R.mipmap.body_length_weight))
+
+        ints.add(ModuleBean("智能点数", R.mipmap.body_length_weight))
         return ints
     }
 
@@ -278,10 +283,10 @@ class AnimalInsureFragment : BaseFragment() {
         else
             ints.add(ModuleBean("提交核心", R.mipmap.a_sub_core_gray))
 
-      /*  if (haveRoles("理赔", "AI理赔"))
-            ints.add(ModuleBean("AI理赔", R.mipmap.ai_lipei))
-        else
-            ints.add(ModuleBean("AI理赔", R.mipmap.ai_lipei_gray))*/
+        /*  if (haveRoles("理赔", "AI理赔"))
+              ints.add(ModuleBean("AI理赔", R.mipmap.ai_lipei))
+          else
+              ints.add(ModuleBean("AI理赔", R.mipmap.ai_lipei_gray))*/
         ints.add(ModuleBean("理赔拍照", R.mipmap.take_photo))
         return ints
     }
@@ -305,10 +310,10 @@ class AnimalInsureFragment : BaseFragment() {
         else
             ints.add(ModuleBean("数据上传", R.mipmap.a_shangchuan_gray))
 
-      /*  if (haveRoles("数据查询", "理赔进度查询"))
-            ints.add(ModuleBean("理赔进度查询", R.mipmap.progress))
-        else
-            ints.add(ModuleBean("理赔进度查询", R.mipmap.progress_gray))*/
+        /*  if (haveRoles("数据查询", "理赔进度查询"))
+              ints.add(ModuleBean("理赔进度查询", R.mipmap.progress))
+          else
+              ints.add(ModuleBean("理赔进度查询", R.mipmap.progress_gray))*/
         return ints
     }
 

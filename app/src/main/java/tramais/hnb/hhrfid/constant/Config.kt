@@ -2,7 +2,8 @@ package tramais.hnb.hhrfid.constant
 
 
 object Config {
-
+    var img_quality_small = 70
+    var img_quality_common =80
 
     @JvmField
     var REQUEST_SING = 1 shl 111
@@ -11,7 +12,7 @@ object Config {
 测试ip：111.44.133.34:6050*/
     @JvmField
 
-    var BASE_URL = "http://111.44.133.34:6050/"
+    var BASE_URL = "http://111.44.133.34:6051/"
 
     /*http://111.44.133.34:6030/SystemAdmin/News/ShowNews.htm?id=32
 生产的是：http://139.170.248.162:6031/SystemAdmin/News/ShowNews.htm?id=32*/
@@ -431,9 +432,11 @@ object Config {
 
     //DeleteBill
     var DeleteAnimalBill = BASE_URL + "InsureBill/DeleteAnimalBill"
+
     //System/getEnterpriseNature
     var getEnterpriseNature = BASE_URL + "System/getEnterpriseNature"
     var GetCompanyDept = BASE_URL + "InsureBill/GetCompanyDept"
+
     //System/address
     var address = BASE_URL + "System/address"
 }

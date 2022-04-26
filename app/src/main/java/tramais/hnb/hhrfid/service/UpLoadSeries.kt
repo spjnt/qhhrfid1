@@ -18,6 +18,7 @@ import tramais.hnb.hhrfid.litePalBean.FarmListCache
 import tramais.hnb.hhrfid.net.RequestUtil
 import tramais.hnb.hhrfid.util.EasyExecutor
 import tramais.hnb.hhrfid.util.UpLoadFileUtil.upLoadFile
+import tramais.hnb.hhrfid.util.Utils
 import java.io.File
 import java.util.concurrent.Executors
 
@@ -33,12 +34,11 @@ class UpLoadSeries : Service()/*, CoroutineScope by MainScope()*/ {
         return super.onStartCommand(intent, flags, startId)
     }
 
-
     fun load() {
         upLoadFarmer { str_farm ->
             sendBroadCast(str_farm)
             if (str_farm.contains("养殖户信息上传完成")) {
-                upLoadLable { str_farm_sign ->
+                upLoadLableTest { str_farm_sign ->
                     sendBroadCast(str_farm_sign)
                 }
             }
@@ -69,12 +69,13 @@ class UpLoadSeries : Service()/*, CoroutineScope by MainScope()*/ {
     /*牧户信息*/
     private fun upLoadFarmer(getOneString: GetOneString) {
         j = 0
+        //.where("isUpLoad =?", "0")
         LitePal.where("isUpLoad =?", "0").findAsync(FarmListCache::class.java).listen { uploadS ->
             val path: HashMap<String, String?> = HashMap()
             path.clear()
             if (uploadS != null && uploadS.size > 0) {
                 executor.onProgressChanged { current, total ->
-                  //  EventBus.getDefault().post(MessageEvent("$current"))
+                    //  EventBus.getDefault().post(MessageEvent("$current"))
                 }.execute { notifier ->
                     val total = uploadS.size.toLong() - 1
                     for (item in 0 until uploadS.size) {
@@ -84,9 +85,9 @@ class UpLoadSeries : Service()/*, CoroutineScope by MainScope()*/ {
                     }
                 }
 
-               /* uploadS.mapMultithreading {
-                    upLoadFarmOne(uploadS, it, getOneString)
-                }*/
+                /* uploadS.mapMultithreading {
+                     upLoadFarmOne(uploadS, it, getOneString)
+                 }*/
             } else {
                 getOneString.getString("养殖户信息上传完成")
             }
@@ -102,10 +103,19 @@ class UpLoadSeries : Service()/*, CoroutineScope by MainScope()*/ {
         val idPath = item.idPath
         val bankPath = item.bankPath
         val zjBackPicture = item.zjBackPicture
-        path["身份证反面"] = zjBackPicture
-        path["身份证"] = idPath
-        path["银行卡"] = bankPath
-        path["签名"] = item.singPic
+      //  if (!zjBackPicture.isNullOrEmpty() && File(zjBackPicture).isFile)
+            path["身份证反面"] = zjBackPicture
+       // if (!idPath.isNullOrEmpty() && File(idPath).isFile)
+            path["身份证"] = idPath
+     //   if (!bankPath.isNullOrEmpty() && File(bankPath).isFile)
+            path["银行卡"] = bankPath
+       // if (!item.singPic.isNullOrEmpty() && File(item.singPic).isFile) {
+            path["签名"] = item.singPic
+        /* } else {
+             getOneString.getString(farmListCache.name + ": 签名缺失")
+             return
+         }
+ */
         upLoadFile(this, item.zjNumber, path, GetList { id_bank_path ->
             var id_path: String? = null
             var id_back_path: String? = null
@@ -124,9 +134,9 @@ class UpLoadSeries : Service()/*, CoroutineScope by MainScope()*/ {
                             farmer_sign = item
                         }
                 }
-            RequestUtil.getInstance(this)!!.saveFarmer("", item.name.toString(), item.zjCategory, item.number, item.zjNumber, item.sFZAddress, item.bankName,
+            RequestUtil.getInstance(this)!!.saveFarmer(item.fRegionNumber, item.name.toString(), item.zjCategory, item.number, item.zjNumber, item.sFZAddress, item.bankName,
                     item.accountName, item.accountNumber, item.mobile, item.area, item.raiseAddress, item.category, item.creatTime, id_path, bank_path, item.remark,
-                    item.upDateTime, id_back_path, item.isPoor.toString(), item.overdueTime, farmer_sign, item.FBankCode, item.FBankRelatedCode, item.FStartime, item.natureCode, item.natureName) { rtnCode, str_farmer: String ->
+                    item.upDateTime, id_back_path, item.isPoor.toString(), item.overdueTime, farmer_sign, item.FBankCode, item.FBankRelatedCode, item.fStartime, item.natureCode, item.natureName, item.comNumber, item.empNumber) { rtnCode, str_farmer: String ->
                 if (rtnCode >= 0) {
                     getOneString.getString("养殖户信息:${item.name}上传成功")
                     val cache = FarmListCache()
@@ -197,7 +207,7 @@ class UpLoadSeries : Service()/*, CoroutineScope by MainScope()*/ {
 
                         if (rtnCode >= 0) {
                             val cache = AnimalSaveCache()
-//                            cache.isUpLoad = "1"
+                            cache.isUpLoad = "1"
                             cache.statu = "在保"
                             getOneString.getString("耳标信息:${lableNum}上传成功")
                             cache.updateAll("LableNum =? ", lableNum)
@@ -225,7 +235,7 @@ class UpLoadSeries : Service()/*, CoroutineScope by MainScope()*/ {
         LitePal.where("isUpLoad =?", "0").findAsync(AnimalSaveCache::class.java).listen { uploadS ->
             if (uploadS != null && uploadS.size > 0) {
                 executor.onProgressChanged { current, total ->
-                   // EventBus.getDefault().post(MessageEvent("$current"))
+                    // EventBus.getDefault().post(MessageEvent("$current"))
                 }.execute { notifier ->
                     val total = uploadS.size.toLong() - 1
                     for (item in 0 until uploadS.size) {
@@ -235,23 +245,6 @@ class UpLoadSeries : Service()/*, CoroutineScope by MainScope()*/ {
                     }
                 }
 
-                /*   val threadCount: Int = when {
-                       uploadS.size <= 200 -> {
-                           8
-                       }
-                       uploadS.size in 201..500 -> {
-                           10
-                       }
-                       uploadS.size > 500 -> {
-                           15
-                       }
-                       else -> {
-                           15
-                       }
-                   }
-                   uploadS.mapMultithreading(threadCount) {
-                       upLoadLableOneByOne(uploadS, it, getOneString)
-                   }*/
             } else {
                 getOneString.getString("耳标信息上传完成")
             }
@@ -259,6 +252,44 @@ class UpLoadSeries : Service()/*, CoroutineScope by MainScope()*/ {
 
     }
 
+    /*耳标信息*/
+    fun upLoadLableTest(getOneString: GetOneString) {
+        j = 0
+        /*.where("isUpLoad =?", "0")*/
+        LitePal.where("isUpLoad =?", "0").findAsync(AnimalSaveCache::class.java).listen { uploadS ->
+            if (uploadS != null && uploadS.size > 0) {
+                val len = when {
+                    uploadS.size <= 500 -> {
+                        5
+                    }
+                    uploadS.size in 501..1000 -> {
+                        8
+                    }
+                    uploadS.size in 1001..2000 -> {
+                        10
+                    }
+                    else -> {
+                        10
+                    }
+                }
+                val splitList = Utils.splitSize(uploadS, len)
+                for (item in splitList!!) {
+                    executor.onProgressChanged { current, total ->
+                    }.execute { notifier ->
+                        for (cache in item) {
+                            if (cache != null) {
+                                val animalSaveCache = cache as AnimalSaveCache
+                                upLoadLableOneByOne(uploadS, animalSaveCache, getOneString)
+                            }
+                        }
+                    }
+                }
+            } else {
+                getOneString.getString("耳标信息上传完成")
+            }
+        }
+
+    }
 
     val executor by lazy {
         return@lazy EasyExecutor.newBuilder(5)

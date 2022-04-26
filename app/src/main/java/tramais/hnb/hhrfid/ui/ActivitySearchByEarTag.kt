@@ -145,7 +145,7 @@ class ActivitySearchByEarTag : BaseActivity() {
             }
         }
         mIvRfidScan!!.setOnClickListener { view: View? ->
-            if (ifC72()) ReadTag(/*mReader,*/ handler!!)
+            if (ifC72()) ReadTag( handler!!)
 
             if (ifHC720s()) {
                 startScan(handler!!)

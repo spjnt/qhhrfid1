@@ -8,7 +8,6 @@ import android.widget.EditText
 import android.widget.TextView
 import com.alibaba.fastjson.JSONArray
 import com.alibaba.fastjson.JSONObject
-import com.apkfuns.logutils.LogUtils
 import org.litepal.LitePal.findAllAsync
 import tramais.hnb.hhrfid.base.QhApplication.Companion.context
 import tramais.hnb.hhrfid.bean.Region
@@ -19,6 +18,7 @@ import java.text.DecimalFormat
 import java.util.*
 import java.util.regex.Pattern
 import java.util.regex.PatternSyntaxException
+import kotlin.math.ceil
 
 object Utils {
     @JvmStatic
@@ -217,4 +217,46 @@ object Utils {
         val scale = context.resources.displayMetrics.density
         return (px / scale + 0.5f).toDouble()
     }
+
+
+    fun splitList(list: List<*>?, len: Int): List<List<*>>? {
+        if (list.isNullOrEmpty()) {
+            return null
+        }
+        val result: MutableList<List<*>> = ArrayList()
+        val size = list.size
+        val count = (size + len - 1) / len
+        for (i in 0 until count) {
+            val subList = list.subList(i * len, if ((i + 1) * len > size) size else len * (i + 1))
+            result.add(subList)
+        }
+        return result
+    }
+
+    fun splitSize(list: List<*>?, len: Int): List<List<*>>? {
+        if (list.isNullOrEmpty()) {
+            return null
+        }
+        val size = list.size
+        val result: MutableList<List<*>> = ArrayList()
+        result.clear()
+        val every = ceil(size.toDouble() / len).toInt()
+        for (i in 0 until len) {
+            val fromIndex = i * every
+            val endIndex = if ((i + 1) * every > size) {
+                size
+            } else {
+                (i + 1) * every
+            }
+            // LogUtils.e("form:  $fromIndex   toEnd:  $endIndex")
+            if (fromIndex < endIndex) {
+                val subList = list.subList(fromIndex, endIndex)
+                if (subList.isNotEmpty())
+                    result.add(subList)
+            }
+        }
+        return result
+    }
+
+
 }

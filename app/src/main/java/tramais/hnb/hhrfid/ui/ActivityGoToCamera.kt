@@ -285,22 +285,32 @@ class ActivityGoToCamera : BaseActivity() {
 
     private var regiondata: List<Region.DataBean>? = null
     fun getRegion() {
+
         if (NetUtil.checkNet(this)) {
-            RequestUtil.getInstance(this)!!.getRegionWithCache(object : GetCommonWithError<Region> {
+            RequestUtil.getInstance(this)!!.getRegion(object : GetCommon<Region> {
                 override fun getCommon(t: Region) {
-                    if (t == null || t.data.isNullOrEmpty()) {
-                        getReasonCache()
-                    } else {
+                    if (t.code >= 0) {
                         regiondata = t.data
                         tv_address!!.text = t.fProvince + t.fCity + t.fCounty
+                    } else {
+                        showStr(t.msg)
                     }
-
-                }
-
-                override fun getError() {
-                    getRegionCache()
                 }
             })
+            /* RequestUtil.getInstance(this)!!.getRegionWithCache(object : GetCommonWithError<Region> {
+                 override fun getCommon(t: Region) {
+                     if (t == null || t.data.isNullOrEmpty()) {
+                         getReasonCache()
+                     } else {
+
+                     }
+
+                 }
+
+                 override fun getError() {
+                     getRegionCache()
+                 }
+             })*/
         } else {
             getRegionCache()
         }

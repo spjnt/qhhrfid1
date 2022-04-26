@@ -12,7 +12,11 @@ import com.tencent.bugly.crashreport.CrashReport
 import com.tencent.bugly.crashreport.CrashReport.UserStrategy
 import com.zhy.http.okhttp.OkHttpUtils
 import okhttp3.OkHttpClient
+import org.litepal.LitePal
 import org.litepal.LitePal.initialize
+import org.litepal.LitePalDB
+import org.litepal.parser.LitePalParser
+import tramais.hnb.hhrfid.util.FileUtil
 import java.util.concurrent.TimeUnit
 
 /**
@@ -35,6 +39,8 @@ class QhApplication : Application() {
         initNet()
         //数据库缓存
         initialize(this)
+        //  LitePalDB.fromDefault("Qnb.db").dbName
+
         initLog()
         //国源SDK
         modulesApplicationInit()

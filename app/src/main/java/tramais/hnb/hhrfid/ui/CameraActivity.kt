@@ -12,22 +12,18 @@ import android.text.TextUtils
 import android.view.KeyEvent
 import android.view.View
 import android.widget.*
-import androidx.lifecycle.lifecycleScope
 import com.alibaba.fastjson.JSONArray
 import com.apkfuns.logutils.LogUtils
 import com.baidu.location.LocationClient
 import com.bumptech.glide.Glide
 import com.forjrking.lubankt.Luban
-import kotlinx.android.synthetic.main.activity_camera.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.litepal.LitePal.findAll
 import org.litepal.LitePal.findAllAsync
 import org.litepal.LitePal.where
 import tramais.hnb.hhrfid.R
 import tramais.hnb.hhrfid.base.BaseActivity
 import tramais.hnb.hhrfid.bean.CropTypeList
+import tramais.hnb.hhrfid.constant.Config
 import tramais.hnb.hhrfid.constant.Constants
 import tramais.hnb.hhrfid.listener.MyLocationListener
 import tramais.hnb.hhrfid.litePalBean.AnimalCateGoryCache
@@ -104,7 +100,7 @@ class CameraActivity : BaseActivity() {
                         if (cache_nums != null && cache_nums!!.size > 0) {
                             if (cache_nums.contains(epc)) {
 
-                                showStr("扫描到重复耳标")
+                                showStr("重复耳标 $epc")
                                 playSound(R.raw.serror)
                                 imv_tips!!.text = ""
                                 isSuccess_ = true
@@ -195,7 +191,7 @@ class CameraActivity : BaseActivity() {
 
         val animal_Type = PreferUtils.getString(context, Constants.animal_type)
 
-        mTvFeiQi!!.text = "重扫"
+        mTvFeiQi!!.text = "重拍"
         mSacnEarTag!!.text = "按扫描键扫描电子耳标"
         if (intent != null) {
 
@@ -253,13 +249,11 @@ class CameraActivity : BaseActivity() {
         // bitmaps?.clear()
         if (intent != null) intent = null
         onPauseaMedia()
-
+        isSuccess_ = true
     }
 
     override fun onStart() {
         super.onStart()
-
-        LogUtils.e("onStart")
     }
 
     //    private var mCameraPreview: CameraView? = null
@@ -350,7 +344,7 @@ class CameraActivity : BaseActivity() {
                     } else {
                         Utils.getEdit(et_rfid)
                     }
-                    if (!TextUtils.isEmpty(text) && !text.contains("已扫码") && !text.contains("正在扫描电子耳标...") && !text.contains("停止扫描,请重新按键")) {
+                    if (!TextUtils.isEmpty(text) && !text.contains("已扫码") && !text.contains("按扫描键扫描电子耳标") && !text.contains("停止扫描,请重新按键")) {
                         if (isSuccess_) {
                             isSuccess_ = false
                             takePhoto()
@@ -403,31 +397,38 @@ class CameraActivity : BaseActivity() {
         mTvFeiQi!!.setOnClickListener { v: View? ->
             if (bitmaps!!.size == 1) {
                 FileUtil.deleteImg(bitmaps[bitmaps.size - 1])
-                imv_label!!.text = ""
+                totalSize -= 1
+                // imv_label!!.text = ""
                 bitmaps.clear()
-
+                val text = Utils.getText(imv_tips)
+                if (text.isNotEmpty() && cache_nums!!.contains(text))
+                    cache_nums.remove(text)
+                mScanTotal!!.text = ""
                 imv_tips!!.text = ""
                 et_rfid!!.setText("")
-                imv_pic!!.visibility = View.GONE
+
+//                imv_pic!!.visibility = View.GONE
             } else if (bitmaps.size >= 2) {
-                imv_pic!!.visibility = View.VISIBLE
+//                imv_pic!!.visibility = View.VISIBLE
+//                mScanTotal!!.visibility = View.VISIBLE
                 FileUtil.deleteImg(bitmaps[bitmaps.size - 1])
                 bitmaps.removeAt(bitmaps.size - 1)
                 val s = bitmaps[bitmaps.size - 1]
-
                 Glide.with(this).load(s).into(imv_pic!!)
-                imv_label!!.text = "当前第 " + bitmaps.size + "张"
+                mScanTotal!!.text = "当前第 ${bitmaps.size} 张"
+                //  imv_label!!.text = "当前第 " + bitmaps.size + "张"
             }
         }
     }
 
     private fun gotoSaveAnimal() {
-        var era_tag: String? = ""
-        era_tag = if (ifC72() || ifHC720s()) {
+
+        val era_tag = if (ifC72() || ifHC720s()) {
             Utils.getText(imv_tips)
         } else {
             Utils.getEdit(et_rfid)
         }
+        //  LogUtils.e("eat camera  $era_tag")
         val intent = Intent(context, ActivitySaveAnimal::class.java)
         intent.putExtra(Constants.epc, era_tag)
         intent.putExtra(Constants.farmer_name, farm_name)
@@ -491,16 +492,16 @@ class CameraActivity : BaseActivity() {
                 _file?.let {
                     val photo_name = era_tag + "_" + bitmaps!!.size + ".jpg"
                     // cdpath = "$sdk_path${TimeUtil.getTime(Constants.yyyy__MM__dd)}/"
-
-                    val decodeByteArray = decodeBitmap(it, 0, it.size)
+                    //  Thread {
+                    val decodeByteArray = decodeBitmap(it)
                     if (decodeByteArray != null)
                         LuBan(decodeByteArray, cdpath, photo_name, crators, waterInfos)
+                    // }.start()
+
                 }
             }
 
         })
-
-
     }
 
     fun LuBan(bitMap: Bitmap, path_: String, photo_name: String, crators: MutableList<String>, waterInfos: MutableList<String>) {
@@ -511,8 +512,8 @@ class CameraActivity : BaseActivity() {
                     .concurrent(true)                //(可选)多文件压缩时是否并行,内部优化线程并行数量防止OOM
                     .useDownSample(true)             //(可选)压缩算法 true采用邻近采样,否则使用双线性采样(纯文字图片效果绝佳)
                     .format(Bitmap.CompressFormat.JPEG)//(可选)压缩后输出文件格式 支持 JPG,PNG,WEBP
-                    .ignoreBy(70)                   //(可选)期望大小,大小和图片呈现质量不能均衡所以压缩后不一定小于此值,
-                    .quality(60)                     //(可选)质量压缩系数  0-100
+                    .ignoreBy(250)                   //(可选)期望大小,大小和图片呈现质量不能均衡所以压缩后不一定小于此值,
+                    .quality(Config.img_quality_small)                     //(可选)质量压缩系数  0-100
                     // .rename { name_ }             //(可选)文件重命名
                     .filter { it != null }             //(可选)过滤器
                     .compressObserver {
@@ -533,25 +534,22 @@ class CameraActivity : BaseActivity() {
                                     path = saveWaterMask(waterMaskView, Bitmapbm, path_, photo_name)
                                     if (it.exists())
                                         it.delete()
-                                    lifecycleScope.launch {
-                                        withContext(Dispatchers.Main) {
-                                            bitmaps!!.add(path)
-                                            scan_total.bringToFront()
-                                            scan_total.text = "当前第 ${bitmaps.size} 张"
-                                            imv_pic!!.visibility = View.VISIBLE
-                                            Glide.with(context).load(path).into(imv_pic!!)
+                                    runOnUiThread {
+                                        bitmaps!!.add(path)
+                                        mScanTotal!!.bringToFront()
+                                        mScanTotal!!.text = "当前第 ${bitmaps.size} 张"
+                                        imv_pic!!.visibility = View.VISIBLE
+                                        Glide.with(context).load(path).into(imv_pic!!)
 
-                                            if (bitmaps!!.size >= 2) mTvFeiQi!!.text = "重拍"
-                                            //  updatePhotos(_file)
-                                            if (bitmaps.size == 1) mSacnEarTag!!.text = "按扫描键拍摄照片"
-                                            if (bitmaps.size == 4) {
-                                                gotoSaveAnimal()
-                                                mSacnEarTag!!.text = "按扫描键扫描电子耳标"
-                                            }
-                                            isSuccess_ = true
+                                        if (bitmaps!!.size >= 2) mTvFeiQi!!.text = "重拍"
+                                        //  updatePhotos(_file)
+                                        if (bitmaps.size == 1) mSacnEarTag!!.text = "按扫描键拍摄照片"
+                                        if (bitmaps.size == 4) {
+                                            gotoSaveAnimal()
+                                            mSacnEarTag!!.text = "按扫描键扫描电子耳标"
                                         }
+                                        isSuccess_ = true
                                     }
-
                                 }
                             }
 
@@ -573,11 +571,10 @@ class CameraActivity : BaseActivity() {
         try {
             val waterBitmap = WaterMaskUtil.loadBitmapFromView(waterMaskView)
             val watermarkBitmap = WaterMaskUtil.createWaterMaskLeftBottom(this, sourBitmap, waterBitmap, 0, 0)
-            return ImageUtils.saveBitmap(this, watermarkBitmap, path_, name_,60)
+            return ImageUtils.saveBitmap(this, watermarkBitmap, path_, name_, Config.img_quality_small)
         } catch (e: Exception) {
         }
         return ""
-
     }
 
     private val bitmapOptions = BitmapFactory.Options().apply {
@@ -589,8 +586,9 @@ class CameraActivity : BaseActivity() {
         }
     }
 
-    private fun decodeBitmap(buffer: ByteArray, start: Int, length: Int): Bitmap {
-        val bitmap = BitmapFactory.decodeByteArray(buffer, start, length, bitmapOptions)
+    private fun decodeBitmap(buffer: ByteArray): Bitmap? {
+        if (buffer.isEmpty()) return null
+        val bitmap = BitmapFactory.decodeByteArray(buffer, 0, buffer.size/*, bitmapOptions*/)
         val matrix = Matrix()
         if (bitmap.width > bitmap.height) {
             matrix.postRotate(90f)
@@ -605,7 +603,7 @@ class CameraActivity : BaseActivity() {
         if (keyCode == 139 || keyCode == 280 || keyCode == 293) {
             if (Utils.getText(mBtnAnimalChoice) != "畜种选择" && Utils.getText(mBtnAnimalChoice) != "全部") {
                 val text = Utils.getText(imv_tips)
-                if (!TextUtils.isEmpty(text) && !text.contains("已扫码") && !text.contains("正在扫描电子耳标...") && !text.contains("停止扫描,请重新按键")) {
+                if (!TextUtils.isEmpty(text) /*&& !text.contains("已扫码") && !text.contains("按扫描键扫描电子耳标") && !text.contains("停止扫描,请重新按键")*/) {
                     if (isSuccess_) {
                         isSuccess_ = false
                         takePhoto()
@@ -620,7 +618,7 @@ class CameraActivity : BaseActivity() {
                         if (ifHC720s()) {
                             startScan(handler)
                         }
-                        mSacnEarTag!!.text = "正在扫描电子耳标..."
+                        mSacnEarTag!!.text = "按扫描键扫描电子耳标"
                     }
                     // }
                 }

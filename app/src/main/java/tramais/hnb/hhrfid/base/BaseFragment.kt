@@ -13,7 +13,6 @@ import com.gyf.immersionbar.components.ImmersionFragment
 import tramais.hnb.hhrfid.bean.Roles
 import tramais.hnb.hhrfid.constant.Constants
 import tramais.hnb.hhrfid.ui.dialog.DialogAvi
-import tramais.hnb.hhrfid.util.NetUtil
 import tramais.hnb.hhrfid.util.PreferUtils
 
 abstract class BaseFragment : ImmersionFragment() /*Fragment()*/ {
@@ -55,11 +54,13 @@ abstract class BaseFragment : ImmersionFragment() /*Fragment()*/ {
     }
 
     fun ifC72(): Boolean {
-         return Build.MODEL.equals("HC720");
+        return Build.MODEL.equals("HC720") || Build.MODEL.equals("SAH6380")
     }
+
     fun ifHC720s(): Boolean {
         return Build.MODEL.equals("HC720S")
     }
+
     @JvmOverloads
     fun showAvi(str: String? = "") {
         if (dialogAvi == null) {
@@ -69,7 +70,7 @@ abstract class BaseFragment : ImmersionFragment() /*Fragment()*/ {
             dialogAvi!!.setText(str)
         }
         if (!dialogAvi!!.isShowing)
-          dialogAvi!!.show()
+            dialogAvi!!.show()
 
     }
 

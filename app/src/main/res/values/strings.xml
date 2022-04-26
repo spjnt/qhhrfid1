@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">青农保·测试</string><!--·测试-->
+    <string name="app_name">青农保</string><!--·测试-->
     <string name="inpuut_account">请输入用户名</string>
     <string name="input_password">请输入密码</string>
     <string name="rem_password">记住密码</string>

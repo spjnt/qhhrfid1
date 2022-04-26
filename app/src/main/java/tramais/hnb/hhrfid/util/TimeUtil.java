@@ -44,8 +44,6 @@ public class TimeUtil {
 
     }
 
-
-
     public static String getFeatDay(int feat) {
         SimpleDateFormat formatter = new SimpleDateFormat(Constants.yyyy_mm_dd);
         Calendar calendar = Calendar.getInstance();

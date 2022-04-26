@@ -10,28 +10,30 @@ import android.view.KeyEvent
 import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import com.alibaba.fastjson.JSON
+import com.apkfuns.logutils.LogUtils
 import com.gyf.immersionbar.ktx.immersionBar
 import com.mylhyl.acp.Acp
 import com.mylhyl.acp.AcpListener
 import com.mylhyl.acp.AcpOptions
 import org.litepal.LitePal
+import org.litepal.parser.LitePalParser
 import tramais.hnb.hhrfid.R
 import tramais.hnb.hhrfid.base.BaseActivity
 import tramais.hnb.hhrfid.bean.Roles
 import tramais.hnb.hhrfid.constant.Constants
 import tramais.hnb.hhrfid.interfaces.GetBool
+import tramais.hnb.hhrfid.interfaces.NetStateChangeObserver
 import tramais.hnb.hhrfid.litePalBean.AnimalSaveCache
 import tramais.hnb.hhrfid.litePalBean.FarmListCache
+import tramais.hnb.hhrfid.ui.dialog.DialogDownLoad
 import tramais.hnb.hhrfid.ui.dialog.DialogUpLoad
 import tramais.hnb.hhrfid.ui.table.TabConst
 import tramais.hnb.hhrfid.ui.table.TabItem
 import tramais.hnb.hhrfid.ui.table.TabLayout
 import tramais.hnb.hhrfid.ui.table.TabSelectListener
-import tramais.hnb.hhrfid.util.NetUtil
-import tramais.hnb.hhrfid.util.PreferUtils
-import tramais.hnb.hhrfid.util.Utils
+import tramais.hnb.hhrfid.util.*
 
-class MainActivity : BaseActivity() {
+class MainActivity : BaseActivity(), NetStateChangeObserver {
     private var layout: FrameLayout? = null
 
     private var tabLayout: TabLayout? = null
@@ -43,15 +45,22 @@ class MainActivity : BaseActivity() {
     private var settingFragment: SettingFragment? = null
     private var currentIndex = 0
     var start: Long = 0L
+    var isNetConnect: Boolean = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         immersionBar()
         start = System.currentTimeMillis()
         permission
-        if (NetUtil.checkNet(this))
+        NetStateChangeReceiver.registerReceiver(this);
+        isNetConnect = NetUtil.checkNet(this)
+        if (isNetConnect) {
             deal()
-        //  NetworkChangeReceiver.registerReceiver(this)
+            tipsDown()
+        }
+
+
+
     }
 
     private fun setCurrentTab(index: Int) {
@@ -159,7 +168,7 @@ class MainActivity : BaseActivity() {
 
         if (!isLocServiceEnable(this)) {
             showStr("请打开位置服务")
-            var intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+            val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
             startActivityForResult(intent, 134)
         }
 
@@ -204,22 +213,22 @@ class MainActivity : BaseActivity() {
 
     override fun onPause() {
         super.onPause()
+        NetStateChangeReceiver.unRegisterObserver(this);
         PreferUtils.putInt(this@MainActivity, Constants.current_index, currentIndex)
-
     }
 
 
     override fun onResume() {
         super.onResume()
         hideAllTitle()
+        NetStateChangeReceiver.registerObserver(this);
+
         currentIndex = PreferUtils.getInt(this, Constants.current_index)
         initTab(NetUtil.checkNet(this), currentIndex)
 
         val role_array = PreferUtils.getString(this, Constants.Role_array)
         if (!role_array.isNullOrEmpty())
             roles = JSON.parseArray(role_array, Roles::class.java)
-
-
     }
 
     private var exitTime: Long = 0 // 用来计算返回键的点击间隔时间
@@ -255,11 +264,6 @@ class MainActivity : BaseActivity() {
         var upload_i = 0
         upload_i += LitePal.where("isUpLoad=?", "0").find(FarmListCache::class.java).size
         upload_i += LitePal.where("isUpLoad=?", "0").find(AnimalSaveCache::class.java).size
-//        upload_i += LitePal.where("isUpLoad=?", "0").find(AllBillDetailCache::class.java).size
-//        upload_i += LitePal.where("isUpLoad=? ", "0").find(BanAnInfo::class.java).size
-//        upload_i += LitePal.where("isUpLoad_Basic=? ", "0").find(ChaKanDetailListCache::class.java).size
-//        upload_i += LitePal.where("UpLoad_sunshi=? ", "0").find(LossListCache::class.java).size
-
         if (upload_i > 0) {
             DialogUpLoad(this, upload_i.toString(), object : GetBool {
                 override fun getBool(tf: Boolean) {
@@ -270,5 +274,66 @@ class MainActivity : BaseActivity() {
                 }
             }).show()
         }
+    }
+
+    private fun tipsDown() {
+        val tips_time = PreferUtils.getString(this, Constants.tips_time)
+        val cacheTime = PreferUtils.getString(this, Constants.cache_time_com)
+        val ifTips = if (cacheTime.isNullOrEmpty()) {
+            if (tips_time.isNotEmpty()) {
+                TimeUtil.getTimeCompareSize(tips_time, TimeUtil.getTime(Constants.yyyy_mm_dd))
+            } else {
+                true
+            }
+        } else {
+            TimeUtil.getTimeCompareSize(cacheTime, TimeUtil.getTime(Constants.yyyy_mm_dd))
+        }
+        if (ifTips)
+            DialogDownLoad(this, object : GetBool {
+                override fun getBool(tf: Boolean) {
+                    if (tf) {
+                        val currentIndex = if (isNetConnect) {
+                            3
+                        } else {
+                            2
+                        }
+                        initTab(NetUtil.checkNet(this@MainActivity), currentIndex)
+                    }
+
+                }
+            }).show()
+    }
+
+    override fun onNetDisconnected() {
+        //  com.apkfuns.logutils.LogUtils.e("dis")
+        currentIndex = PreferUtils.getInt(this, Constants.current_index)
+
+        if (isNetConnect) {
+            if (currentIndex >= 1)
+                currentIndex -= 1
+
+        }
+        initTab(NetUtil.checkNet(this), currentIndex)
+
+    }
+
+    override fun onNetConnected(networkType: NetworkType?) {
+        //  com.apkfuns.logutils.LogUtils.e("con")
+        currentIndex = PreferUtils.getInt(this, Constants.current_index)
+
+        if (!isNetConnect) {
+            if (currentIndex <= 2)
+                currentIndex += 1
+
+        }
+        initTab(NetUtil.checkNet(this), currentIndex)
+        //
+
+    }
+
+    override fun onDestroy() {
+
+        NetStateChangeReceiver.unRegisterReceiver(this);
+        super.onDestroy()
     }
 }

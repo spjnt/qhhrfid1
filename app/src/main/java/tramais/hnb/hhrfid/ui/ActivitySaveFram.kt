@@ -26,7 +26,10 @@ import org.litepal.LitePal.findAllAsync
 import org.litepal.LitePal.where
 import tramais.hnb.hhrfid.R
 import tramais.hnb.hhrfid.base.BaseActivity
-import tramais.hnb.hhrfid.bean.*
+import tramais.hnb.hhrfid.bean.BankInfoDetail
+import tramais.hnb.hhrfid.bean.FarmList
+import tramais.hnb.hhrfid.bean.Naturean
+import tramais.hnb.hhrfid.bean.Region
 import tramais.hnb.hhrfid.constant.Config
 import tramais.hnb.hhrfid.constant.Constants
 import tramais.hnb.hhrfid.interfaces.*
@@ -36,7 +39,6 @@ import tramais.hnb.hhrfid.litePalBean.FarmListCache
 import tramais.hnb.hhrfid.litePalBean.IdCategoryCache
 import tramais.hnb.hhrfid.litePalBean.NatureanCache
 import tramais.hnb.hhrfid.net.RequestUtil
-import tramais.hnb.hhrfid.ui.ActivitySaveFram
 import tramais.hnb.hhrfid.ui.dialog.DialogChoiceBank
 import tramais.hnb.hhrfid.ui.dialog.DialogChoiceRegion
 import tramais.hnb.hhrfid.ui.dialog.DialogImg
@@ -44,9 +46,6 @@ import tramais.hnb.hhrfid.ui.popu.PopuChoice
 import tramais.hnb.hhrfid.ui.popu.PopuChoicePicture
 import tramais.hnb.hhrfid.util.*
 import tramais.hnb.hhrfid.util.UpLoadFileUtil.upLoadFile
-import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 
 class ActivitySaveFram : BaseActivity(), ChoicePhoto {
@@ -186,16 +185,17 @@ class ActivitySaveFram : BaseActivity(), ChoicePhoto {
         if (intent != null) {
             val underWrites = intent.getSerializableExtra("underWrites")
             val type = intent.getStringExtra("type")
-            LogUtils.e("type  $type")
+           // LogUtils.e("type  $type")
             if (type == "Content") {
                 setChange(false)
                 if (underWrites != null) {
                     underWrites as FarmList
                     fRegionNumber = underWrites.areaCode
                     //   LogUtils.e("zjCategory  ${underWrites.zjCategory}  ${underWrites.category}")
-                    mTvCategory!!.text = underWrites.zjCategory
+                    currentIdCate = underWrites.zjCategory
+                    mTvCategory!!.text = currentIdCate
                     mIvTakeIdPhoto!!.setBackgroundResource(0)
-                    if (underWrites.zjCategory == "营业执照") {
+                    if (currentIdCate == "营业执照") {
                         mName!!.text = "证件名称"
                         mNature!!.isEnabled = true
                         mNature!!.text = underWrites.fEnterpriseNatureName
@@ -212,12 +212,14 @@ class ActivitySaveFram : BaseActivity(), ChoicePhoto {
                         mLlOverTime!!.visibility = View.VISIBLE
                         mLlStartTime!!.visibility = View.VISIBLE
                     }
+
                     natureName = underWrites.fEnterpriseNatureName
                     natureCode = underWrites.fEnterpriseNature
                     FBankCode = underWrites.fBankCode
                     FBankRelatedCode = underWrites.fBankRelatedCode
                     mOverTime!!.text = underWrites.fValidate
                     mStartTime!!.text = underWrites.fStartTime
+                    //     LogUtils.e("underWrites.fStartTime  ${underWrites.fStartTime}")
                     mEtName!!.setText(underWrites.name)
                     mEtUnderSer!!.setText(underWrites.number)
                     mEtUnderIdNums!!.setText(underWrites.zjNumber)
@@ -232,7 +234,7 @@ class ActivitySaveFram : BaseActivity(), ChoicePhoto {
                     idCard_path_back = underWrites?.zjBackPicture ?: ""
                     backCard_path = underWrites?.bankPicture ?: ""
                     farmer_sign = underWrites?.signPicture ?: ""
-                    // LogUtils.e("farmer_sign  $farmer_sign")
+                    //  LogUtils.e("farmer_sign  $farmer_sign")
                     if (!TextUtils.isEmpty(idCard_path)) {
                         hasZjPic = true
                         Glide.with(this).load(idCard_path).into(mIvTakeIdPhoto!!)
@@ -257,7 +259,7 @@ class ActivitySaveFram : BaseActivity(), ChoicePhoto {
                         mIsPoorFalse!!.isChecked = false
                     }
                     raiseAddress = underWrites?.raiseAddress ?: ""
-
+                    mEtUnderAddress!!.setText(raiseAddress)
                     mEtTogetherName!!.text = underWrites.area
                     val category = underWrites.category
                     if (category == "自行投保") {
@@ -270,8 +272,11 @@ class ActivitySaveFram : BaseActivity(), ChoicePhoto {
                         isTogether = true
                         mLlTogether!!.visibility = View.VISIBLE
                     }
+                } else {
+                    LogUtils.e("under  is  null")
                 }
             } else {
+                currentIdCate = "身份证"
                 mCbTogether!!.isChecked = true
                 isTogether = true
                 setChange(true)
@@ -284,6 +289,7 @@ class ActivitySaveFram : BaseActivity(), ChoicePhoto {
             }
 
         }
+        //mEtUnderAddressU
         if (NetUtil.checkNet(this) && TextUtils.isEmpty(raiseAddress)) {
             mLocationClient = LocationClient(applicationContext)
             BDLoactionUtil.initLoaction(mLocationClient)
@@ -317,7 +323,8 @@ class ActivitySaveFram : BaseActivity(), ChoicePhoto {
         if (NetUtil.checkNet(this))
             RequestUtil.getInstance(this)!!.getRegion(object : GetCommon<Region> {
                 override fun getCommon(t: Region) {
-                    regiondata = t.data
+                    if (t.code >= 0)
+                        regiondata = t.data
                 }
             })
         else
@@ -447,6 +454,7 @@ class ActivitySaveFram : BaseActivity(), ChoicePhoto {
     var AccountName: String? = null
     var natureCode: String? = null
     var natureName: String? = null
+    var currentIdCate: String? = "身份证"
     override fun initListner() {
         mEtCardBank!!.setOnClickListener {
             if (getBankResulData == null || getBankResulData!!.isEmpty()) {
@@ -534,12 +542,22 @@ class ActivitySaveFram : BaseActivity(), ChoicePhoto {
         mTvCategory!!.setOnClickListener {
             if (list_indefiy != null && list_indefiy.size > 0)
                 PopuChoice(this@ActivitySaveFram, mTvCategory, "请选择证件类型", list_indefiy) { str: String ->
+                    if (!currentIdCate.isNullOrEmpty() && currentIdCate == str) return@PopuChoice
+                    currentIdCate = str
                     mTvCategory!!.text = str
+                    idCard_path = ""
+                    idCard_path_back = ""
+                    hasZjPic = false
+                    hasZjPicBack = false
+                    pathImgId = ""
+                    pathImgIdBack = ""
                     mIvTakeIdPhoto!!.setBackgroundResource(0)
+                    mIvTakeIdPhotoBack!!.setBackgroundColor(0)
                     if ((str == "营业执照")) {
                         mIvTakeIdPhoto!!.setImageDrawable(ContextCompat.getDrawable(this, R.mipmap.yingyezhizhao))
                         mRlBack!!.visibility = View.GONE
                         mLlOverTime!!.visibility = View.GONE
+                        if (mIvDelFont!!.visibility == View.VISIBLE) mIvDelFont!!.visibility = View.GONE
                         mNature!!.isEnabled = true
                         mNature!!.text = ""
                         natureName = ""
@@ -547,8 +565,11 @@ class ActivitySaveFram : BaseActivity(), ChoicePhoto {
                         mName!!.text = "证件名称"
                     } else {
                         mIvTakeIdPhoto!!.setImageDrawable(ContextCompat.getDrawable(this, R.mipmap.idcard_font))
+                        mIvTakeIdPhotoBack!!.setImageDrawable(ContextCompat.getDrawable(this, R.mipmap.idcard_back))
                         mRlBack!!.visibility = View.VISIBLE
                         mLlOverTime!!.visibility = View.VISIBLE
+                        if (mIvDelFont!!.visibility == View.VISIBLE) mIvDelFont!!.visibility = View.GONE
+                        if (mIvDelBack!!.visibility == View.VISIBLE) mIvDelBack!!.visibility = View.GONE
                         mNature!!.isEnabled = false
                         mName!!.text = getString(R.string.name)
                         mNature!!.text = "无"
@@ -557,32 +578,40 @@ class ActivitySaveFram : BaseActivity(), ChoicePhoto {
                     }
                 }
         }
+        /*  身份证反面*/
         mIvTakeIdPhotoBack!!.setOnClickListener { v: View? ->
+
             if (!hasZjPicBack) {
                 clickImg = 3
                 PopuChoicePicture(this@ActivitySaveFram, this@ActivitySaveFram).showAtLocation(mIvTakeIdPhoto, Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL, 0, 0)
             } else {
+                if (idCard_path_back.isNullOrEmpty()) return@setOnClickListener
                 val dialogImg = DialogImg(this, idCard_path_back)
                 if (!dialogImg.isShowing) dialogImg.show()
             }
         }
+        /*身份证正面*/
         mIvTakeIdPhoto!!.setOnClickListener { view: View? ->
+
             if (!hasZjPic) {
                 clickImg = 1
                 PopuChoicePicture(this@ActivitySaveFram, this@ActivitySaveFram).showAtLocation(mIvTakeIdPhoto, Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL, 0, 0)
 
             } else {
+                LogUtils.e("idCardPath  $idCard_path")
+                if (idCard_path.isNullOrEmpty()) return@setOnClickListener
                 val dialogImg = DialogImg(this, idCard_path)
                 if (!dialogImg.isShowing) dialogImg.show()
             }
         }
-
+        /*银行卡*/
         mIvTakeBankPhoto!!.setOnClickListener { view: View? ->
             //    LogUtils.e("backCard_path$backCard_path")
             if (!hasBankPic) {
                 clickImg = 2
                 PopuChoicePicture(this@ActivitySaveFram, this@ActivitySaveFram).showAtLocation(mIvTakeBankPhoto, Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL, 0, 0)
             } else {
+                if (backCard_path.isNullOrEmpty()) return@setOnClickListener
                 val dialogImg = DialogImg(this, backCard_path)
                 if (!dialogImg.isShowing) dialogImg.show()
             }
@@ -594,8 +623,8 @@ class ActivitySaveFram : BaseActivity(), ChoicePhoto {
                 return@setOnClickListener
             }
             showAvi()
-            if ((Utils.getText(mTvCategory) == "身份证")) {
-                RequestUtil.getInstance(this@ActivitySaveFram)!!.getIdCardsInfo(Config.indentifyocr, map_indefiy!![Utils.getText(mTvCategory)], pathImgId, (object : GetResultJsonObject {
+            if ((currentIdCate == "身份证")) {
+                RequestUtil.getInstance(this@ActivitySaveFram)!!.getIdCardsInfo(Config.indentifyocr, map_indefiy!![currentIdCate], pathImgId, (object : GetResultJsonObject {
                     override fun getResult(rtnCode: Int, message: String?, totalNums: Int, datas: JSONObject?) {
                         hideAvi()
                         if (datas != null) {
@@ -615,7 +644,8 @@ class ActivitySaveFram : BaseActivity(), ChoicePhoto {
                         }
                     }
                 }))
-                RequestUtil.getInstance(this@ActivitySaveFram)!!.getIdCardsInfo(Config.IdentifyBackOcr, map_indefiy[Utils.getText(mTvCategory)], pathImgIdBack, (object : GetResultJsonObject {
+                if (pathImgIdBack.isNullOrEmpty()) return@setOnClickListener
+                RequestUtil.getInstance(this@ActivitySaveFram)!!.getIdCardsInfo(Config.IdentifyBackOcr, map_indefiy[currentIdCate], pathImgIdBack, (object : GetResultJsonObject {
                     override fun getResult(rtnCode: Int, message: String?, totalNums: Int, datas: JSONObject?) {
                         hideAvi()
                         if (datas != null) {
@@ -627,7 +657,7 @@ class ActivitySaveFram : BaseActivity(), ChoicePhoto {
                     }
                 }))
             } else {
-                RequestUtil.getInstance(this@ActivitySaveFram)!!.getIdCardsInfo(Config.IdentifyBusinessLicense, map_indefiy!![Utils.getText(mTvCategory)], pathImgId, (object : GetResultJsonObject {
+                RequestUtil.getInstance(this@ActivitySaveFram)!!.getIdCardsInfo(Config.IdentifyBusinessLicense, map_indefiy!![currentIdCate], pathImgId, (object : GetResultJsonObject {
                     override fun getResult(rtnCode: Int, message: String?, totalNums: Int, datas: JSONObject?) {
                         hideAvi()
                         if (datas != null) {
@@ -705,11 +735,13 @@ class ActivitySaveFram : BaseActivity(), ChoicePhoto {
             hasZjPic = false
             mIvDelFont!!.visibility = View.GONE
             pathImgId = ""
+            idCard_path = ""
             mIvTakeIdPhoto!!.setBackgroundResource(0)
-            if ((Utils.getText(mTvCategory) == "身份证")) mIvTakeIdPhoto!!.setImageDrawable(ContextCompat.getDrawable(this, R.mipmap.idcard_font)) else mIvTakeIdPhoto!!.setImageDrawable(ContextCompat.getDrawable(this, R.mipmap.yingyezhizhao))
+            if ((currentIdCate == "身份证")) mIvTakeIdPhoto!!.setImageDrawable(ContextCompat.getDrawable(this, R.mipmap.idcard_font)) else mIvTakeIdPhoto!!.setImageDrawable(ContextCompat.getDrawable(this, R.mipmap.yingyezhizhao))
         }
         mIvDelBack!!.setOnClickListener { v: View? ->
             hasZjPicBack = false
+
             pathImgIdBack = ""
             mIvDelBack!!.visibility = View.GONE
             idCard_path_back = ""
@@ -834,9 +866,12 @@ class ActivitySaveFram : BaseActivity(), ChoicePhoto {
         val finalCatetory = catetory
         if (NetUtil.checkNet(mContext)) {
             showAvi()
-            back_id["身份证"] = idCard_path
-            back_id["身份证反面"] = idCard_path_back
-            back_id["银行卡"] = backCard_path
+            if (idCard_path.isNotEmpty())
+                back_id["身份证"] = idCard_path
+            if (idCard_path_back.isNotEmpty())
+                back_id["身份证反面"] = idCard_path_back
+            if (backCard_path.isNotEmpty())
+                back_id["银行卡"] = backCard_path
             back_id["签名"] = farmer_sign.toString()
             val finalCatetory1 = catetory
             val finalTogetherName = togetherName
@@ -857,45 +892,53 @@ class ActivitySaveFram : BaseActivity(), ChoicePhoto {
                         farmer_sign = item
                     }
                 }
+//                val empNumber = PreferUtils.getString(this, Constants.userNumber)
+//                val comNumber = PreferUtils.getString(this, Constants.companyNumber)
                 RequestUtil.getInstance(mContext)!!.saveFarmer(fRegionNumber, Name, category, EtUnderIdNums, EtUnderIdNums, EtUnderIdAddress, EtCardBank, EtCardAcc, EtCardNum, EtPhoneNum, finalTogetherName,
                         EtUnderAddress, finalCatetory1, TimeUtil.getTime(Constants.yyyy_MM_ddHHmmss), id_path, bank_path, Utils.getEdit(mInputInfo),
-                        TimeUtil.getTime(Constants.yyyy_MM_ddHHmmss), id_back_path, isPoor.toString(), overTime, farmer_sign, FBankCode, FBankRelatedCode, mStartTime, natureCode, natureName) { rtnCode, message ->
+                        TimeUtil.getTime(Constants.yyyy_MM_ddHHmmss), id_back_path, isPoor.toString(), overTime, farmer_sign, FBankCode, FBankRelatedCode, mStartTime, natureCode, natureName, companyNum, userNum) { rtnCode, message ->
                     hideAvi()
                     showStr(message)
-                    if (isGoToNextUi && rtnCode >= 0) {
-                        if (category == "营业执照" && isTogether) {
-                            showStr("村委不可验标")
-                            return@saveFarmer
-                        }
-                        goToCamer(Name, EtUnderIdNums, EtPhoneNum, EtTogetherName, finalCatetory2, EtUnderAddress, message, "")
-                        saveFarmerCache(fRegionNumber, false, isSelf, Name, category,
+                    if (rtnCode >= 0) {
+                        saveFarmerCache(fRegionNumber, isSelf, Name, category,
                                 EtUnderIdNums, EtUnderIdNums, EtUnderIdAddress, EtCardBank, EtCardAcc,
                                 EtCardNum, EtPhoneNum, togetherName, EtUnderAddress, finalCatetory, TimeUtil.getTime(Constants.yyyy_MM_ddHHmmss), idCard_path, backCard_path, Utils.getEdit(mInputInfo), idCard_path_back, isPoor, overTime,
-                                farmer_sign.toString(), FBankCode, FBankRelatedCode, startTime, natureCode, natureName)
+                                farmer_sign.toString(), FBankCode, FBankRelatedCode, mStartTime, natureCode, natureName, "1")
+                        if (isGoToNextUi) {
+                            if (category == "营业执照" && isTogether) {
+                                showStr("村委不可验标")
+                                return@saveFarmer
+                            }
+                            goToCamer(Name, EtUnderIdNums, EtPhoneNum, EtTogetherName, finalCatetory2, EtUnderAddress, message, "")
+                        }
                     }
+
                 }
             }
         } else {
-            saveFarmerCache(fRegionNumber, false, isSelf, Name, category,
+            saveFarmerCache(fRegionNumber, isSelf, Name, category,
                     EtUnderIdNums, EtUnderIdNums, EtUnderIdAddress, EtCardBank, EtCardAcc,
                     EtCardNum, EtPhoneNum, togetherName, EtUnderAddress, finalCatetory, TimeUtil.getTime(Constants.yyyy_MM_ddHHmmss), idCard_path, backCard_path, Utils.getEdit(mInputInfo), idCard_path_back, isPoor, overTime,
-                    farmer_sign.toString(), FBankCode, FBankRelatedCode, startTime, natureCode, natureName)
+                    farmer_sign.toString(), FBankCode, FBankRelatedCode, mStartTime, natureCode, natureName, "0")
         }
     }
 
+    /* cache.empNumber = PreferUtils.getString(this, Constants.userNumber)
+                cache.comNumber = PreferUtils.getString(this, Constants.companyNumber)*/
     private fun saveFarmerCache(
-            fRegionNumber: String?, isUpLoad: Boolean, isSelf: Boolean, name: String, zjCategory: String,
+            fRegionNumber: String?, isSelf: Boolean, name: String, zjCategory: String,
             Number: String, ZjNumber: String, SFZAddress: String, BankName: String, AccountName: String,
             AccountNumber: String, Mobile: String, Area: String, RaiseAddress: String,
             Category: String, CreateTime: String, ZjPicture: String, BankPicture: String, remark: String, backID: String, isPoor: Int,
-            overTime: String, farmer_sign: String, FBankCode: String?, FBankRelatedCode: String?, FstartTime: String?, FEnterpriseNature: String?, natureName: String?,
+            overTime: String, farmer_sign: String, FBankCode: String?, FBankRelatedCode: String?, FstartTime: String?, FEnterpriseNature: String?,
+            natureName: String?, isUpLoad: String
     ) {
-        where("ZjNumber =?", ZjNumber).findAsync(FarmListCache::class.java).listen { list: List<FarmListCache?>? ->
+        where("zjNumber =?", ZjNumber).findAsync(FarmListCache::class.java).listen { list: List<FarmListCache?>? ->
             val cache = FarmListCache()
             cache.fRegionNumber = fRegionNumber
             cache.natureName = natureName
             cache.natureCode = FEnterpriseNature
-            cache.isUpLoad = "0"
+            cache.isUpLoad = isUpLoad
             cache.accountName = AccountName
             cache.accountNumber = AccountNumber
             cache.raiseAddress = RaiseAddress
@@ -913,7 +956,10 @@ class ActivitySaveFram : BaseActivity(), ChoicePhoto {
             cache.overdueTime = overTime
             cache.FBankCode = FBankCode
             cache.FBankRelatedCode = FBankRelatedCode
-            cache.FStartime = FstartTime
+            cache.fStartime = FstartTime
+            cache.empNumber = userNum
+            cache.comNumber = companyNum
+
             cache.singTime = TimeUtil.getTime(Constants.yyyy_mm_dd)
             if (isSelf) {
                 cache.category = Category
@@ -927,6 +973,8 @@ class ActivitySaveFram : BaseActivity(), ChoicePhoto {
             if (list == null || list.isEmpty()) {
                 cache.zjNumber = ZjNumber
                 val save = cache.save()
+                LogUtils.e("save  $save")
+                if (NetUtil.checkNet(this)) return@listen
                 if (save) {
                     showStr("保存成功")
                     if (isGoToNextUi) {
@@ -943,7 +991,8 @@ class ActivitySaveFram : BaseActivity(), ChoicePhoto {
                 // LogUtils.e("huan  cun")
                 cache.upDateTime = TimeUtil.getTime(Constants.yyyy__MM__dd)
 
-                val i = cache.updateAll("ZjNumber = ?", ZjNumber)
+                val i = cache.updateAll("zjNumber = ?", ZjNumber)
+                if (NetUtil.checkNet(this)) return@listen
                 if (i > 0) {
                     showStr("保存成功")
                     if (isGoToNextUi) {
@@ -971,7 +1020,7 @@ class ActivitySaveFram : BaseActivity(), ChoicePhoto {
         intent.putExtra(Constants.farmer_tel, EtPhoneNum)//电话号码
         //  intent.putExtra(Constants.category_name, EtTogetherName)//集体户名
         intent.putExtra(Constants.category, finalCatetory2) //集体投保  个人投保
-        intent.putExtra(Constants.farmer_zjCategory, Utils.getText(mTvCategory))//证件类型
+        intent.putExtra(Constants.farmer_zjCategory, currentIdCate)//证件类型
         intent.putExtra(Constants.farmer_area, EtTogetherName)//集体户名
         intent.putExtra(Constants.farmer_address, EtUnderAddress)//证件地址
         intent.putExtra(Constants.Ba_num, message)//报案号
@@ -1022,6 +1071,13 @@ class ActivitySaveFram : BaseActivity(), ChoicePhoto {
 
     fun setImage(clickImg: Int, getimage: Bitmap?) {
         if (getimage == null) return
+        val name = Utils.getEdit(mEtName)
+        val photoName = name.ifEmpty {
+            TimeUtil.getTime(Constants.yyyy__MM__dd)
+        }
+        val photoPath = name.ifEmpty {
+            TimeUtil.getTime(Constants.yyyyMMddHHmmss)
+        }
         when (clickImg) {
             1 -> {
                 hasZjPic = true
@@ -1029,7 +1085,7 @@ class ActivitySaveFram : BaseActivity(), ChoicePhoto {
                 if (getimage != null) {
                     mIvTakeIdPhoto!!.setBackgroundResource(0)
                     mIvTakeIdPhoto!!.setImageBitmap(getimage)
-                    idCard_path = ImageUtils.saveBitmap(mContext, getimage, FileUtil.getSDPath() + Constants.sdk_middle_path, Utils.getEdit(mEtName) + "/" + Utils.getEdit(mEtName) + "_" + "idCard" + ".jpg")
+                    idCard_path = ImageUtils.saveBitmap(mContext, getimage, FileUtil.getSDPath() + Constants.sdk_middle_path, photoName + "/" + photoPath + "_" + "idCard" + ".jpg")
                     pathImgId = ImageUtils.getStream(idCard_path!!)
                 }
             }
@@ -1038,7 +1094,7 @@ class ActivitySaveFram : BaseActivity(), ChoicePhoto {
                     hasBankPic = true
                     mIvTakeBankPhoto!!.setBackgroundResource(0)
                     mIvTakeBankPhoto!!.setImageBitmap(getimage)
-                    backCard_path = ImageUtils.saveBitmap(mContext, getimage, FileUtil.getSDPath() + Constants.sdk_middle_path, Utils.getEdit(mEtName) + "/" + Utils.getEdit(mEtName) + "_" + "bankCard" + ".jpg")
+                    backCard_path = ImageUtils.saveBitmap(mContext, getimage, FileUtil.getSDPath() + Constants.sdk_middle_path, photoName + "/" + photoPath + "_" + "bankCard" + ".jpg")
                     pathImgBank = ImageUtils.getStream(backCard_path)
                     mDelBank!!.visibility = View.VISIBLE
                 }
@@ -1046,7 +1102,7 @@ class ActivitySaveFram : BaseActivity(), ChoicePhoto {
             3 -> {
                 if (getimage != null) {
                     hasZjPicBack = true
-                    idCard_path_back = ImageUtils.saveBitmap(mContext, getimage, FileUtil.getSDPath() + Constants.sdk_middle_path, Utils.getEdit(mEtName) + "/" + Utils.getEdit(mEtName) + "_" + "idCard_back" + ".jpg")
+                    idCard_path_back = ImageUtils.saveBitmap(mContext, getimage, FileUtil.getSDPath() + Constants.sdk_middle_path, photoName + "/" + photoPath + "_" + "idCard_back" + ".jpg")
                     mIvTakeIdPhotoBack!!.setBackgroundResource(0)
                     mIvTakeIdPhotoBack!!.setImageBitmap(getimage)
                     pathImgIdBack = ImageUtils.getStream(idCard_path_back)

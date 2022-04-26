@@ -83,31 +83,31 @@ class WaterMaskView @JvmOverloads constructor(context: Context, attrs: Attribute
     /*定位图片设置*/
     private fun setLocation(width: Int) {
         val layoutParams = ivLocation.layoutParams
-        layoutParams.width = (width*0.6).toInt()
-        layoutParams.height = (width*0.6).toInt()
+        layoutParams.width = (width * 0.6).toInt()
+        layoutParams.height = (width * 0.6).toInt()
         ivLocation.layoutParams = layoutParams
     }
 
 
     private var infos: MutableList<String> = ArrayList()
-    fun setLeftData(infos: MutableList<String>, width: Float,color: Int) {
+    fun setLeftData(infos: MutableList<String>, width: Float, color: Int) {
         this.infos = infos
-        setLeftAdapter(width,color)
+        setLeftAdapter(width, color)
         mLeftAdapter!!.addData(infos)
     }
 
     var location_: String? = null
 
     @SuppressLint("SetTextI18n")
-    fun setLocation(location: String?, width: Int,color:Int) {
+    fun setLocation(location: String?, width: Int, color: Int) {
         this.location_ = location
         if (location_.isNullOrEmpty()) {
             tvLocation.text = "无法定位"
         } else {
-            tvLocation.text = ":${location.toString()}"
+            tvLocation.text = "${location.toString()}"
             tvLocation.setTextColor(color)
             val layoutParams = tvLocation.layoutParams
-            layoutParams.width = (width*0.95).toInt()
+            layoutParams.width = (width * 0.95).toInt()
             tvLocation.layoutParams = layoutParams
         }
 
@@ -154,9 +154,9 @@ class WaterMaskView @JvmOverloads constructor(context: Context, attrs: Attribute
 
 
     var mLeftAdapter: BaseQuickAdapter<String?, BaseViewHolder>? = null
-    fun setLeftAdapter(width: Float,color: Int) {
+    fun setLeftAdapter(width: Float, color: Int) {
         val layoutParams = rlLeft.layoutParams
-        layoutParams.width = (width*0.95).toInt()
+        layoutParams.width = (width * 0.95).toInt()
         rlLeft.layoutParams = layoutParams
         rlLeft.adapter = object : BaseQuickAdapter<String?, BaseViewHolder>(R.layout.item_text_small) {
             override fun convert(holder: BaseViewHolder, item: String?) {

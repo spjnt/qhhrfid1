@@ -259,12 +259,19 @@ class RequestUtil(var context: Context) {
         params.add("ImgFile4", buffer4)
         params.add("Longitude", longitude)
         params.add("Latitude", latitude)
-        var category_ = if (category == "藏系牦牛") {
-            "藏系牦牛~IXO~990319~140248"
-        } else if (category == "藏系羊") {
-            "藏系羊~IXO~990320~140248"
-        } else {
-            category
+        val category_ = when (category) {
+            "藏系牦牛" -> {
+                "藏系牦牛~IXO~990319~140248"
+            }
+            "藏系羊" -> {
+                "藏系羊~IXO~990320~140248"
+            }
+            "能繁母猪" -> {
+                "能繁母猪~II6~990275~140971"
+            }
+            else -> {
+                category
+            }
         }
         params.add("Category", category_)
         params.add("BornDate", TimeUtil.getPastDate(date))
@@ -328,7 +335,7 @@ class RequestUtil(var context: Context) {
             AreaCode: String?, name: String, zjCategory: String?, Number: String?, ZjNumber: String?, SFZAddress: String?, BankName: String?, AccountName: String?, AccountNumber: String?, Mobile: String?, Area: String?, RaiseAddress: String?, Category: String?,
             CreateTime: String?, ZjPicture: String?, BankPicture: String?, remark: String?, updateTime: String?, backid: String?, isPoor: String,
             OverdueTime: String?, SignPicture: String?,
-            FBankCode: String?, FBankRelatedCode: String?, FStartTime: String?, FEnterpriseNature: String?, FEnterpriseNatureName: String?,
+            FBankCode: String?, FBankRelatedCode: String?, FStartTime: String?, FEnterpriseNature: String?, FEnterpriseNatureName: String?, companyNum: String?, employeeNum: String?,
             getString: GetRtnMessage,
     ) {
         val params = Params.createParams()
@@ -346,14 +353,24 @@ class RequestUtil(var context: Context) {
         params.add("RaiseAddress", RaiseAddress)
         params.add("Category", Category)
         params.add("CreateTime", CreateTime)
-        params.add("CompanyNumber", companyNum)
+        val com = if (companyNum.isNullOrEmpty()) {
+            PreferUtils.getString(context, Constants.companyNumber)
+        } else {
+            companyNum
+        }
+        params.add("CompanyNumber", com)
         params.add("ZjPicture", ZjPicture)
         params.add("BankPicture", BankPicture)
         params.add("remark", remark)
         params.add("UpdateTime", updateTime)
         params.add("ZjBackPicture", backid)
         params.add("isPoor", isPoor)
-        params.add("FEmployeeNumber", employNo)
+        val em = if (employeeNum.isNullOrEmpty()) {
+            PreferUtils.getString(context, Constants.userNumber)
+        } else {
+            employeeNum
+        }
+        params.add("FEmployeeNumber", em)
         params.add("OverdueTime", OverdueTime)
         params.add("SignPicture", SignPicture)
         params.add("FBankCode", FBankCode)

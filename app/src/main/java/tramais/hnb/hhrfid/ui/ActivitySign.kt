@@ -5,11 +5,10 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.text.Html
-import android.text.TextUtils
+import android.util.DisplayMetrics
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import com.bumptech.glide.Glide
 import tramais.hnb.hhrfid.R
 import tramais.hnb.hhrfid.base.BaseActivity
 import tramais.hnb.hhrfid.constant.Constants
@@ -34,6 +33,7 @@ class ActivitySign : BaseActivity() {
         setContentView(R.layout.activity_sign)
         hideAllTitle()
         fromOrientation = intent.getIntExtra("fromOrientation", ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+
     }
 
     override fun initView() {
@@ -46,6 +46,7 @@ class ActivitySign : BaseActivity() {
         about!!.text = Html.fromHtml(resources.getString(R.string.checkbox_text))
         rem_about = findViewById(R.id.iv_rem_pass)
         rem_about!!.isSelected = false
+        mLinePath.setPaintWidth(6)
     }
 
     var sign_common: String? = null
@@ -90,7 +91,7 @@ class ActivitySign : BaseActivity() {
                 // FileUtil.makeFilePath(path, childPaht)
                 mLinePath.save(path + childPaht)
                 val intent = Intent()
-              //  LogUtils.e("path + childPaht:"+(path + childPaht))
+                //  LogUtils.e("path + childPaht:"+(path + childPaht))
                 intent.putExtra(Sign_Path, path + childPaht)
                 setResult(Activity.RESULT_OK, intent)
                 finish()

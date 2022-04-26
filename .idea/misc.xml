@@ -31,7 +31,7 @@
         <entry key="..\:/qhhrfid/app/src/main/res/layout/activity_bao_an.xml" value="0.3880208333333333" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/activity_baoan_fenpei.xml" value="0.35885416666666664" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/activity_base.xml" value="0.3880208333333333" />
-        <entry key="..\:/qhhrfid/app/src/main/res/layout/activity_camera.xml" value="0.1" />
+        <entry key="..\:/qhhrfid/app/src/main/res/layout/activity_camera.xml" value="0.264" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/activity_camera_new.xml" value="0.3880208333333333" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/activity_camera_new2.xml" value="0.346875" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/activity_camera_only.xml" value="0.3880208333333333" />
@@ -83,6 +83,7 @@
         <entry key="..\:/qhhrfid/app/src/main/res/layout/dialog_choice_region.xml" value="0.3614583333333333" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/dialog_commom.xml" value="0.3880208333333333" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/dialog_delete.xml" value="0.3880208333333333" />
+        <entry key="..\:/qhhrfid/app/src/main/res/layout/dialog_down_load.xml" value="0.3880208333333333" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/dialog_edit.xml" value="0.3880208333333333" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/dialog_upload.xml" value="0.3880208333333333" />
         <entry key="..\:/qhhrfid/app/src/main/res/layout/fragment_animal_insure.xml" value="0.16927083333333334" />

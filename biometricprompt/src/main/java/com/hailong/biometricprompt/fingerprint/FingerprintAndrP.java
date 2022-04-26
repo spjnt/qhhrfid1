@@ -116,7 +116,7 @@ public class FingerprintAndrP implements IFingerprint {
         @Override
         public void onAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result) {
             super.onAuthenticationSucceeded(result);
-            Log.e(" result  P", "" + result.getCryptoObject().getCipher().toString());
+          //  Log.e(" result  P", "" + result.getCryptoObject().getCipher().toString());
             if (fingerprintCallback != null)
                 fingerprintCallback.onSucceeded();
         }

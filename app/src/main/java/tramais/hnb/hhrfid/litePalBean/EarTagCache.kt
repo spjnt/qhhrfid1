@@ -1,15 +1,7 @@
-package tramais.hnb.hhrfid.litePalBean;
+package tramais.hnb.hhrfid.litePalBean
 
-import org.litepal.crud.LitePalSupport;
+import org.litepal.crud.LitePalSupport
 
-public class EarTagCache extends LitePalSupport {
-    String earTag;
-
-    public String getEarTag() {
-        return earTag;
-    }
-
-    public void setEarTag(String earTag) {
-        this.earTag = earTag;
-    }
+class EarTagCache : LitePalSupport() {
+    var earTag: String? = null
 }

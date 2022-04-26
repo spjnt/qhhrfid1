@@ -19,7 +19,6 @@ import tramais.hnb.hhrfid.net.Params
 import tramais.hnb.hhrfid.net.RequestUtil
 import tramais.hnb.hhrfid.util.GsonUtil.Companion.instant
 import tramais.hnb.hhrfid.util.PreferUtils
-import java.util.*
 
 
 class DownloadService : Service() {
@@ -52,26 +51,11 @@ class DownloadService : Service() {
     }
 
     fun getAddress() {
-
         RequestUtil.getInstance(this)!!.address(object : GetCommon<Address> {
             override fun getCommon(t: Address) {
 
             }
         })
-
-
-    }
-
-    fun getRegion() {
-
-        RequestUtil.getInstance(this)!!.getRegion(object : GetCommon<Region> {
-            override fun getCommon(t: Region) {
-//                data = t.data
-//                etAreaName!!.text = t.fProvince + t.fCity + t.fCounty
-            }
-        })
-
-
     }
 
     private fun getDept() {
@@ -110,7 +94,6 @@ class DownloadService : Service() {
                 val cache = BankInfoCache()
                 cache.jsonString = toJSONString
                 cache.save()
-
                 print("getBankInfos")
             }
         })
@@ -156,7 +139,7 @@ class DownloadService : Service() {
      }
  */
     private val regions: Unit
-         get() {
+        get() {
             deleteAll(RegionCache::class.java)
             val params = Params.createParams()
             params.add("fnumber", PreferUtils.getString(this, Constants.FXZCode))
@@ -187,7 +170,7 @@ class DownloadService : Service() {
                             datas.add(dataBean)
                         }
                         cache.data = datas
-                       cache.save()
+                        cache.save()
                     }
 
 
@@ -202,18 +185,15 @@ class DownloadService : Service() {
             })
         }
     private val roles: Unit
-        private get() {
+        get() {
             deleteAll(RoleCache::class.java)
             RequestUtil.getInstance(this)!!.getRoler(PreferUtils.getString(this, Constants.account)) { rtnCode, message, totalNums, datas ->
                 if (datas != null && datas.size > 0) {
                     val cache = RoleCache()
                     cache.json = datas.toJSONString()
                     cache.save()
-
-                    // downLoad_num++
                     print("roles")
                 } else {
-                    // downLoad_num++
                     print("roles")
                 }
             }
@@ -416,32 +396,33 @@ class DownloadService : Service() {
         }
 
     private fun saveCache(underWrites: List<FarmList>?) {
-        LitePal.deleteAll(FarmListCache::class.java)
+        // LitePal.deleteAll(FarmListCache::class.java)
         if (underWrites != null && underWrites.isNotEmpty()) {
             for (item in underWrites) {
-                //   where("ZjNumber =?", item.zjNumber).findAsync(FarmListCache::class.java).listen { list: List<FarmListCache?>? ->
-                //  if (list == null || list.isEmpty()) {
-                val cache = FarmListCache()
-                cache.accountName = item.accountName
-                cache.accountNumber = item.accountNumber
-                cache.area = item.area
-                cache.bankName = item.bankName
-                cache.category = item.category
-                cache.mobile = item.mobile
-                cache.name = item.name
-                cache.number = item.number
-                cache.raiseAddress = item.raiseAddress
-                cache.sFZAddress = item.sfzAddress
-                cache.zjCategory = item.zjCategory
-                cache.zjNumber = item.zjNumber
-                cache.creatTime = item.createTime
-                cache.isUpLoad = "1"
-                cache.isPoor = item.isPoor.toString()
-                cache.singPic = item.signPicture
-                cache.overdueTime = item.fValidate
-                cache.save()
-                //   }
-                //  }
+                LitePal.where("zjNumber =?", item.zjNumber).findAsync(FarmListCache::class.java).listen { list: List<FarmListCache?>? ->
+                    if (list == null || list.isEmpty()) {
+                        val cache = FarmListCache()
+                        cache.accountName = item.accountName
+                        cache.accountNumber = item.accountNumber
+                        cache.area = item.area
+                        cache.bankName = item.bankName
+                        cache.category = item.category
+                        cache.mobile = item.mobile
+                        cache.name = item.name
+                        cache.number = item.number
+                        cache.raiseAddress = item.raiseAddress
+                        cache.sFZAddress = item.sfzAddress
+                        cache.zjCategory = item.zjCategory
+                        cache.zjNumber = item.zjNumber
+                        cache.creatTime = item.createTime
+                        cache.isUpLoad = "1"
+                        cache.isPoor = item.isPoor.toString()
+                        cache.singPic = item.signPicture
+                        cache.overdueTime = item.fValidate
+                        cache.fStartime = item.fStartTime
+                        cache.save()
+                    }
+                }
             }
             // downLoad_num++
             print("saveCache")

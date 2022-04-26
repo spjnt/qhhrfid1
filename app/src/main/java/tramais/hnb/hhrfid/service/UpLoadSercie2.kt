@@ -1,9 +1,7 @@
 package tramais.hnb.hhrfid.service
 
-import android.annotation.SuppressLint
 import android.app.Service
 import android.content.Intent
-import android.os.AsyncTask
 import android.os.IBinder
 import android.text.TextUtils
 import com.apkfuns.logutils.LogUtils
@@ -34,11 +32,11 @@ class UpLoadSercie2 : Service(), CoroutineScope by MainScope() {
     }
 
 
-   /* @SuppressLint("StaticFieldLeak")
-    private inner class PraseAllData : AsyncTask<Void?, Void?, Any?>() {
-        @Deprecated("Deprecated in Java")
-        override fun doInBackground(vararg params: Void?): Any {
-            *//*上传农户信息 *//*
+    /* @SuppressLint("StaticFieldLeak")
+     private inner class PraseAllData : AsyncTask<Void?, Void?, Any?>() {
+         @Deprecated("Deprecated in Java")
+         override fun doInBackground(vararg params: Void?): Any {
+             *//*上传农户信息 *//*
             upLoadFarmer { str_farm ->
                 sendBroadCast(str_farm)
                 if (str_farm.contains("养殖户信息上传完成")) {
@@ -152,9 +150,9 @@ class UpLoadSercie2 : Service(), CoroutineScope by MainScope() {
                                         farmer_sign = item
                                     }
                             }
-                        RequestUtil.getInstance(this)!!.saveFarmer("", item.name.toString(), item.zjCategory, item.number, item.zjNumber, item.sFZAddress, item.bankName,
+                        RequestUtil.getInstance(this)!!.saveFarmer(item.fRegionNumber, item.name.toString(), item.zjCategory, item.number, item.zjNumber, item.sFZAddress, item.bankName,
                                 item.accountName, item.accountNumber, item.mobile, item.area, item.raiseAddress, item.category, item.creatTime, id_path, bank_path, item.remark,
-                                item.upDateTime, id_back_path, item.isPoor.toString(), item.overdueTime, farmer_sign, item.FBankCode, item.FBankRelatedCode, item.FStartime, item.natureCode, item.natureName) { rtnCode, str_farmer: String ->
+                                item.upDateTime, id_back_path, item.isPoor.toString(), item.overdueTime, farmer_sign, item.FBankCode, item.FBankRelatedCode, item.fStartime, item.natureCode, item.natureName, item.comNumber, item.empNumber) { rtnCode, str_farmer: String ->
                             if (rtnCode >= 0) {
                                 getOneString.getString("养殖户信息:${item.name}上传成功")
                                 val cache = FarmListCache()
@@ -303,46 +301,6 @@ class UpLoadSercie2 : Service(), CoroutineScope by MainScope() {
                     }
                 }
                 LogUtils.e("measureTimeMillis  $measureTimeMillis")
-                /* for (index in 0 until uploadS.size) {
-                     upLoadLableOneByOne(uploadS, index, getOneString)
-                 }*/
-
-
-                /*  val img_path: MutableList<String?> = ArrayList()
-                 for (index in 0 until uploadS.size) {
-                     LogUtils.e("index  $index")
-
-
-                             val saveCache = uploadS[index]
-                             img_path.clear()
-                             val lableNum: String? = saveCache.lableNum
-                             if (saveCache.img1 != null)
-                                 img_path.add(saveCache.img1)
-                             if (saveCache.img2 != null)
-                                 img_path.add(saveCache.img2)
-                             if (saveCache.img3 != null)
-                                 img_path.add(saveCache.img3)
-                             if (saveCache.img4 != null)
-                                 img_path.add(saveCache.img4)
-                             upLoadFile(this, "耳标照片", lableNum, img_path, GetList { list_lable ->
-                                 if (list_lable.size == img_path.size)
-
-                                     RequestUtil.getInstance(this)!!.saveAnimal(
-                                             saveCache.lableNum, saveCache.farmID, list_lable, saveCache.animalType, saveCache.ageMonth, saveCache.latitude, saveCache.longitude, saveCache.employeeNumber, saveCache.comPanyNumber,
-                                     ) { rtnCode: Int, message: String ->
-                                         if (rtnCode >= 0) {
-                                             val cache = AnimalSaveCache()
-                                             cache.isUpLoad = "1"
-                                             cache.statu = "在保"
-                                             getOneString.getString("耳标信息:${lableNum}上传成功")
-                                             cache.updateAll("LableNum =? ", lableNum)
-                                         } else {
-                                             getOneString.getString("农户:${saveCache.farmName}耳标信息:${lableNum}上传失败")
-                                         }
-
-                                     }
-                             })
-            }*/
 
             } else {
                 getOneString.getString("耳标信息上传完成")

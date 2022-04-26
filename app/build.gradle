@@ -11,10 +11,10 @@ android {
     compileSdkVersion 31
     buildToolsVersion "30.0.3"
     defaultConfig {
-        applicationId "tramais.hnb.hhrfid.test"//.test
+        applicationId "tramais.hnb.hhrfid"//.test
         minSdkVersion 21
-        versionCode 301
-        versionName "3.01"
+        versionCode 318
+        versionName "3.18"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 //        ndk {
 //            // 设置支持的SO库架构
@@ -110,7 +110,7 @@ dependencies {
     //轮播图
     implementation 'com.github.pinguo-zhouwei:MZBannerView:v2.0.2'
     //国源SDK
-    implementation('com.grandtech.common:standard_sdk_qh_prod:0.0.0.0.3:@aar') {  transitive = true }
+    implementation('com.grandtech.common:standard_sdk_qh_prod:0.0.0.0.4:@aar') {  transitive = true }
    // implementation('com.grandtech.common:standard_sdk_qh_prod:0.0.0.0.1:@aar') {  transitive = true }
     // implementation('com.grandtech.common:standard_sdk_prod:0.0.0.1.5:@aar') { transitive = true }
     implementation 'com.github.bumptech.glide:glide:4.13.0'

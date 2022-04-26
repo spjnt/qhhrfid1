@@ -2,7 +2,6 @@ package tramais.hnb.hhrfid.util
 
 import android.content.Context
 import android.text.TextUtils
-import com.apkfuns.logutils.LogUtils
 import tramais.hnb.hhrfid.bean.HttpBean
 import tramais.hnb.hhrfid.constant.Config
 import tramais.hnb.hhrfid.constant.Constants
@@ -12,7 +11,6 @@ import tramais.hnb.hhrfid.interfaces.OkResponseInterface
 import tramais.hnb.hhrfid.net.OkhttpUtil
 import tramais.hnb.hhrfid.net.Params
 import java.util.*
-import kotlin.system.measureTimeMillis
 
 object UpLoadFileUtil {
     fun upLoadFile(context: Context?, category: String?, num: String?, paths: List<String?>?, getList: GetList) {
@@ -62,7 +60,7 @@ object UpLoadFileUtil {
     }
 
     fun upLoadFile(context: Context?, category: String, num: String?, item: String?, serial: Int, getList: GetOneString) {
-        //  LogUtils.e("category  $category   $num  $item   $serial")
+        // LogUtils.e("category  $category   $num  $item   $serial")
         if (item.isNullOrEmpty() || (!item.isNullOrEmpty() && item.contains("http"))) {
             if (!item.isNullOrEmpty() && item.contains("http"))
                 getList.getString(item)
@@ -74,8 +72,14 @@ object UpLoadFileUtil {
 
 
         val params = Params.createParams()
-        val measureTimeMillis = measureTimeMillis { ImageUtils.getStream(item) }
-        LogUtils.e("me  $measureTimeMillis")
+//        val measureTimeMillis = measureTimeMillis { ImageUtils.getStream(item) }
+//        LogUtils.e("me  $measureTimeMillis")
+    /*    val steam = if (category == "耳标照片") {
+            ImageUtils.getStream(item)
+        } else {
+            ImageUtils.getStreamT(item)
+        }*/
+        //  LogUtils.e("stream  $steam")
         params.add("picture", ImageUtils.getStream(item))
         when (category) {
             "身份证" -> params.add("filename", "sfz${num}.jpg")
@@ -98,6 +102,7 @@ object UpLoadFileUtil {
         OkhttpUtil.getInstance(context).doPosts(Config.UploadPicture, params, object : OkResponseInterface {
             override fun onSuccess(bean: HttpBean, id: Int) {
                 val response = bean.response
+                // LogUtils.e("response  $response")
                 if (!TextUtils.isEmpty(response)) {
                     val picUrl = response.substring(1, response.length - 1)
                     getList.getString(picUrl)
@@ -107,6 +112,7 @@ object UpLoadFileUtil {
             }
 
             override fun onError(e: Exception) {
+                getList.getString("")
                 System.gc()
             }
         })

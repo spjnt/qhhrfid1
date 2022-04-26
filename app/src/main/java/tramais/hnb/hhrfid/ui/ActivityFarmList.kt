@@ -284,6 +284,10 @@ class ActivityFarmList : BaseActivity() {
         _cache_to.clear()
         fluentQuery.findAsync(FarmListCache::class.java).listen { list: List<FarmListCache> ->
             total = list.size
+            if (list.isNullOrEmpty()){
+                showStr("未匹配到相同数据")
+                return@listen
+            }
             _cache_to.addAll(list.toMutableList())
 
             // LogUtils.e("total  $total  ${_cache_to.size}")
@@ -316,6 +320,7 @@ class ActivityFarmList : BaseActivity() {
                 list.zjNumber = item.zjNumber
                 list.signPicture = item.singPic
                 list.fValidate = item.overdueTime
+                list.fStartTime = item.fStartime
                 list.isPoor = if (item.isPoor.isNullOrEmpty()) {
                     0
                 } else {
@@ -335,13 +340,14 @@ class ActivityFarmList : BaseActivity() {
     var total = 0
     private fun getUnderList(input: String, PageIndex: Int, module_name: String) {
         // if (writes != null) writes!!.clear()
-        showAvi()
+
         val flag = if (module_name == "种植险") {
             module_name
         } else {
             "养殖险"
         }
         if (NetUtil.checkNet(this)) {
+            showAvi()
            // LogUtils.e("come in  with  net  $input")
             RequestUtil.getInstance(context)!!.getUnderList(input, PageIndex, flag, module_name) { rtnCode: Int, meg: String?, totalNums: Int, datas: JSONArray? ->
                 hideAvi()

@@ -11,7 +11,7 @@ public interface Constants {
     String json = "json";
     String risk = "risk";
     String loss = "loss";
-
+    String tips_time = "tips_time";
     String Sign_Common = "Sign_Common";
     String MAIN_HEAG_BG = "MAIN_HEAG_BG";
     String ROLE = "ROLES";
@@ -54,10 +54,12 @@ public interface Constants {
     String lon = "lon";
     String lat = "lat";
     String cache_time = "cache_time";
+    String cache_time_com = "cache_time_com";
     String c72_power = "c72_power";
     String sdk_middle_path = "/QNBTramais/Data/承保人信息/";
     String sdk_first_path = "/UpLoadFile/";
     String sdk_middle_animal = "/QNBTramais/Data/";
+    String sdk_middle_db = "/QNBTramais/Data/Database/";
     String sdk_camer = "/QNBTramais/Photo/";
     String sdk_banner = "/QNBTramais/Data/Banner";
     String sdk_qr = "/QNBTramais/Data/Qr/";

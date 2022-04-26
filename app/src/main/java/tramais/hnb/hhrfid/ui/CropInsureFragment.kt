@@ -14,10 +14,13 @@ import tramais.hnb.hhrfid.bean.ModuleBean
 import tramais.hnb.hhrfid.bean.Roles
 import tramais.hnb.hhrfid.constant.Constants
 import tramais.hnb.hhrfid.interfaces.RecyclerItemClickListener
-import tramais.hnb.hhrfid.util.Utils
 import tramais.hnb.hhrfid.lv.MainModuleAdapter
-import tramais.hnb.hhrfid.ui.crop.*
-import java.util.*
+import tramais.hnb.hhrfid.ui.crop.CropBaoAnChoiceActivity
+import tramais.hnb.hhrfid.ui.crop.CropInsureCheckPublic
+import tramais.hnb.hhrfid.ui.crop.CropStandardActivity
+import tramais.hnb.hhrfid.ui.crop.CropSyncPayment
+import tramais.hnb.hhrfid.util.PreferUtils
+import tramais.hnb.hhrfid.util.Utils
 
 class CropInsureFragment : BaseFragment() {
     private var crop_rv: RecyclerView? = null
@@ -166,14 +169,23 @@ class CropInsureFragment : BaseFragment() {
             override fun onClick(view: View?, position: Int, name: String?) {
                 when (name) {
 
-                    "承保验标" -> if (haveRoles("承保", "承保验标"))
-                        Utils.goToNextUI(CropStandardActivity::class.java)
-                    else
-                        tips()
+                    "承保验标" -> {
+                        val fxzCode = PreferUtils.getString(requireContext(), Constants.FXZCode)
+                        if (fxzCode.isNotEmpty() && fxzCode.endsWith("00")) {
+                            "该账号,不可承保验标".showStr()
+                            return
+                        }
+                        if (haveRoles("承保", "承保验标"))
+                            Utils.goToNextUI(CropStandardActivity::class.java)
+                        else
+                            tips()
+                    }
+
+
                     "新建投保单" ->
 
                         if (haveRoles("承保", "新建投保单")) {
-                            var intent = Intent(context, CropBaoAnChoiceActivity::class.java)
+                            val intent = Intent(context, CropBaoAnChoiceActivity::class.java)
                             intent.putExtra(Constants.SO_WHAT, "Fragment")
                             startActivity(intent)
                         } else

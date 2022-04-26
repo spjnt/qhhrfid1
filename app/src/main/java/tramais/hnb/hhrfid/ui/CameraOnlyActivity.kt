@@ -25,6 +25,7 @@ import kotlinx.coroutines.withContext
 import tramais.hnb.hhrfid.R
 import tramais.hnb.hhrfid.base.BaseActivity
 import tramais.hnb.hhrfid.bean.FenPei
+import tramais.hnb.hhrfid.constant.Config
 import tramais.hnb.hhrfid.constant.Constants
 import tramais.hnb.hhrfid.listener.MyLocationListener
 import tramais.hnb.hhrfid.ui.dialog.DialogImg
@@ -118,7 +119,7 @@ class CameraOnlyActivity : BaseActivity() {
         try {
             val waterBitmap = WaterMaskUtil.loadBitmapFromView(waterMaskView)
             val watermarkBitmap = WaterMaskUtil.createWaterMaskLeftBottom(this, sourBitmap, waterBitmap, 0, 0)
-            return ImageUtils.saveBitmap(this, watermarkBitmap, path_, name_)
+            return ImageUtils.saveBitmap(this, watermarkBitmap, path_, name_,90)
         } catch (e: Exception) {
             LogUtils.e("e  ${e.message}")
         }
@@ -254,7 +255,7 @@ class CameraOnlyActivity : BaseActivity() {
                 _file?.let {
                     cdpath = "$sdk_path${TimeUtil.getTime(Constants.yyyy__MM__dd)}/"
                     val photo_name = famername + "_" + System.currentTimeMillis().toString() + ".jpg"
-                    val decodeByteArray = decodeBitmap(it, it.size)
+                    val decodeByteArray = decodeBitmap(it/*, it.size*/) ?: return
                     LuBan(decodeByteArray, cdpath, photo_name, crators, waterInfos)
                 }
             }
@@ -275,13 +276,17 @@ class CameraOnlyActivity : BaseActivity() {
         }
     }
 
-    private fun decodeBitmap(buffer: ByteArray, length: Int): Bitmap {
-        val bitmap = BitmapFactory.decodeByteArray(buffer, 0, length, bitmapOptions)
+    private fun decodeBitmap(buffer: ByteArray): Bitmap? {
+        if (buffer.isEmpty()) return null
+        val bitmap = BitmapFactory.decodeByteArray(buffer, 0, buffer.size/*, bitmapOptions*/)
         val matrix = Matrix()
-        if (bitmap.width > bitmap.height) {
+        val width = bitmap.width
+        val height = bitmap.height
+        if (width <= 0 || height <= 0) return null
+        if (width > height) {
             matrix.postRotate(90f)
         }
-        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+        return Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true)
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
@@ -295,7 +300,8 @@ class CameraOnlyActivity : BaseActivity() {
         super.onResume()
     }
 
-    fun LuBan(bitMap: Bitmap, path_: String, photo_name: String, crators: MutableList<String>, waterInfos: MutableList<String>) {
+    fun LuBan(bitMap: Bitmap?, path_: String, photo_name: String, crators: MutableList<String>, waterInfos: MutableList<String>) {
+        if (bitMap == null) return
         try {
             Luban.with(this)               //(可选)Lifecycle,可以不填写内部使用ProcessLifecycleOwner
                     .load(bitMap)                       //支持 File,Uri,InputStream,String,Bitmap 和以上数据数组和集合
@@ -303,10 +309,10 @@ class CameraOnlyActivity : BaseActivity() {
                     .concurrent(true)                //(可选)多文件压缩时是否并行,内部优化线程并行数量防止OOM
                     .useDownSample(true)             //(可选)压缩算法 true采用邻近采样,否则使用双线性采样(纯文字图片效果绝佳)
                     .format(Bitmap.CompressFormat.JPEG)//(可选)压缩后输出文件格式 支持 JPG,PNG,WEBP
-                    .ignoreBy(2048)                   //(可选)期望大小,大小和图片呈现质量不能均衡所以压缩后不一定小于此值,
-                    .quality(98)                     //(可选)质量压缩系数  0-100
+                    .ignoreBy(1024 * 2)                   //(可选)期望大小,大小和图片呈现质量不能均衡所以压缩后不一定小于此值,
+                    .quality(90)                     //(可选)质量压缩系数  0-100
                     // .rename { name_ }             //(可选)文件重命名
-                    .filter { true }             //(可选)过滤器
+                    .filter { it != null }             //(可选)过滤器
                     .compressObserver {
                         onSuccess = {
                             // LogUtils.e("it.absolutePath   ${it.absolutePath}")

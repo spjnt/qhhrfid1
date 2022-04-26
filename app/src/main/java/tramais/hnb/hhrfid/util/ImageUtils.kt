@@ -2,13 +2,15 @@ package tramais.hnb.hhrfid.util
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.media.ExifInterface
 import android.net.Uri
 import android.text.TextUtils
 import android.util.Base64
 import com.apkfuns.logutils.LogUtils
-import tramais.hnb.hhrfid.constant.Constants
+import tramais.hnb.hhrfid.constant.Config
 import java.io.*
 
 object ImageUtils {
@@ -52,52 +54,22 @@ object ImageUtils {
         return compressImage(bitmap) //再进行质量压缩
     }
 
-    fun getStreamT(photoPathurl: String?): String? {
-        if (TextUtils.isEmpty(photoPathurl)) {
-            return null
-        }
-        var isI: InputStream? = null
-        var data: ByteArray? = null
-        var result: String? = null
-        try {
-            isI = FileInputStream(photoPathurl)
-            //创建一个字符流大小的数组。
-            data = ByteArray(isI.available())
-            //写入数组
-            isI.read(data)
-            //用默认的编码格式进行编码
-            result = Base64.encodeToString(data, Base64.DEFAULT)
-        } catch (e: java.lang.Exception) {
-            LogUtils.e("expr " + e.message)
-            e.printStackTrace()
-        } finally {
-            if (null != isI) {
-                try {
-                    isI.close()
-                    System.gc()
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                    LogUtils.e("e " + e.message)
-                }
-            }
-        }
-        return result
-    }
-
-    fun getStream(photoPathurl: String?): String {
-        if (TextUtils.isEmpty(photoPathurl) || photoPathurl === "null") return ""
+  /*  fun getStreamT(photoPathurl: String?): String {
+        if (TextUtils.isEmpty(photoPathurl)) return ""
         if (!File(photoPathurl).isFile) return ""
         val decodeFile = getimageOnly(BitmapFactory.decodeFile(photoPathurl))
         return bitmapToBase64(decodeFile)!!
-        /*var uploadBuffer: String = ""
+
+    }*/
+
+    fun getStream(photoPathurl: String?): String {
+        var uploadBuffer: String = ""
 
         var fin: FileInputStream? = null
         val baos = ByteArrayOutputStream()
         try {
             fin = FileInputStream(photoPathurl)
-
             val buffer = ByteArray(1024)
-
             var count = 0
             while (fin.read(buffer).also { count = it } != -1) {
                 baos.write(buffer, 0, count)
@@ -106,25 +78,26 @@ object ImageUtils {
             baos.close()
             fin.close()
             uploadBuffer = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT)
-
+            baos.reset()
         } catch (e: Exception) {
             LogUtils.e("bitmapToBase64  e" + e.message)
             e.printStackTrace()
 
         }
-        return uploadBuffer*/
+        return uploadBuffer
     }
 
-    fun bitmapToBase64(bitmap: Bitmap?): String? {
+ /*   fun bitmapToBase64(bitmap: Bitmap?): String? {
         var result: String? = null
         var baos: ByteArrayOutputStream? = null
         try {
             if (bitmap != null) {
                 baos = ByteArrayOutputStream()
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 60, baos)
+                bitmap.compress(Bitmap.CompressFormat.JPEG, Config.img_quality_small, baos)
                 baos.flush()
                 baos.close()
                 val bitmapBytes = baos.toByteArray()
+                baos.reset()
                 result = Base64.encodeToString(bitmapBytes, Base64.DEFAULT)
             }
         } catch (e: IOException) {
@@ -142,75 +115,25 @@ object ImageUtils {
             }
         }
         return result
-    }
+    }*/
 
-    /**
-     * 绘制文字到右下角
-     *
-     * @param context
-     * @param
-     */
-    fun drawTextToRightBottom(context: Context, url: String?, epc: String, lat_lon: String, address: String): Bitmap? {
-        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-        paint.color = Color.RED
-        paint.textSize = dp2px(context, 6.0f).toFloat()
-        val bounds = Rect()
-
-//        paint.getTextBounds(ids, 0, ids.length(), bounds);
-        val bitmap = getimage(url)
-        return drawTextToBitmap(context, bitmap, epc, lat_lon, address, paint, bounds,
-                dp2px(context, 3f), bitmap!!.height - bounds.height() - dp2px(context, 3f))
-    }
-
-    //图片上绘制文字
-    private fun drawTextToBitmap(context: Context, bitmap: Bitmap?, epc: String, lat_lon: String, address: String,
-                                 paint: Paint, bounds: Rect, paddingLeft: Int, paddingTop: Int): Bitmap? {
-        var bitmap = bitmap
-        var bitmapConfig = bitmap!!.config
-        paint.isDither = true // 获取跟清晰的图像采样
-        paint.isFilterBitmap = true // 过滤一些
-        if (bitmapConfig == null) {
-            bitmapConfig = Bitmap.Config.RGB_565
-        }
-        bitmap = bitmap.copy(bitmapConfig, true)
-        val canvas = Canvas(bitmap)
-        val nowTime = TimeUtil.getTime(Constants.yyyy_MM_ddHHmmss)
-        canvas.drawText("PICC", paddingLeft.toFloat(), (paddingTop - 200).toFloat(), paint)
-        canvas.drawText("验标员:" + PreferUtils.getString(context, Constants.UserName), paddingLeft.toFloat(), (paddingTop - 160).toFloat(), paint)
-        canvas.drawText(epc, paddingLeft.toFloat(), (paddingTop - 120).toFloat(), paint)
-        canvas.drawText("时间:$nowTime", paddingLeft.toFloat(), (paddingTop - 80).toFloat(), paint)
-        canvas.drawText(lat_lon, paddingLeft.toFloat(), (paddingTop - 40).toFloat(), paint)
-        if (!lat_lon.contains("查勘地点")) canvas.drawText("地址:$address", paddingLeft.toFloat(), paddingTop.toFloat(), paint)
-        return bitmap
-    }
-
-    /**
-     * dip转pix
-     *
-     * @param context
-     * @param dp
-     * @return
-     */
-    fun dp2px(context: Context, dp: Float): Int {
-        val scale = context.resources.displayMetrics.density
-        return (dp * scale + 0.5f).toInt()
-    }
 
     @JvmStatic
     fun saveBitmap(context: Context?, bitmap: Bitmap?, path: String?, photoName: String?, quality: Int? = 80): String {
         // 首先保存图片
-        val appDir = File(path)
-        if (!appDir.exists()) {
+        val appDir = path?.let { File(it) }
+        if (!appDir!!.exists()) {
             appDir.mkdir()
         }
         //LogUtils.e("quality  $quality")
-        val file = File(appDir, photoName)
-        if (!file.parentFile.exists()) file.parentFile.mkdirs()
+        val file = photoName?.let { File(appDir, it) }
+        if (!file!!.parentFile?.exists()!!) file.parentFile?.mkdirs()
         try {
             val fos = FileOutputStream(file)
             bitmap!!.compress(Bitmap.CompressFormat.JPEG, quality!!, fos)
             fos.flush()
             fos.close()
+            //  bitmap.recycle()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -228,7 +151,7 @@ object ImageUtils {
             val w = newOpts.outWidth
             val h = newOpts.outHeight
             // 现在主流手机比较多是800*480分辨率，所以高和宽我们设置为
-            val hh = 2160f // 这里设置高度为800f
+            val hh = 800f// 这里设置高度为800f
             val ww = 480f // 这里设置宽度为480f
             // 缩放比。由于是固定比例缩放，只用高或者宽其中一个数据进行计算即可
             var be = 2 // be=1表示不缩放
@@ -248,30 +171,14 @@ object ImageUtils {
         return null
     }
 
-    fun getimageOnly(image: Bitmap?): Bitmap? {
-        if (image != null) {
-            val baos = ByteArrayOutputStream()
-            image.compress(Bitmap.CompressFormat.JPEG, 60, baos) //质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
-            var options = 100
-            while (baos.toByteArray().size / 1024 > 1024) {  //循环判断如果压缩后图片是否大于100kb,大于继续压缩
-                baos.reset() //重置baos即清空baos
-                //第一个参数 ：图片格式 ，第二个参数： 图片质量，100为最高，0为最差  ，第三个参数：保存压缩后的数据的流
-                image.compress(Bitmap.CompressFormat.JPEG, options, baos) //这里压缩options，把压缩后的数据存放到baos中
-                options -= 10 //每次都减少10
-                if (options <= 0) break
-            }
-            val isBm = ByteArrayInputStream(baos.toByteArray()) //把压缩后的数据baos存放到ByteArrayInputStream中
-            return BitmapFactory.decodeStream(isBm, null, null) //把ByteArrayInputStream数据生成图片
-        }
-        return null
-    }
+
 
     fun compressImage(image: Bitmap?): Bitmap? {
         if (image != null) {
             val baos = ByteArrayOutputStream()
-            image.compress(Bitmap.CompressFormat.JPEG, 90, baos) //质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
+            image.compress(Bitmap.CompressFormat.JPEG, Config.img_quality_common, baos) //质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
             var options = 100
-            while (baos.toByteArray().size / 1024 > 500) {  //循环判断如果压缩后图片是否大于100kb,大于继续压缩
+            while (baos.toByteArray().size / 1024 > 1024) {  //循环判断如果压缩后图片是否大于100kb,大于继续压缩
                 baos.reset() //重置baos即清空baos
                 //第一个参数 ：图片格式 ，第二个参数： 图片质量，100为最高，0为最差  ，第三个参数：保存压缩后的数据的流
                 image.compress(Bitmap.CompressFormat.JPEG, options, baos) //这里压缩options，把压缩后的数据存放到baos中

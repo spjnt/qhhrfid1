@@ -45,15 +45,8 @@ class ActivityFile : BaseActivity() {
                         hideAvi()
                         delay(upload_i)
                     }
-
                     deal(isDeal = false)
-
                 }
-                /*4 -> {
-                    val mes = msg.obj as String
-                    LogUtils.e("currentIndex   $mes   ${Thread.currentThread().name}")
-                    mEarNum!!.text = "待上传数量 (${mes}/${animalSize})"
-                }*/
             }
         }
     }
@@ -98,11 +91,14 @@ class ActivityFile : BaseActivity() {
     @SuppressLint("SetTextI18n")
     private fun deal(isDeal: Boolean) {
         upload_i = 0
-        val find = LitePal.where("isUpLoad=?", "0").find(FarmListCache::class.java)
+        //where("isUpLoad=?", "0").
+        val find = LitePal.where("isUpLoad =?", "0").find(FarmListCache::class.java)
         if (isDeal)
             farmSize = find.size
         mTvFarm!!.text = "待上传数量 ${find.size}"
         upload_i += find.size
+        //"farmname =?", "尕玛才仁"      "isUpLoad=?", "0"
+        //where("isUpLoad=?", "0")
         val find1 = LitePal.where("isUpLoad=?", "0").find(AnimalSaveCache::class.java)
         if (isDeal)
             animalSize = find1.size
@@ -146,7 +142,6 @@ class ActivityFile : BaseActivity() {
      public fun onEvent(message: MessageEvent) {
          val texg = message.data
          LogUtils.e("textg  $texg")
-
          runOnUiThread { mEarNum!!.text = "待上传数量 (${texg}/${animalSize})" }
      }
  */

@@ -12,6 +12,7 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.alibaba.fastjson.JSONObject
+import com.apkfuns.logutils.LogUtils
 import com.gyf.immersionbar.ktx.immersionBar
 import com.rscja.deviceapi.RFIDWithUHF
 import com.rscja.deviceapi.exception.ConfigurationException
@@ -89,7 +90,20 @@ class SettingFragment : BaseFragment() {
             if (image_total > 0) {
                 mIvPhotos!!.text = image_total.toString() + "张"
             }
-
+            val color_str = PreferUtils.getString(context, Constants.color_str)
+            val color_int = PreferUtils.getInt(context, Constants.color_int)
+            LogUtils.e("color_int  $color_int")
+            try {
+                if (!color_str.isNullOrEmpty() && color_int != -1) {
+                    mTvColor!!.text = color_str.toString()
+                    mTvCologBg!!.setBackgroundColor(requireActivity().resources.getColor(color_int))
+                } else {
+                    mTvColor!!.text = colors[0].colorStr
+                    mTvCologBg!!.setBackgroundColor(requireActivity().resources.getColor(colors[0].colorInt))
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
 
         }
     }
@@ -119,16 +133,6 @@ class SettingFragment : BaseFragment() {
             mTvPhone!!.text = "手机: $mobile"
             mTvCompany!!.text = "公司: $companName"
         }
-
-        val color_str = PreferUtils.getString(context, Constants.color_str)
-        val color_int = PreferUtils.getInt(context, Constants.color_int)
-        if (color_str.isNullOrEmpty() && color_int == -1) {
-            mTvColor!!.text = colors[0].colorStr
-            mTvCologBg!!.setBackgroundColor(resources.getColor(colors[0].colorInt))
-        } else {
-            mTvColor!!.text = color_str
-            mTvCologBg!!.setBackgroundColor(resources.getColor(color_int))
-        }
     }
 
 
@@ -154,8 +158,8 @@ class SettingFragment : BaseFragment() {
         }
     }
 
-    val colors: MutableList<ColorChoiceBean> = mutableListOf(ColorChoiceBean("红色", R.color.new_theme),
-            ColorChoiceBean("绿色", R.color.f08c792),
+    private val colors: MutableList<ColorChoiceBean> = mutableListOf(
+            ColorChoiceBean("红色", R.color.new_theme), ColorChoiceBean("绿色", R.color.f08c792),
             ColorChoiceBean("蓝色", R.color.login_button), ColorChoiceBean("橙色", R.color.orange),
             ColorChoiceBean("黑色", R.color.black), ColorChoiceBean("白色", R.color.white))
 
@@ -165,13 +169,14 @@ class SettingFragment : BaseFragment() {
                 override fun getCommon(t: ColorChoiceBean) {
                     val color_str = t.colorStr
                     mTvColor!!.text = color_str
-                    mTvCologBg!!.setBackgroundColor(resources.getColor(t.colorInt))
+                    mTvCologBg!!.setBackgroundColor(requireActivity().resources.getColor(t.colorInt))
                     PreferUtils.putString(requireContext(), Constants.color_str, color_str)
                     PreferUtils.putInt(requireContext(), Constants.color_int, t.colorInt)
                 }
             })
         }
-        /*设置功率*/mIvRefChoice!!.setOnClickListener { view: View? ->
+        /*设置功率*/
+        mIvRefChoice!!.setOnClickListener { view: View? ->
             when {
                 ifC72() -> {
                     PopuChoice(activity, mIvRefChoice, "请设置功率", data_rfid) { str: String ->
@@ -194,7 +199,8 @@ class SettingFragment : BaseFragment() {
                 }
             }
         }
-        /*更新缓存*/mRlCache!!.setOnClickListener { view: View? ->
+        /*更新缓存*/
+        mRlCache!!.setOnClickListener { view: View? ->
             if (NetUtil.checkNet(requireContext())) {
                 // showStr(context, "正在缓存,请稍等")
                 startDownload()
@@ -245,11 +251,14 @@ class SettingFragment : BaseFragment() {
         override fun onReceive(context: Context, intent: Intent) {
             val down = intent.getIntExtra(Constants.DownLoad_desc, 0)
             if (down == 6) {
+                val cacheTime = TimeUtil.getTime(Constants.yyyy_MM_ddHHmmss)
+                val cacheTimeToCom = TimeUtil.getFeatDay(7)
                 mTvCacheTime!!.text = """
                      更新时间:
-                     ${TimeUtil.getTime(Constants.yyyy_MM_ddHHmmss)}
+                     $cacheTime
                      """.trimIndent()
-                PreferUtils.putString(context, Constants.cache_time, TimeUtil.getTime(Constants.yyyy_MM_ddHHmmss))
+                PreferUtils.putString(context, Constants.cache_time, cacheTime)
+                PreferUtils.putString(context, Constants.cache_time_com, cacheTimeToCom)
                 hideAvi()
             }
         }

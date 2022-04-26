@@ -23,11 +23,9 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.hailong.biometricprompt.fingerprint.FingerprintCallback
 import com.hailong.biometricprompt.fingerprint.FingerprintVerifyManager
-import kotlinx.coroutines.asCoroutineDispatcher
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import org.litepal.LitePal
 import org.litepal.LitePal.findAllAsync
+import org.litepal.parser.LitePalParser
 import tramais.hnb.hhrfid.R
 import tramais.hnb.hhrfid.base.BaseActivity
 import tramais.hnb.hhrfid.bean.HttpBean
@@ -41,13 +39,9 @@ import tramais.hnb.hhrfid.net.OkhttpUtil
 import tramais.hnb.hhrfid.net.Params
 import tramais.hnb.hhrfid.net.RequestUtil
 import tramais.hnb.hhrfid.ui.dialog.BaseDialog
+import tramais.hnb.hhrfid.util.*
 import tramais.hnb.hhrfid.util.GsonUtil.Companion.instant
-import tramais.hnb.hhrfid.util.NetUtil
-import tramais.hnb.hhrfid.util.PackageUtils
-import tramais.hnb.hhrfid.util.PreferUtils
-import tramais.hnb.hhrfid.util.Utils
 import java.io.File
-import java.util.concurrent.Executors
 
 
 class ActivityLogin : BaseActivity() {
@@ -56,7 +50,8 @@ class ActivityLogin : BaseActivity() {
     private var mEtPsw: EditText? = null
     private var mIvCleanPsw: ImageView? = null
     private var mIvHideShowPsw: ImageView? = null
-    private var mIvRemPass: ImageView? = null
+
+    //    private var mIvRemPass: ImageView? = null
     private var mBtnLogin: Button? = null
     private var mChangePsw: TextView? = null
     private var mForgetPsw: TextView? = null
@@ -64,12 +59,14 @@ class ActivityLogin : BaseActivity() {
     private var logo: ImageView? = null
     private var loginContent: LinearLayout? = null
     private var isShow = false
-    private var isRem = false
+
+    // private var isRem = false
     private var mLlPsw: LinearLayout? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
     }
+
 
     override fun initView() {
         hideAllTitle()
@@ -82,7 +79,7 @@ class ActivityLogin : BaseActivity() {
         mEtPsw = findViewById(R.id.et_psw)
         mIvCleanPsw = findViewById(R.id.iv_clean_psw)
         mIvHideShowPsw = findViewById(R.id.iv_hide_show_psw)
-        mIvRemPass = findViewById(R.id.iv_rem_pass)
+        // mIvRemPass = findViewById(R.id.iv_rem_pass)
         mBtnLogin = findViewById(R.id.btn_login)
         mChangePsw = findViewById(R.id.change_psw)
         mForgetPsw = findViewById(R.id.forget_psw)
@@ -91,41 +88,35 @@ class ActivityLogin : BaseActivity() {
         Glide.with(this).load(R.mipmap.new_logo) //图片地址
                 .apply(options)
                 .into(logo!!)
-//        LitePal.deleteAll(EarTagCache::class.java)
-//        LitePal.deleteAll(AnimalSaveCache::class.java)
 
-        // 默认5个线程
-       /* val resultList = (1..10).mapMultithreading {
-            Thread.sleep(1000)
-            Thread.currentThread().name
-        }
-// 自定义线程数，并在执行完毕后变量输出结果
-        val resultList2 = (1..10).mapMultithreading(6) {
-            Thread.sleep(1000)
-            return@mapMultithreading Thread.currentThread().name
-        }
-        resultList.forEach {
-            LogUtils.e("it  $it")
-        }*/
+
     }
 
-
-
+    val test: MutableList<Int> = ArrayList()
     override fun initData() {
         // LogUtils.e("context.getPackageName()   ${context.packageName}")
         val account = PreferUtils.getString(context, Constants.account)
         val password = PreferUtils.getString(context, Constants.password)
-        val aBoolean = PreferUtils.getBoolean(context, Constants.isRemPsw)
+        //val aBoolean = PreferUtils.getBoolean(context, Constants.isRemPsw)
         if (!TextUtils.isEmpty(account)) mEtAccount!!.setText(account)
         if (!TextUtils.isEmpty(password)) mEtPsw!!.setText(password)
-        isRem = aBoolean
-        mIvRemPass!!.isSelected = aBoolean
+        // isRem = aBoolean
+        //  mIvRemPass!!.isSelected = aBoolean
         val screenOn = isScreenOn(this)
         if (!account.isNullOrEmpty() && !password.isNullOrEmpty() && screenOn) {
             addFinger()
         } else {
             alpha(loginContent)
         }
+//        val config = LitePalParser.parseLitePalConfiguration()
+//        val path = LitePal.getDatabase().path
+//        LogUtils.e("path  $path")
+//        //+"_${TimeUtil.getTime(Constants.yyyyMMddHHmmss)}"
+//        val newPath = FileUtil.getSDPath() + Constants.sdk_middle_animal + config.dbName + ".db"
+//        if (File(newPath).exists()) File(newPath).delete()
+//        FileUtil.fileCopy(path, newPath)
+
+
     }
 
     fun alpha(view: View?) {
@@ -255,10 +246,10 @@ class ActivityLogin : BaseActivity() {
                 mEtPsw!!.transformationMethod = PasswordTransformationMethod.getInstance()
             }
         }
-        mIvRemPass!!.setOnClickListener { view: View? ->
-            isRem = !isRem
-            mIvRemPass!!.isSelected = isRem
-        }
+        /* mIvRemPass!!.setOnClickListener { view: View? ->
+             isRem = !isRem
+             mIvRemPass!!.isSelected = isRem
+         }*/
     }
 
 
@@ -295,11 +286,7 @@ class ActivityLogin : BaseActivity() {
             is_btn_click = true
             finish()
         }
-        PreferUtils.putString(context, Constants.account, userName)
 
-        PreferUtils.putBoolean(context, Constants.isRemPsw, isRem)
-        if (isRem)
-            PreferUtils.putString(context, Constants.password, password)
     }
 
     private fun getLogin(userName: String, password: String) {
@@ -338,10 +325,10 @@ class ActivityLogin : BaseActivity() {
                                     PreferUtils.putBoolean(context, Constants.isLogin, true)
                                     PreferUtils.putString(context, Constants.login_data, datas.toJSONString())
                                     PreferUtils.putString(context, Constants.account, userName)
+                                    PreferUtils.putString(context, Constants.password, password)
 
-                                    PreferUtils.putBoolean(context, Constants.isRemPsw, isRem)
-                                    if (isRem)
-                                        PreferUtils.putString(context, Constants.password, password)
+                                    /*    PreferUtils.putBoolean(context, Constants.isRemPsw, isRem)
+                                        if (isRem)*/
 
                                     RequestUtil.getInstance(this@ActivityLogin)!!.getRoler(userName) { rtnCode, message, totalNums, datas ->
                                         if (datas != null && datas.size > 0) {

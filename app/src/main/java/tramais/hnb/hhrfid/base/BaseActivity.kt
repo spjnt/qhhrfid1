@@ -202,7 +202,7 @@ abstract class BaseActivity : AppCompatActivity() {
         get() = PreferUtils.getString(this, Constants.UserName)
 
     fun ifC72(): Boolean {
-        return Build.MODEL.equals("HC720") || Build.MODEL.equals("SAH6380")
+        return Build.MODEL.contains("HC72") || Build.MODEL.equals("SAH6380")||Build.MODEL.contains("c72")||Build.MODEL.contains("HC720")
     }
 
     fun ifHC720s(): Boolean {
@@ -320,6 +320,10 @@ abstract class BaseActivity : AppCompatActivity() {
             if (mReader == null) return
             Thread {
                 val srt_tag = mReader!!.inventorySingleTag()
+                if (srt_tag.isNullOrEmpty()) {
+                  //  stopC72Read(mReader)
+                    return@Thread
+                }
                 reverseTag(srt_tag, handler)
             }.start()
         }
@@ -329,7 +333,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     private fun reverseTag(srt_tag: String, handler: Handler) {
-        if (srt_tag.isEmpty()) return
+        if (srt_tag.isNullOrEmpty()) return
         val ep = arrayOf("")
         getTime { count: Int ->
             if (count < 5) {

@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.apkfuns.logutils.LogUtils
 import org.litepal.LitePal.where
 import tramais.hnb.hhrfid.R
 import tramais.hnb.hhrfid.base.BaseActivity
@@ -67,41 +68,16 @@ class ActivitySaveAnimal : BaseActivity() {
         mRvPhotos!!.adapter = mAdapter
     }
 
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+    }
+
     override fun initData() {
         val month = PreferUtils.getString(this, Constants.age_month)
         if (TextUtils.isEmpty(month)) mEtMonth!!.setText("12") else mEtMonth!!.setText(month)
         //  img_lists?.clear()
 
-        if (intent != null) {
-            farmer_area = intent.getStringExtra(Constants.farmer_area)
-            category = intent.getStringExtra(Constants.category)
-            farmer_zjCategory = intent.getStringExtra(Constants.farmer_zjCategory)
-            farmer_tel = intent.getStringExtra(Constants.farmer_tel)
-            farmer_name = intent.getStringExtra(Constants.farmer_name)
-            if (!farmer_name.isNullOrBlank() && farmer_name!!.length > 5) {
-                var farmerName = farmer_name!!.substring(0, 5) + "..."
-                setTitleText("投保人:  $farmerName")
-            } else {
-                setTitleText("投保人:  $farmer_name")
-
-            }
-            animal_type = intent.getStringExtra(Constants.animal_type)
-            val epc = intent.getStringExtra(Constants.epc)
-            img_list = intent.getStringArrayListExtra(Constants.img_list)
-            id_nums = intent.getStringExtra(Constants.farmer_id_nums)
-            farmer_address = intent.getStringExtra(Constants.farmer_address)
-            longitude = intent.getDoubleExtra(Constants.lon, 0.0)
-            latitude = intent.getDoubleExtra(Constants.lat, 0.0)
-            mAdapter!!.setGroupList(img_list)
-            mEtEarTag!!.text = epc
-            mAnimalCategory!!.text = animal_type
-            //   if (!animal_type.isNullOrBlank() && !id_nums.isNullOrBlank()){
-            val animalSaveCaches = where("FarmID =? and AnimalType=? and isMakeDeal=? ", id_nums, animal_type, "0").find(AnimalSaveCache::class.java)
-            if (animalSaveCaches == null || animalSaveCaches.size == 0) mScanTotal!!.text = 1.toString() + "" else mScanTotal!!.text = (animalSaveCaches.size + 1).toString() + ""
-            //  }
-
-
-        }
 
     }
 
@@ -132,6 +108,11 @@ class ActivitySaveAnimal : BaseActivity() {
             })*/
     }
 
+    override fun onPause() {
+        super.onPause()
+        if (intent != null) intent = null
+    }
+
     //    var isSave = false
     private fun saveAnimal(ifGotoFile: Boolean, ifOnlySave: Boolean, isGoMain: Boolean) {
         val earTag = Utils.getText(mEtEarTag)
@@ -146,24 +127,16 @@ class ActivitySaveAnimal : BaseActivity() {
         }
 
         where("earTag =?", earTag).findAsync(EarTagCache::class.java).listen { list: List<EarTagCache?>? ->
-            if (list!!.isNotEmpty()) {
-                for (i in list.indices) {
-                    list[i]!!.delete()
-                }
+            if (list!!.isNullOrEmpty()) {
+                val tagCache = EarTagCache()
+                tagCache.earTag = earTag
+                val save = tagCache.save()
+                //   LogUtils.e("tag  $save")
             }
-            val tagCache = EarTagCache()
-            tagCache.earTag = earTag
-            tagCache.save()
-
         }
         PreferUtils.putString(this, Constants.age_month, month)
-        where("LableNum =? and FarmID =?", earTag, id_nums).findAsync(AnimalSaveCache::class.java).listen { list: List<AnimalSaveCache?>? ->
-            if (list!!.isNotEmpty()) {
-                for (i in list.indices) {
-                    list[i]!!.delete()
-                }
-            }
-
+        //   LogUtils.e("list  ${id_nums}   $earTag")
+        where("lableNum =? and farmID =?", earTag, id_nums).findAsync(AnimalSaveCache::class.java).listen { list: List<AnimalSaveCache?>? ->
             val saveCache = AnimalSaveCache()
             saveCache.farmName = farmer_name
             saveCache.tel = farmer_tel
@@ -204,78 +177,93 @@ class ActivitySaveAnimal : BaseActivity() {
                 saveCache.img4 = ""
                 saveCache.img5 = ""
             }
-            /*   if (list != null && list.isNotEmpty()) {
-                   //  saveCache.saveOrUpdate()
-                   val i = saveCache.updateAll("LableNum =? and FarmID =?", Utils.getText(mEtEarTag), id_nums)
-                   if (i > 0) {
-                       showStr("保存成功")
-                       if (ifOnlySave) {
-                           when {
-                               ifGotoFile -> {
-                                   finish()
-                                   Utils.goToNextUI(ActivityFile::class.java)
-                               }
-                               isGoMain -> {
-                                   Utils.goToNextUI(MainActivity::class.java)
-                               }
-                               else -> {
-                                   goToCamera()
-                               }
-                           }
-                       } else {
-                           val intent = Intent(context, ActivityFarmList::class.java)
-                           intent.putExtra(Constants.MODULE_NAME, "承保验标")
-                           startActivity(intent)
-                       }
-                   } else {
-                       showStr("保存成功")
-                   }
-               } else {*/
-            saveCache.lableNum = earTag
-            saveCache.farmID = id_nums
-            val save = saveCache.save()
-            if (save) {
-                showStr("保存成功")
-                if (ifOnlySave) {
-                    when {
-                        ifGotoFile -> {
-                            Utils.goToNextUI(ActivityFile::class.java)
+            if (list!!.isNotEmpty()) {
+                val i = saveCache.updateAll("LableNum =? and FarmID =?", earTag, id_nums)
+                if (i > 0) {
+                    showStr("保存成功")
+                    if (ifOnlySave) {
+                        when {
+                            ifGotoFile -> {
+                                finish()
+                                Utils.goToNextUI(ActivityFile::class.java)
+                            }
+                            isGoMain -> {
+                                Utils.goToNextUI(MainActivity::class.java)
+                            }
+                            else -> {
+                                goToCamera()
+                            }
                         }
-                        isGoMain -> {
-                            Utils.goToNextUI(MainActivity::class.java)
-                        }
-                        else -> {
-                            goToCamera()
-                        }
+                    } else {
+                        val intent = Intent(context, ActivityFarmList::class.java)
+                        intent.putExtra(Constants.MODULE_NAME, "承保验标")
+                        startActivity(intent)
                     }
                 } else {
-                    val intent = Intent(context, ActivityFarmList::class.java)
-                    intent.putExtra(Constants.MODULE_NAME, "承保验标")
-                    startActivity(intent)
+                    showStr("保存成功")
                 }
+
+
             } else {
-                showStr("保存失败")
+                saveCache.lableNum = earTag
+                saveCache.farmID = id_nums
+                val save = saveCache.save()
+                if (save) {
+                    showStr("保存成功")
+                    if (ifOnlySave) {
+                        when {
+                            ifGotoFile -> {
+                                Utils.goToNextUI(ActivityFile::class.java)
+                            }
+                            isGoMain -> {
+                                Utils.goToNextUI(MainActivity::class.java)
+                            }
+                            else -> {
+                                goToCamera()
+                            }
+                        }
+                    } else {
+                        val intent = Intent(context, ActivityFarmList::class.java)
+                        intent.putExtra(Constants.MODULE_NAME, "承保验标")
+                        startActivity(intent)
+                    }
+                } else {
+                    showStr("保存失败")
+                }
             }
-            //  }
         }
     }
 
     override fun onResume() {
         super.onResume()
-        //  isSave = false
+        isKeyDown = false
+        if (intent != null) {
+            farmer_area = intent.getStringExtra(Constants.farmer_area)
+            category = intent.getStringExtra(Constants.category)
+            farmer_zjCategory = intent.getStringExtra(Constants.farmer_zjCategory)
+            farmer_tel = intent.getStringExtra(Constants.farmer_tel)
+            farmer_name = intent.getStringExtra(Constants.farmer_name)
+            if (!farmer_name.isNullOrBlank() && farmer_name!!.length > 5) {
+                val farmerName = farmer_name!!.substring(0, 5) + "..."
+                setTitleText("投保人:  $farmerName")
+            } else {
+                setTitleText("投保人:  $farmer_name")
+            }
+            animal_type = intent.getStringExtra(Constants.animal_type)
+            val epc = intent.getStringExtra(Constants.epc)
+            //   LogUtils.e("epc   $epc")
+            img_list = intent.getStringArrayListExtra(Constants.img_list)
+            id_nums = intent.getStringExtra(Constants.farmer_id_nums)
+            farmer_address = intent.getStringExtra(Constants.farmer_address)
+            longitude = intent.getDoubleExtra(Constants.lon, 0.0)
+            latitude = intent.getDoubleExtra(Constants.lat, 0.0)
+            mAdapter!!.setGroupList(img_list)
+            mEtEarTag!!.text = epc
+            mAnimalCategory!!.text = animal_type
+            val animalSaveCaches = where("FarmID =? and AnimalType=? ", id_nums, animal_type).find(AnimalSaveCache::class.java)
+            if (animalSaveCaches.isNullOrEmpty()) mScanTotal!!.text = 1.toString() + "" else mScanTotal!!.text = (animalSaveCaches.size + 1).toString() + ""
+        }
     }
-    /* private fun goDeal() {
-         val intent = Intent(context, ActivityUnderWriteDeal::class.java)
-         intent.putExtra(Constants.farmer_zjCategory, farmer_zjCategory)
-         intent.putExtra(Constants.farmer_name, farmer_name)
-         intent.putExtra(Constants.animal_type, animal_type)
-         intent.putExtra(Constants.farmer_id_nums, id_nums)
-         intent.putExtra(Constants.farmer_area, farmer_area)
-         intent.putExtra(Constants.category, category)
-         intent.putExtra(Constants.farmer_address, farmer_address)
-         intent.putExtra(Constants.Type, "from_camer")
-         startActivity(intent)
-     }*/
 
     private fun goToCamera() {
         val intent = Intent(context, CameraActivity::class.java)
@@ -298,10 +286,10 @@ class ActivitySaveAnimal : BaseActivity() {
             if (!isKeyDown) {
                 saveAnimal(ifGotoFile = false, ifOnlySave = true, isGoMain = false)
             }
-        } else if (keyCode == KeyEvent.KEYCODE_BACK && event.action === KeyEvent.ACTION_DOWN) {
+        } else if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_DOWN) {
             if (!isKeyDown)
                 saveAnimal(ifGotoFile = false, ifOnlySave = true, isGoMain = true)
-            return true
+            return false
         }
         isKeyDown = true
         return super.onKeyDown(keyCode, event)

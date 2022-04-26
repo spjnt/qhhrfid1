@@ -1,215 +1,186 @@
-package tramais.hnb.hhrfid.ui.view;
+package tramais.hnb.hhrfid.ui.view
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.*
+import android.util.AttributeSet
+import android.view.MotionEvent
+import android.view.View
+import androidx.annotation.ColorInt
+import java.io.*
+import kotlin.Throws
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.PorterDuff;
-import android.text.TextUtils;
-import android.util.AttributeSet;
-import android.view.MotionEvent;
-import android.view.View;
+class LinePathView : View {
+    private var mContext: Context? = null
 
-import androidx.annotation.ColorInt;
+    /**
+     * 笔画X坐标起点
+     */
+    private var mX = 0f
 
-import com.apkfuns.logutils.LogUtils;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-/**
- * <pre>
- *           .----.
- *        _.'__    `.
- *    .--(Q)(OK)---/$\
- *  .' @          /$$$\
- *  :         ,   $$$$$
- *   `-..__.-' _.-\$$$/
- *         `;_:    `"'
- *       .'"""""`.
- *      /,  FLY  ,\
- *     //         \\
- *     `-._______.-'
- *     ___`. | .'___
- *    (______|______)
- * </pre>
- */
-
-public class LinePathView extends View {
+    /**
+     * 笔画Y坐标起点
+     */
+    private var mY = 0f
 
     /**
      * 手写画笔
      */
-    private final Paint mGesturePaint = new Paint();
+    private val mGesturePaint = Paint()
+
     /**
      * 路径
      */
-    private final Path mPath = new Path();
-    private Context mContext;
-    /**
-     * 笔画X坐标起点
-     */
-    private float mX;
-    /**
-     * 笔画Y坐标起点
-     */
-    private float mY;
+    private val mPath = Path()
+
     /**
      * 签名画笔
      */
-    private Canvas cacheCanvas;
+    private var cacheCanvas: Canvas? = null
+
     /**
      * 签名画布
      */
-    private Bitmap cachebBitmap;
+    private var cachebBitmap: Bitmap? = null
+    /**
+     * 是否有签名
+     *
+     * @return
+     */
     /**
      * 是否已经签名
      */
-    private boolean isTouched = false;
+    var touched = false
+        private set
+
     /**
      * 画笔宽度 px；
      */
-    private int mPaintWidth = 10;
+    private var mPaintWidth = 10
+
     /**
      * 前景色
      */
-    private int mPenColor = Color.BLACK;
+    private var mPenColor = Color.BLACK
+
     /**
      * 背景色（指最终签名结果文件的背景颜色，默认为透明色）
      */
-    private int mBackColor = Color.TRANSPARENT;
+    private var mBackColor = Color.TRANSPARENT
 
     //签名开始与结束
-    private Touch touch;
+    var touch: Touch? = null
 
-    public LinePathView(Context context) {
-        super(context);
-        init(context);
+    constructor(context: Context?) : super(context) {
+        init(context)
     }
 
-    public LinePathView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init(context);
+    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
+        init(context)
     }
 
-    public LinePathView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init(context);
+    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+        init(context)
     }
 
-    public void init(Context context) {
-        this.mContext = context;
+    fun init(context: Context?) {
+        mContext = context
         //设置抗锯齿
-        mGesturePaint.setAntiAlias(true);
+        mGesturePaint.isAntiAlias = true
         //设置签名笔画样式
-        mGesturePaint.setStyle(Paint.Style.STROKE);
+        mGesturePaint.style = Paint.Style.STROKE
         //设置笔画宽度
-        mGesturePaint.setStrokeWidth(mPaintWidth);
+        mGesturePaint.strokeWidth = mPaintWidth.toFloat()
         //设置签名颜色
-        mGesturePaint.setColor(mPenColor);
+        mGesturePaint.color = mPenColor
     }
 
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
         //创建跟view一样大的bitmap，用来保存签名
-        cachebBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
-        cacheCanvas = new Canvas(cachebBitmap);
-        cacheCanvas.drawColor(mBackColor);
-        isTouched = false;
+        cachebBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        cacheCanvas = Canvas(cachebBitmap!!)
+        cacheCanvas!!.drawColor(mBackColor)
+        touched = false
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (touch != null) touch.OnTouch(true);
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                touchDown(event);
-                break;
-            case MotionEvent.ACTION_MOVE:
-                isTouched = true;
-                if (touch != null) touch.OnTouch(false);
-                touchMove(event);
-                break;
-            case MotionEvent.ACTION_UP:
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (touch != null) touch!!.OnTouch(true)
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> touchDown(event)
+            MotionEvent.ACTION_MOVE -> {
+                touched = true
+                if (touch != null) touch!!.OnTouch(false)
+                touchMove(event)
+            }
+            MotionEvent.ACTION_UP -> {
                 //将路径画到bitmap中，即一次笔画完成才去更新bitmap，而手势轨迹是实时显示在画板上的。
-                cacheCanvas.drawPath(mPath, mGesturePaint);
-                mPath.reset();
-                break;
+                cacheCanvas!!.drawPath(mPath, mGesturePaint)
+                mPath.reset()
+            }
         }
         // 更新绘制
-        invalidate();
-        return true;
+        invalidate()
+        return true
     }
 
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
+    override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
         //画此次笔画之前的签名
-        canvas.drawBitmap(cachebBitmap, 0, 0, mGesturePaint);
+        canvas.drawBitmap(cachebBitmap!!, 0f, 0f, mGesturePaint)
         // 通过画布绘制多点形成的图形
-        canvas.drawPath(mPath, mGesturePaint);
+        canvas.drawPath(mPath, mGesturePaint)
     }
 
     // 手指点下屏幕时调用
-    private void touchDown(MotionEvent event) {
+    private fun touchDown(event: MotionEvent) {
         // 重置绘制路线
-        mPath.reset();
-        float x = event.getX();
-        float y = event.getY();
-        mX = x;
-        mY = y;
+        mPath.reset()
+        val x = event.x
+        val y = event.y
+        mX = x
+        mY = y
         // mPath绘制的绘制起点
-        mPath.moveTo(x, y);
+        mPath.moveTo(x, y)
     }
 
     // 手指在屏幕上滑动时调用
-    private void touchMove(MotionEvent event) {
-        final float x = event.getX();
-        final float y = event.getY();
-        final float previousX = mX;
-        final float previousY = mY;
-        final float dx = Math.abs(x - previousX);
-        final float dy = Math.abs(y - previousY);
+    private fun touchMove(event: MotionEvent) {
+        val x = event.x
+        val y = event.y
+        val previousX = mX
+        val previousY = mY
+        val dx = Math.abs(x - previousX)
+        val dy = Math.abs(y - previousY)
         // 两点之间的距离大于等于3时，生成贝塞尔绘制曲线
         if (dx >= 3 || dy >= 3) {
             // 设置贝塞尔曲线的操作点为起点和终点的一半
-            float cX = (x + previousX) / 2;
-            float cY = (y + previousY) / 2;
+            val cX = (x + previousX) / 2
+            val cY = (y + previousY) / 2
             // 二次贝塞尔，实现平滑曲线；previousX, previousY为操作点，cX, cY为终点
-            mPath.quadTo(previousX, previousY, cX, cY);
+            mPath.quadTo(previousX, previousY, cX, cY)
             // 第二次执行时，第一次结束调用的坐标值将作为第二次调用的初始坐标值
-            mX = x;
-            mY = y;
+            mX = x
+            mY = y
         }
     }
 
     /**
      * 清除画板
      */
-    public void clear() {
+    fun clear() {
         if (cacheCanvas != null) {
-            isTouched = false;
+            touched = false
             //更新画板信息
-            mGesturePaint.setColor(mPenColor);
-            cacheCanvas.drawColor(mBackColor, PorterDuff.Mode.CLEAR);
-            mGesturePaint.setColor(mPenColor);
-            invalidate();
+            mGesturePaint.color = mPenColor
+            cacheCanvas!!.drawColor(mBackColor, PorterDuff.Mode.CLEAR)
+            mGesturePaint.color = mPenColor
+            invalidate()
         }
     }
 
-    public Touch getTouch() {
-        return touch;
-    }
-
-    public void setTouch(Touch touch) {
-        this.touch = touch;
+    interface Touch {
+        fun OnTouch(isTouch: Boolean)
     }
 
     /**
@@ -217,76 +188,40 @@ public class LinePathView extends View {
      *
      * @param path 保存到路径
      */
-    public void save(String path) {
-        save(path, false, 0);
+    @Throws(IOException::class)
+    fun save(path: String?) {
+        save(path, false, 0)
     }
 
-    private String createCompressPic(String oldPicPath) {
-        if (TextUtils.isEmpty(oldPicPath)) {
-            return "";
-        }
-
-        Bitmap bitmap = cachebBitmap;
-        String picPath = "";
-        File file;
-
-        file = new File(picPath);
-        if (file.exists()) {
-            file.delete();
-        }
-        try {
-            FileOutputStream fos = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-            fos.flush();
-            fos.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return file.getAbsolutePath();
-    }
-
-    public void save(String path, boolean clearBlank, int blank) {
-
-        Bitmap bitmap = cachebBitmap;
-
+    /**
+     * 保存画板
+     *
+     * @param path       保存到路径
+     * @param clearBlank 是否清除边缘空白区域
+     * @param blank      要保留的边缘空白距离
+     */
+    @SuppressLint("WrongThread")
+    @Throws(IOException::class)
+    fun save(path: String?, clearBlank: Boolean, blank: Int) {
+        var bitmap = cachebBitmap
+        //BitmapUtil.createScaledBitmapByHeight(srcBitmap, 300);//  压缩图片
         if (clearBlank) {
-            bitmap = clearBlank(bitmap, blank);
+            bitmap = clearBlank(bitmap, blank)
         }
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
-        byte[] buffer = bos.toByteArray();
+        val bos = ByteArrayOutputStream()
+        bitmap!!.compress(Bitmap.CompressFormat.PNG, 100, bos)
+        val buffer = bos.toByteArray()
         if (buffer != null) {
-            File file = new File(path);
-            if (file.exists()) {
-                file.delete();
-            }
+            val file = File(path)
+            if (file.exists()) file.delete()
             if (!file.exists()) {
-                file.getParentFile().mkdirs();
-                try {
-                    file.createNewFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                file.parentFile.mkdirs()
+                file.createNewFile()
             }
-            FileOutputStream outputStream = null;
-            try {
-                outputStream = new FileOutputStream(file);
-                outputStream.write(buffer);
-                outputStream.flush();
-                outputStream.close();
-
-            } catch (FileNotFoundException e) {
-                LogUtils.e("FileNotFoundException:  " + e.getMessage());
-                e.printStackTrace();
-
-            } catch (IOException e) {
-                LogUtils.e("IOException:  " + e.getMessage());
-                e.printStackTrace();
-
-            }
-
+            val outputStream: OutputStream = FileOutputStream(file)
+            outputStream.write(buffer)
+            outputStream.close()
         }
-
     }
 
     /**
@@ -294,13 +229,14 @@ public class LinePathView extends View {
      *
      * @return
      */
-    public Bitmap getBitMap() {
-        setDrawingCacheEnabled(true);
-        buildDrawingCache();
-        Bitmap bitmap = getDrawingCache();
-        setDrawingCacheEnabled(false);
-        return bitmap;
-    }
+    val bitMap: Bitmap
+        get() {
+            isDrawingCacheEnabled = true
+            buildDrawingCache()
+            val bitmap = drawingCache
+            isDrawingCacheEnabled = false
+            return bitmap
+        }
 
     /**
      * 逐行扫描 清楚边界空白。
@@ -309,82 +245,86 @@ public class LinePathView extends View {
      * @param blank 边距留多少个像素
      * @return
      */
-    private Bitmap clearBlank(Bitmap bp, int blank) {
-        int HEIGHT = bp.getHeight();
-        int WIDTH = bp.getWidth();
-        int top = 0, left = 0, right = 0, bottom = 0;
-        int[] pixs = new int[WIDTH];
-        boolean isStop;
+    private fun clearBlank(bp: Bitmap?, blank: Int): Bitmap {
+        var blank = blank
+        val HEIGHT = bp!!.height
+        val WIDTH = bp.width
+        var top = 0
+        var left = 0
+        var right = 0
+        var bottom = 0
+        var pixs = IntArray(WIDTH)
+        var isStop: Boolean
         //扫描上边距不等于背景颜色的第一个点
-        for (int y = 0; y < HEIGHT; y++) {
-            bp.getPixels(pixs, 0, WIDTH, 0, y, WIDTH, 1);
-            isStop = false;
-            for (int pix : pixs) {
+        for (y in 0 until HEIGHT) {
+            bp.getPixels(pixs, 0, WIDTH, 0, y, WIDTH, 1)
+            isStop = false
+            for (pix in pixs) {
                 if (pix != mBackColor) {
-                    top = y;
-                    isStop = true;
-                    break;
+                    top = y
+                    isStop = true
+                    break
                 }
             }
             if (isStop) {
-                break;
+                break
             }
         }
         //扫描下边距不等于背景颜色的第一个点
-        for (int y = HEIGHT - 1; y >= 0; y--) {
-            bp.getPixels(pixs, 0, WIDTH, 0, y, WIDTH, 1);
-            isStop = false;
-            for (int pix : pixs) {
+        for (y in HEIGHT - 1 downTo 0) {
+            bp.getPixels(pixs, 0, WIDTH, 0, y, WIDTH, 1)
+            isStop = false
+            for (pix in pixs) {
                 if (pix != mBackColor) {
-                    bottom = y;
-                    isStop = true;
-                    break;
+                    bottom = y
+                    isStop = true
+                    break
                 }
             }
             if (isStop) {
-                break;
+                break
             }
         }
-        pixs = new int[HEIGHT];
+        pixs = IntArray(HEIGHT)
         //扫描左边距不等于背景颜色的第一个点
-        for (int x = 0; x < WIDTH; x++) {
-            bp.getPixels(pixs, 0, 1, x, 0, 1, HEIGHT);
-            isStop = false;
-            for (int pix : pixs) {
+        for (x in 0 until WIDTH) {
+            bp.getPixels(pixs, 0, 1, x, 0, 1, HEIGHT)
+            isStop = false
+            for (pix in pixs) {
                 if (pix != mBackColor) {
-                    left = x;
-                    isStop = true;
-                    break;
+                    left = x
+                    isStop = true
+                    break
                 }
             }
             if (isStop) {
-                break;
+                break
             }
         }
         //扫描右边距不等于背景颜色的第一个点
-        for (int x = WIDTH - 1; x > 0; x--) {
-            bp.getPixels(pixs, 0, 1, x, 0, 1, HEIGHT);
-            isStop = false;
-            for (int pix : pixs) {
+        for (x in WIDTH - 1 downTo 1) {
+            bp.getPixels(pixs, 0, 1, x, 0, 1, HEIGHT)
+            isStop = false
+            for (pix in pixs) {
                 if (pix != mBackColor) {
-                    right = x;
-                    isStop = true;
-                    break;
+                    right = x
+                    isStop = true
+                    break
                 }
             }
             if (isStop) {
-                break;
+                break
             }
         }
         if (blank < 0) {
-            blank = 0;
+            blank = 0
         }
         //计算加上保留空白距离之后的图像大小
-        left = left - blank > 0 ? left - blank : 0;
-        top = top - blank > 0 ? top - blank : 0;
-        right = right + blank > WIDTH - 1 ? WIDTH - 1 : right + blank;
-        bottom = bottom + blank > HEIGHT - 1 ? HEIGHT - 1 : bottom + blank;
-        return Bitmap.createBitmap(bp, left, top, right - left, bottom - top);
+        left = if (left - blank > 0) left - blank else 0
+        top = if (top - blank > 0) top - blank else 0
+        right = if (right + blank > WIDTH - 1) WIDTH - 1 else right + blank
+        bottom = if (bottom + blank > HEIGHT - 1) HEIGHT - 1 else bottom + blank
+        return Bitmap.createBitmap(bp, left, top, right - left, bottom - top)
     }
 
     /**
@@ -392,15 +332,15 @@ public class LinePathView extends View {
      *
      * @param mPaintWidth
      */
-    public void setPaintWidth(int mPaintWidth) {
-        mPaintWidth = mPaintWidth > 0 ? mPaintWidth : 10;
-        this.mPaintWidth = mPaintWidth;
-        mGesturePaint.setStrokeWidth(mPaintWidth);
-
+    fun setPaintWidth(mPaintWidth: Int) {
+        var mPaintWidth = mPaintWidth
+        mPaintWidth = if (mPaintWidth > 0) mPaintWidth else 10
+        this.mPaintWidth = mPaintWidth
+        mGesturePaint.strokeWidth = mPaintWidth.toFloat()
     }
 
-    public void setBackColor(@ColorInt int backColor) {
-        mBackColor = backColor;
+    fun setBackColor(@ColorInt backColor: Int) {
+        mBackColor = backColor
     }
 
     /**
@@ -408,22 +348,8 @@ public class LinePathView extends View {
      *
      * @param mPenColor
      */
-    public void setPenColor(int mPenColor) {
-        this.mPenColor = mPenColor;
-        mGesturePaint.setColor(mPenColor);
-    }
-
-    /**
-     * 是否有签名
-     *
-     * @return
-     */
-    public boolean getTouched() {
-        return isTouched;
-    }
-
-    public interface Touch {
-        void OnTouch(boolean isTouch);
+    fun setPenColor(mPenColor: Int) {
+        this.mPenColor = mPenColor
+        mGesturePaint.color = mPenColor
     }
 }
-

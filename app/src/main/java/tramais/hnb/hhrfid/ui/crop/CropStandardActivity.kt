@@ -32,7 +32,6 @@ import tramais.hnb.hhrfid.util.NetUtil
 import tramais.hnb.hhrfid.util.PreferUtils
 import tramais.hnb.hhrfid.util.TimeUtil
 import tramais.hnb.hhrfid.util.Utils
-import java.util.*
 
 /*
 * 验标
@@ -85,8 +84,12 @@ class CropStandardActivity : BaseActivity() {
     override fun initData() {
         getInstance(this)!!.getRegion(object : GetCommon<Region> {
             override fun getCommon(t: Region) {
-                data = t.data
-                etAreaName!!.text = t.fProvince + t.fCity + t.fCounty
+                if (t.code >= 0) {
+                    data = t.data
+                    etAreaName!!.text = t.fProvince + t.fCity + t.fCounty
+                }else{
+                    showStr(t.msg)
+                }
             }
         })
         getInstance(this)!!.getCrop("种植险") { rtnCode: Int, message: String?, totalNums: Int, datas: JSONArray? ->

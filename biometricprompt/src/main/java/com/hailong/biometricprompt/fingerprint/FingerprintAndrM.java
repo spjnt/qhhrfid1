@@ -120,7 +120,7 @@ public class FingerprintAndrM implements IFingerprint {
             super.onAuthenticationSucceeded(result);
             fingerprintDialog.setTip(context.getString(R.string.biometricprompt_verify_success), R.color.biometricprompt_color_82C785);
 
-            Log.e(" result  M", "" + result.getCryptoObject());
+            //Log.e(" result  M", "" + result.getCryptoObject());
             fingerprintCallback.onSucceeded();
             fingerprintDialog.dismiss();
         }

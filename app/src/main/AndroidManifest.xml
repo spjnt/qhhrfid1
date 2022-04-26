@@ -28,8 +28,6 @@
      android:hardwareAccelerated="false"
     -->
     <application
-        android:largeHeap="true"
-        android:hardwareAccelerated="false"
         android:name=".base.QhApplication"
         android:allowBackup="true"
         android:icon="@mipmap/new_logo"
@@ -82,6 +80,7 @@
             android:name=".ui.ActivitySaveAnimal"
             android:configChanges="orientation|keyboardHidden"
             android:label="畜种信息上传"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity android:name=".ui.ActtivitySearchByFarmerOrTel" />
         <!--<activity android:name=".ui.ActivityBaoAn" />-->
@@ -115,6 +114,9 @@
         <activity android:name=".ui.crop.CropSmipleActivity" />
         <!--<activity android:name=".ui.crop.CropClaimAndLossDeter" />-->
         <activity android:name=".ui.WebActivity" /> <!-- <activity android:name=".ui.crop.CropActivityFenPei" /> -->
+        <!--  android:configChanges="orientation|keyboardHidden"
+            android:label="签名"
+            android:screenOrientation="landscape"-->
         <activity
             android:name=".ui.ActivitySign"
             android:configChanges="orientation|keyboardHidden"
@@ -170,6 +172,9 @@
 
         <service android:name=".service.DownloadService" />
         <service android:name=".service.UpLoadSeries" />
+
+
+
     </application>
 
 </manifest>

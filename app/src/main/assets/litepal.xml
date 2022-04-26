@@ -20,7 +20,7 @@
       <version value="1" />
   -->
     <!--111-->
-    <version value="111" />
+    <version value="112" />
 
     <list>
         <mapping class="tramais.hnb.hhrfid.litePalBean.IdCategoryCache" />

@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/e6"
-    android:padding="@dimen/size_10">
+    android:padding="@dimen/size_10"
+    android:background="@color/e6">
 
     <ImageView
         android:id="@+id/iv_sign"
@@ -15,7 +15,8 @@
         android:id="@+id/line_path"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:focusableInTouchMode="true" />
+
+        />
 
     <TextView
         android:id="@+id/title"
@@ -41,7 +42,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/bottom_no_conner"
             android:gravity="center"
-            android:padding="@dimen/size_4"
+            android:padding="@dimen/size_6"
             android:text="清除"
             android:textColor="@color/black"
             android:textSize="@dimen/text_size_6sp" />
@@ -53,7 +54,7 @@
             android:layout_marginTop="@dimen/size_5"
             android:background="@drawable/small_conner_new"
             android:gravity="center"
-            android:padding="@dimen/size_4"
+            android:padding="@dimen/size_6"
             android:text="保存"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_6sp" />
@@ -63,12 +64,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_gravity="right">
+        android:layout_gravity="right"
+      >
 
         <ImageView
             android:id="@+id/iv_rem_pass"
-            android:layout_width="@dimen/size_10"
-            android:layout_height="@dimen/size_10"
+            android:layout_width="@dimen/size_12"
+            android:layout_height="@dimen/size_12"
             android:layout_gravity="center_vertical"
             android:src="@drawable/remember_pwd" />
 

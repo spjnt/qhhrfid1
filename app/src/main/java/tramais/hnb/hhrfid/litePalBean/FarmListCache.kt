@@ -30,7 +30,9 @@ class FarmListCache : LitePalSupport() {
     var fRegionNumber: String? = null
     var FBankCode: String? = null
     var FBankRelatedCode: String? = null
-    var FStartime: String? = null
+    var fStartime: String? = null
     var natureCode: String? = null
     var natureName: String? = null
+    var comNumber: String? = null
+    var empNumber: String? = null
 }

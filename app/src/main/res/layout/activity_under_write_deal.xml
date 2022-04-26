@@ -201,6 +201,7 @@
 
 
             </LinearLayout>
+            <include layout="@layout/item_line" />
         </LinearLayout>
 
         <LinearLayout
