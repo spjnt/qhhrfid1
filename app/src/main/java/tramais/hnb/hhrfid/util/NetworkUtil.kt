@@ -30,10 +30,10 @@ class NetworkUtil private constructor() {
             val info: NetworkInfo? = getActiveNetworkInfo(context)
             if (info != null && info.isAvailable()) {
                 netType = when {
-                    info.type === ConnectivityManager.TYPE_WIFI -> {
+                    info.type == ConnectivityManager.TYPE_WIFI -> {
                         NetworkType.NETWORK_WIFI
                     }
-                    info.getType() === ConnectivityManager.TYPE_MOBILE -> {
+                    info.type == ConnectivityManager.TYPE_MOBILE -> {
                         when (info.getSubtype()) {
                             TelephonyManager.NETWORK_TYPE_TD_SCDMA, TelephonyManager.NETWORK_TYPE_EVDO_A, TelephonyManager.NETWORK_TYPE_UMTS, TelephonyManager.NETWORK_TYPE_EVDO_0, TelephonyManager.NETWORK_TYPE_HSDPA, TelephonyManager.NETWORK_TYPE_HSUPA, TelephonyManager.NETWORK_TYPE_HSPA, TelephonyManager.NETWORK_TYPE_EVDO_B, TelephonyManager.NETWORK_TYPE_EHRPD, TelephonyManager.NETWORK_TYPE_HSPAP -> NetworkType.NETWORK_3G
                             TelephonyManager.NETWORK_TYPE_LTE, TelephonyManager.NETWORK_TYPE_IWLAN -> NetworkType.NETWORK_4G

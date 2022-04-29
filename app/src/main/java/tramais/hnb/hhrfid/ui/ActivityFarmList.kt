@@ -15,10 +15,8 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.fastjson.JSONArray
-import com.apkfuns.logutils.LogUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
-import com.google.gson.Gson
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import org.litepal.FluentQuery
 import org.litepal.LitePal
@@ -192,6 +190,10 @@ class ActivityFarmList : BaseActivity() {
                                 startActivity(intent)
                             }
                             "承保验标" -> {
+//                                if (underWrites_.zjCategory == "营业执照" && underWrites_.category == "集体投保") {
+//                                    showStr("村委不可验标")
+//                                    return@let
+//                                }
                                 val intent = Intent(this@ActivityFarmList, CameraActivity::class.java)
                                 intent.putExtra(Constants.farmer_name, underWrites_.name)
                                 intent.putExtra(Constants.farmer_id_nums, underWrites_.zjNumber)
@@ -284,7 +286,7 @@ class ActivityFarmList : BaseActivity() {
         _cache_to.clear()
         fluentQuery.findAsync(FarmListCache::class.java).listen { list: List<FarmListCache> ->
             total = list.size
-            if (list.isNullOrEmpty()){
+            if (list.isNullOrEmpty()) {
                 showStr("未匹配到相同数据")
                 return@listen
             }
@@ -348,7 +350,7 @@ class ActivityFarmList : BaseActivity() {
         }
         if (NetUtil.checkNet(this)) {
             showAvi()
-           // LogUtils.e("come in  with  net  $input")
+            // LogUtils.e("come in  with  net  $input")
             RequestUtil.getInstance(context)!!.getUnderList(input, PageIndex, flag, module_name) { rtnCode: Int, meg: String?, totalNums: Int, datas: JSONArray? ->
                 hideAvi()
                 total = totalNums
@@ -368,14 +370,14 @@ class ActivityFarmList : BaseActivity() {
 
             }
         } else {
-          //  LogUtils.e("come in  no  net  $input")
+            //  LogUtils.e("come in  no  net  $input")
             getListCache(input, PageIndex)
         }
 
     }
 
     private fun setUnderAdapter(underWrites: MutableList<FarmList?>, isReresh: Boolean) {
-       // LogUtils.e("under  ${Gson().toJson(underWrites)}  ${isReresh}")
+        // LogUtils.e("under  ${Gson().toJson(underWrites)}  ${isReresh}")
         /* if (!isReresh)
              if (underWrites.isNullOrEmpty() || underWrites.size == 0) {
                  showStr("暂无数据展示")
@@ -403,7 +405,7 @@ class ActivityFarmList : BaseActivity() {
                 } else {
                     holder.setText(R.id.tv_category_name, farmer_.area)
                 }
-               // LogUtils.e("${farmer_.name}")
+                // LogUtils.e("${farmer_.name}")
                 holder.setText(R.id.tv_category, farmer_.zjNumber)
                 holder.setText(R.id.tv_phone_num, farmer_.mobile)
                 holder.setText(R.id.tv_name, farmer_.name)

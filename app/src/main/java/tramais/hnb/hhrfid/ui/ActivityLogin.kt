@@ -23,9 +23,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.hailong.biometricprompt.fingerprint.FingerprintCallback
 import com.hailong.biometricprompt.fingerprint.FingerprintVerifyManager
-import org.litepal.LitePal
 import org.litepal.LitePal.findAllAsync
-import org.litepal.parser.LitePalParser
 import tramais.hnb.hhrfid.R
 import tramais.hnb.hhrfid.base.BaseActivity
 import tramais.hnb.hhrfid.bean.HttpBean
@@ -39,8 +37,11 @@ import tramais.hnb.hhrfid.net.OkhttpUtil
 import tramais.hnb.hhrfid.net.Params
 import tramais.hnb.hhrfid.net.RequestUtil
 import tramais.hnb.hhrfid.ui.dialog.BaseDialog
-import tramais.hnb.hhrfid.util.*
 import tramais.hnb.hhrfid.util.GsonUtil.Companion.instant
+import tramais.hnb.hhrfid.util.NetUtil
+import tramais.hnb.hhrfid.util.PackageUtils
+import tramais.hnb.hhrfid.util.PreferUtils
+import tramais.hnb.hhrfid.util.Utils
 import java.io.File
 
 
@@ -84,17 +85,13 @@ class ActivityLogin : BaseActivity() {
         mChangePsw = findViewById(R.id.change_psw)
         mForgetPsw = findViewById(R.id.forget_psw)
         val options = RequestOptions.bitmapTransform(RoundedCorners(20)) //图片圆角为30
-
         Glide.with(this).load(R.mipmap.new_logo) //图片地址
                 .apply(options)
                 .into(logo!!)
-
-
     }
 
     val test: MutableList<Int> = ArrayList()
     override fun initData() {
-        // LogUtils.e("context.getPackageName()   ${context.packageName}")
         val account = PreferUtils.getString(context, Constants.account)
         val password = PreferUtils.getString(context, Constants.password)
         //val aBoolean = PreferUtils.getBoolean(context, Constants.isRemPsw)
@@ -108,22 +105,15 @@ class ActivityLogin : BaseActivity() {
         } else {
             alpha(loginContent)
         }
-//        val config = LitePalParser.parseLitePalConfiguration()
-//        val path = LitePal.getDatabase().path
-//        LogUtils.e("path  $path")
-//        //+"_${TimeUtil.getTime(Constants.yyyyMMddHHmmss)}"
-//        val newPath = FileUtil.getSDPath() + Constants.sdk_middle_animal + config.dbName + ".db"
-//        if (File(newPath).exists()) File(newPath).delete()
-//        FileUtil.fileCopy(path, newPath)
-
-
+        // Utils.up()
     }
+
 
     fun alpha(view: View?) {
         Handler(Looper.getMainLooper()).post {
             try {
                 val animator: ObjectAnimator = ObjectAnimator.ofFloat(view, "alpha", 0.0f, 1.0f)
-                animator.duration = 800
+                animator.duration = 500
                 animator.start()
             } catch (e: java.lang.Exception) {
                 Log.e("e", e.message.toString())

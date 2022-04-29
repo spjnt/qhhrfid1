@@ -572,7 +572,7 @@ class CropMakeDealActivity : BaseActivity() {
                 try {
                     val bitmapFormUri = ImageUtils.getBitmapFormUri(this, mUri)
                     insure_path = ImageUtils.saveBitmap(this, bitmapFormUri, FileUtil.getSDPath() + Constants.sdk_middle_path, "张三" + "/" + "张三" + "_" + "crop_grop" + ".jpg")
-                    val getimage = ImageUtils.getimage(insure_path)
+                 //   val getimage = ImageUtils.getimage(insure_path)
                     //   confimImg.setBackgroundResource(0);
                     //   confimImg.setImageBitmap(getimage);
                     insure_path_stream = ImageUtils.getStream(insure_path)

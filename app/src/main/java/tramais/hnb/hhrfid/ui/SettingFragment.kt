@@ -12,7 +12,6 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.alibaba.fastjson.JSONObject
-import com.apkfuns.logutils.LogUtils
 import com.gyf.immersionbar.ktx.immersionBar
 import com.rscja.deviceapi.RFIDWithUHF
 import com.rscja.deviceapi.exception.ConfigurationException
@@ -51,6 +50,11 @@ class SettingFragment : BaseFragment() {
     private var mBtnLogin: LinearLayout? = null
     private var mLlColor: LinearLayout? = null
 
+    /*   Intent intent= new Intent();
+        intent.setAction("android.intent.action.VIEW");
+        Uri content_url = Uri.parse("https://www.baidu.com");
+        intent.setData(content_url);
+        startActivity(intent);*/
     //    private var mTvVersion: TextView? = null
     private var mTvCacheTime: TextView? = null
     private var mTvCompany: TextView? = null
@@ -92,7 +96,7 @@ class SettingFragment : BaseFragment() {
             }
             val color_str = PreferUtils.getString(context, Constants.color_str)
             val color_int = PreferUtils.getInt(context, Constants.color_int)
-            LogUtils.e("color_int  $color_int")
+            // LogUtils.e("color_int  $color_int")
             try {
                 if (!color_str.isNullOrEmpty() && color_int != -1) {
                     mTvColor!!.text = color_str.toString()
@@ -212,7 +216,16 @@ class SettingFragment : BaseFragment() {
         mRlVersion!!.setOnClickListener { view: View? ->
             Utils.goToNextUI(ActivityVersion::class.java)
         }
-        mRlFeedback!!.setOnClickListener { view: View? -> DialogFeedBack(requireContext()).show() }
+        mRlFeedback!!.setOnClickListener { view: View? ->
+//
+//            val config = LitePalParser.parseLitePalConfiguration()
+//            val path = LitePal.getDatabase().path
+//            LogUtils.e("path  $path")
+//            val newPath = FileUtil.getSDPath() + Constants.sdk_middle_animal + config.dbName + ".db"
+//            if (File(newPath).exists()) File(newPath).delete()
+//            fileCopy(File(path), File(newPath))
+            DialogFeedBack(requireContext()).show()
+        }
         mBtnLogin!!.setOnClickListener { view: View? ->
             //  Utils.goToNextUI(ActivityLogin.class);
             requireActivity().finish()
@@ -250,13 +263,15 @@ class SettingFragment : BaseFragment() {
         @SuppressLint("SetTextI18n")
         override fun onReceive(context: Context, intent: Intent) {
             val down = intent.getIntExtra(Constants.DownLoad_desc, 0)
-            if (down == 6) {
+            if (down == 7) {
                 val cacheTime = TimeUtil.getTime(Constants.yyyy_MM_ddHHmmss)
                 val cacheTimeToCom = TimeUtil.getFeatDay(7)
-                mTvCacheTime!!.text = """
+                requireActivity().runOnUiThread {
+                    mTvCacheTime!!.text = """
                      更新时间:
                      $cacheTime
                      """.trimIndent()
+                }
                 PreferUtils.putString(context, Constants.cache_time, cacheTime)
                 PreferUtils.putString(context, Constants.cache_time_com, cacheTimeToCom)
                 hideAvi()

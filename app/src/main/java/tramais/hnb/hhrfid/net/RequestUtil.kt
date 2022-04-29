@@ -1973,13 +1973,10 @@ class RequestUtil(var context: Context) {
 
     fun DeleteBill(number: String?, getResult: GetResult) {
         val params = Params.createParams()
-
         params.add("number", number) //投保单号
-
         OkhttpUtil.getInstance(context).doPosts(Config.DeleteAnimalBill, params, object : OkResponseInterface {
             override fun onSuccess(bean: HttpBean, id: Int) {
                 getResult.getResult(JSONObject.parseObject(bean.response, ResultBean::class.java))
-
             }
 
             override fun onError(e: Exception) {}

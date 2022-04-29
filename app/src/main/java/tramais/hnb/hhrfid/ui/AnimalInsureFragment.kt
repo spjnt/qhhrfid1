@@ -111,7 +111,7 @@ class AnimalInsureFragment : BaseFragment() {
                 when (name) {
                     "任务调度" -> {
                         if (haveRoles("理赔", "任务调度")) {
-                            var intent = Intent(context, ActivityFenPei::class.java)
+                            val intent = Intent(context, ActivityFenPei::class.java)
                             intent.putExtra(Constants.MODULE_NAME, "养殖险")
                             context!!.startActivity(intent)
                         }
@@ -123,7 +123,7 @@ class AnimalInsureFragment : BaseFragment() {
                         if (haveRoles("理赔", "任务查勘"))
                         //Utils.goToNextUI(ActivityCheck::class.java)
                         {
-                            var intent = Intent(context, ActivityCheck::class.java)
+                            val intent = Intent(context, ActivityCheck::class.java)
                             intent.putExtra(Constants.MODULE_NAME, "养殖险-$name")
                             context!!.startActivity(intent)
                         } else
@@ -137,7 +137,7 @@ class AnimalInsureFragment : BaseFragment() {
                      }*/
                     "查勘公示" -> {//ActivityAnimalLiPeiPublic
                         if (haveRoles("理赔", "查勘公示")) {
-                            var intent = Intent(context, ActivityAnimalCBPublic::class.java)
+                            val intent = Intent(context, ActivityAnimalCBPublic::class.java)
                             intent.putExtra(Constants.MODULE_NAME, "养殖险")
                             context!!.startActivity(intent)
                         }
@@ -147,7 +147,7 @@ class AnimalInsureFragment : BaseFragment() {
                     }
                     "提交核心" -> {
                         if (haveRoles("理赔", "提交核心")) {
-                            var intent = Intent(context, ActivityCheck::class.java)
+                            val intent = Intent(context, ActivityCheck::class.java)
                             intent.putExtra(Constants.MODULE_NAME, "养殖险-$name")
                             context!!.startActivity(intent)
                         } else
@@ -219,7 +219,7 @@ class AnimalInsureFragment : BaseFragment() {
     }
 
     fun goToFarmList(module: String) {
-        var intent = Intent(context, ActivityFarmList::class.java)
+        val intent = Intent(context, ActivityFarmList::class.java)
         intent.putExtra(Constants.MODULE_NAME, module)
         startActivity(intent)
     }

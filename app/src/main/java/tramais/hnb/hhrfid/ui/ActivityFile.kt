@@ -14,7 +14,6 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.ScrollView
 import android.widget.TextView
-import com.apkfuns.logutils.LogUtils
 import org.litepal.LitePal
 import tramais.hnb.hhrfid.R
 import tramais.hnb.hhrfid.base.BaseActivity
@@ -39,13 +38,17 @@ class ActivityFile : BaseActivity() {
             super.handleMessage(msg)
             when (msg.what) {
                 3 -> {
-                    val message = msg.obj as String
-                    if (message.contains("耳标信息上传完成")) {
-                        stopService(Intent(this@ActivityFile, UpLoadSeries::class.java))
-                        hideAvi()
-                        delay(upload_i)
+                    val message = msg.obj
+                    if (message != null) {
+                        message as String
+                        if (message.contains("耳标信息上传完成")) {
+                            stopService(Intent(this@ActivityFile, UpLoadSeries::class.java))
+                            hideAvi()
+                            delay(upload_i)
+                        }
+                        deal(isDeal = false)
                     }
-                    deal(isDeal = false)
+
                 }
             }
         }
@@ -97,7 +100,6 @@ class ActivityFile : BaseActivity() {
             farmSize = find.size
         mTvFarm!!.text = "待上传数量 ${find.size}"
         upload_i += find.size
-        //"farmname =?", "尕玛才仁"      "isUpLoad=?", "0"
         //where("isUpLoad=?", "0")
         val find1 = LitePal.where("isUpLoad=?", "0").find(AnimalSaveCache::class.java)
         if (isDeal)
@@ -152,7 +154,7 @@ class ActivityFile : BaseActivity() {
             upLoad_desc = intent.getStringExtra(Constants.upLoad_desc)
             buffer.append(upLoad_desc)
             buffer.append("\n")
-            LogUtils.e("upLoad_desc   $upLoad_desc")
+            // LogUtils.e("upLoad_desc   $upLoad_desc")
             if (upLoad_desc == "养殖户信息上传完成")
                 buffer.append("耳标信息上传中...\n")
             runOnUiThread { mTvDesc!!.text = buffer.toString() }
@@ -171,10 +173,8 @@ class ActivityFile : BaseActivity() {
                 return@Runnable
             }
             // 内层高度超过外层
-            var offset = (inner.measuredHeight
-                    - scroll.measuredHeight)
+            var offset = (inner.measuredHeight - scroll.measuredHeight)
             if (offset < 0) {
-
                 offset = 0
             }
             scroll.scrollTo(0, offset)
@@ -182,7 +182,7 @@ class ActivityFile : BaseActivity() {
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.action === KeyEvent.ACTION_DOWN) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_DOWN) {
             Utils.goToNextUI(MainActivity::class.java)
             return true
         }

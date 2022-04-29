@@ -790,11 +790,11 @@ class ActivitySaveFram : BaseActivity(), ChoicePhoto {
                 showStr("请输入18位证件号码")
                 return
             }
-            if (mStartTime.isNullOrBlank()) {
+            if (mStartTime.isBlank()) {
                 showStr("请选择证件证件签发日期")
                 return
             }
-            if (overTime.isNullOrBlank()) {
+            if (overTime.isBlank()) {
                 showStr("请选择证件有效期结束时间")
                 return
             }

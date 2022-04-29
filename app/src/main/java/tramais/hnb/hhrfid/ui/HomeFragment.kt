@@ -30,7 +30,6 @@ import tramais.hnb.hhrfid.ui.crop.CropBaoAnChoiceActivity
 import tramais.hnb.hhrfid.ui.view.RecyleViewForScrollView
 import tramais.hnb.hhrfid.util.GsonUtil
 import tramais.hnb.hhrfid.util.Utils
-import java.util.*
 
 
 class HomeFragment : BaseFragment() {
@@ -149,7 +148,7 @@ class HomeFragment : BaseFragment() {
             ivYzTask!!.setBackgroundResource(R.mipmap.a_diaodu_gray)
         }
 
-        if (haveRoles("种植险", "承保", "新增投保单")) {
+        if (haveRoles("种植险", "承保", "新建投保单")) {
             ivZzNew!!.setBackgroundResource(R.mipmap.a_new)
         } else {
             ivZzNew!!.setBackgroundResource(R.mipmap.a_new_gray)
@@ -197,7 +196,7 @@ class HomeFragment : BaseFragment() {
                 tips()
         }
         llZzNew!!.setOnClickListener { v ->
-            if (haveRoles("种植险", "承保", "新增投保单"))
+            if (haveRoles("种植险", "承保", "新建投保单"))
                 Utils.goToNextUI(CropBaoAnChoiceActivity::class.java)
             else
                 tips()
@@ -214,7 +213,7 @@ class HomeFragment : BaseFragment() {
     }
 
     fun goToFenPei(module_name: String) {
-        var intent = Intent(context, ActivityFenPei::class.java)
+        val intent = Intent(context, ActivityFenPei::class.java)
         intent.putExtra(Constants.MODULE_NAME, module_name)
         requireContext().startActivity(intent)
     }
@@ -224,7 +223,7 @@ class HomeFragment : BaseFragment() {
     }
 
     private val news: Unit
-        private get() {
+        get() {
             RequestUtil.getInstance(context)!!.getNewsList { rtnCode: Int, message: String?, totalNums: Int, datas: JSONArray? ->
                 if (datas != null && datas.size > 0) newsLists = GsonUtil.instant!!.parseCommonUseArr(datas, NewsList::class.java)
                 if (newsLists != null && newsLists!!.isNotEmpty()) getBannerData(newsLists)

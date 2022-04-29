@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -17,21 +18,24 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/iv_arrow"
+        android:layout_toStartOf="@id/iv_arrow"
         android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/size_4"
+            android:layout_marginStart="@dimen/size_4"
             android:padding="@dimen/size_2">
 
             <TextView
                 android:id="@+id/tv_first"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:text="蔡万平"
+                android:layout_marginEnd="@dimen/size_4"
+                android:layout_toStartOf="@id/tv_third"
+                android:text=""
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_14sp"
                 android:textStyle="bold" />
@@ -40,13 +44,13 @@
                 android:id="@+id/tv_third"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-
-                android:drawableLeft="@mipmap/phone_blue"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
                 android:paddingHorizontal="@dimen/size_4"
                 android:text=""
                 android:textColor="@color/light_blue"
-                android:textSize="@dimen/text_size_14sp" />
+                android:textSize="@dimen/text_size_14sp"
+                app:drawableLeftCompat="@mipmap/phone_blue" />
 
 
         </RelativeLayout>

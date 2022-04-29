@@ -277,11 +277,11 @@ class ActivityUnderWriteDeal : BaseActivity() {
                 lables?.let {
                     val data = it.data
                     if (data != null && data.isNotEmpty()) {
-                        for (item in data!!) {
+                        for (item in data) {
 
                             val fFarmerNumber = item.fFarmerNumber
                             for (item_dto in item.data!!) {
-                                var lable = item.fFarmerName + "-" + item_dto.fLabelNumber
+                                val lable = item.fFarmerName + "-" + item_dto.fLabelNumber
                                 buffer.append(item_dto.fLabelNumber + "~")
                                 buffer.append("$fFarmerNumber|")
                                 if (!shouTagDetail_!!.contains(lable))
@@ -290,7 +290,7 @@ class ActivityUnderWriteDeal : BaseActivity() {
 
                             }
                             if (type == "from_farmerlist") {
-                                var detail = item.fFarmerName + "(" + item.fFarmerNumber + ")"
+                                val detail = item.fFarmerName + "(" + item.fFarmerNumber + ")"
                                 if (!list_farmers_line.contains(detail))
                                     list_farmers_line.add(detail)
                             }

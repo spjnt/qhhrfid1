@@ -54,13 +54,13 @@ object ImageUtils {
         return compressImage(bitmap) //再进行质量压缩
     }
 
-  /*  fun getStreamT(photoPathurl: String?): String {
+    fun getStreamT(photoPathurl: String?): String {
         if (TextUtils.isEmpty(photoPathurl)) return ""
-        if (!File(photoPathurl).isFile) return ""
-        val decodeFile = getimageOnly(BitmapFactory.decodeFile(photoPathurl))
+        if (!photoPathurl?.let { File(it).isFile }!!) return ""
+        val decodeFile = compressImage(BitmapFactory.decodeFile(photoPathurl),Config.img_quality_smaller)
         return bitmapToBase64(decodeFile)!!
 
-    }*/
+    }
 
     fun getStream(photoPathurl: String?): String {
         var uploadBuffer: String = ""
@@ -87,13 +87,13 @@ object ImageUtils {
         return uploadBuffer
     }
 
- /*   fun bitmapToBase64(bitmap: Bitmap?): String? {
+    fun bitmapToBase64(bitmap: Bitmap?): String? {
         var result: String? = null
         var baos: ByteArrayOutputStream? = null
         try {
             if (bitmap != null) {
                 baos = ByteArrayOutputStream()
-                bitmap.compress(Bitmap.CompressFormat.JPEG, Config.img_quality_small, baos)
+                bitmap.compress(Bitmap.CompressFormat.JPEG, Config.img_quality_smaller, baos)
                 baos.flush()
                 baos.close()
                 val bitmapBytes = baos.toByteArray()
@@ -115,7 +115,7 @@ object ImageUtils {
             }
         }
         return result
-    }*/
+    }
 
 
     @JvmStatic
@@ -172,11 +172,10 @@ object ImageUtils {
     }
 
 
-
-    fun compressImage(image: Bitmap?): Bitmap? {
+    fun compressImage(image: Bitmap?, quality: Int? = Config.img_quality_common): Bitmap? {
         if (image != null) {
             val baos = ByteArrayOutputStream()
-            image.compress(Bitmap.CompressFormat.JPEG, Config.img_quality_common, baos) //质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
+            image.compress(Bitmap.CompressFormat.JPEG,quality!!, baos) //质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
             var options = 100
             while (baos.toByteArray().size / 1024 > 1024) {  //循环判断如果压缩后图片是否大于100kb,大于继续压缩
                 baos.reset() //重置baos即清空baos

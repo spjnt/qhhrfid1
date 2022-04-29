@@ -104,9 +104,9 @@ public class OkhttpUtil {
 
                     @Override
                     public void onResponse(String response, int id) {
-                        if (!url.contains("UploadPicture"))
-                            LogUtils.e("onResponse :--->" + url + "  " + params.getParams() + "    " + response);
-                        else   LogUtils.e("onResponse :--->" + url + "  "  + response);
+//                        if (!url.contains("UploadPicture"))
+//                            LogUtils.e("onResponse :--->" + url + "  " + params.getParams() + "    " + response);
+//                        else   LogUtils.e("onResponse :--->" + url + "  "  + response);
 //                        FileUtil.writeTxtToFile(params.getParams(), FileUtil.getSDPath() + Constants.sdk_first_path, "parmars" + ".txt");
                         listener.onSuccess(new HttpBean(id, response), id);
                     }

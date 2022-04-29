@@ -301,7 +301,6 @@ abstract class BaseActivity : AppCompatActivity() {
             showStr("请在联网环境下操作")
             return
         }
-
     }
 
     fun playSound(raw: Int) {

@@ -50,11 +50,11 @@ abstract class BaseFragment : ImmersionFragment() /*Fragment()*/ {
     }
 
     fun haveRoles(roles: List<Roles>?, type: String, FObjSubGroup: String, FObjectName: String): Boolean {
-        return roles!!.isNotEmpty() && roles!!.filter { it.fObjGroup.equals(type) && it.fObjSubGroup.equals(FObjSubGroup) && it.fObjectName.equals(FObjectName) }.isNotEmpty()
+        return roles!!.isNotEmpty() && roles.any { it.fObjGroup.equals(type) && it.fObjSubGroup.equals(FObjSubGroup) && it.fObjectName.equals(FObjectName) }
     }
 
     fun ifC72(): Boolean {
-        return Build.MODEL.equals("HC720") || Build.MODEL.equals("SAH6380")
+        return Build.MODEL.contains("HC72") || Build.MODEL.equals("SAH6380")||Build.MODEL.contains("c72")||Build.MODEL.contains("HC720")
     }
 
     fun ifHC720s(): Boolean {

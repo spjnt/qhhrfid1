@@ -1,5 +1,6 @@
 package tramais.hnb.hhrfid.ui
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -8,6 +9,7 @@ import android.graphics.Matrix
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
+import android.speech.tts.TextToSpeech
 import android.text.TextUtils
 import android.view.KeyEvent
 import android.view.View
@@ -36,9 +38,10 @@ import tramais.hnb.hhrfid.util.*
 import tramais.hnb.hhrfid.util.GsonUtil.Companion.instant
 import tramais.hnb.hhrfid.waterimage.WaterMaskUtil
 import tramais.hnb.hhrfid.waterimage.WaterMaskView
+import java.util.*
 import kotlin.math.max
 
-class CameraActivity : BaseActivity() {
+class CameraActivity : BaseActivity(), TextToSpeech.OnInitListener {
     var mLocationClient: LocationClient? = null
 
     private var cameraView: CustomCameraView? = null
@@ -89,7 +92,9 @@ class CameraActivity : BaseActivity() {
     private val bitmaps: ArrayList<String>? = ArrayList()
     private val animals: ArrayList<String>? = ArrayList()
     private var isSuccess_ = true
-    private val handler: Handler = object : Handler() {
+    private var mTextToSpeech: TextToSpeech? = null
+    private val handler: Handler = @SuppressLint("HandlerLeak")
+    object : Handler() {
         override fun handleMessage(msg: Message) {
             super.handleMessage(msg)
             when (msg.what) {
@@ -101,11 +106,13 @@ class CameraActivity : BaseActivity() {
                             if (cache_nums.contains(epc)) {
 
                                 showStr("重复耳标 $epc")
+                                submit("重复耳标 $epc")
                                 playSound(R.raw.serror)
                                 imv_tips!!.text = ""
                                 isSuccess_ = true
                             } else {
                                 totalSize += 1
+                                submit("$epc")
                                 cache_nums.add(epc)
                                 playSound(R.raw.barcodebeep)
                                 //                                    SoundUtil.playSound(1);
@@ -115,6 +122,7 @@ class CameraActivity : BaseActivity() {
                             }
 
                         } else {
+                            submit("$epc")
                             cache_nums!!.add(epc)
                             playSound(R.raw.barcodebeep)
                             imv_tips!!.text = epc
@@ -125,6 +133,15 @@ class CameraActivity : BaseActivity() {
                 }
             }
         }
+    }
+
+    private fun initTextToSpeech() {
+        // 参数Context,TextToSpeech.OnInitListener
+        mTextToSpeech = TextToSpeech(this, this)
+        // 设置音调，值越大声音越尖（女生），值越小则变成男声,1.0是常规
+        mTextToSpeech!!.setPitch(1.0f)
+        // 设置语速
+        mTextToSpeech!!.setSpeechRate(0.5f)
     }
 
     //    private var content: FrameLayout? = null
@@ -140,7 +157,7 @@ class CameraActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         animals?.clear()
-
+        initTextToSpeech()
         if (NetUtil.checkNet(context)) {
             getInstance(this)!!.getCrop("养殖险") { rtnCode: Int, message: String?, totalNums: Int, datas: JSONArray? ->
                 if (datas != null && datas.size > 0) {
@@ -261,7 +278,31 @@ class CameraActivity : BaseActivity() {
         super.onDestroy()
         if (mLocationClient != null) mLocationClient!!.stop()
         bitmaps?.clear()
+        if (mTextToSpeech != null) {
+            mTextToSpeech!!.stop()
+            mTextToSpeech!!.shutdown()
+            mTextToSpeech = null
+        }
+    }
 
+    private fun submit(someVoice: String) {
+        if (someVoice.isEmpty()) {
+            return
+        }
+        if (mTextToSpeech != null && !mTextToSpeech!!.isSpeaking) {
+            /*
+                TextToSpeech的speak方法有两个重载。
+                // 执行朗读的方法
+                speak(CharSequence text,int queueMode,Bundle params,String utteranceId);
+                // 将朗读的的声音记录成音频文件
+                synthesizeToFile(CharSequence text,Bundle params,File file,String utteranceId);
+                第二个参数queueMode用于指定发音队列模式，两种模式选择
+                （1）TextToSpeech.QUEUE_FLUSH：该模式下在有新任务时候会清除当前语音任务，执行新的语音任务
+                （2）TextToSpeech.QUEUE_ADD：该模式下会把新的语音任务放到语音任务之后，
+                等前面的语音任务执行完了才会执行新的语音任务
+             */
+            mTextToSpeech!!.speak(someVoice, TextToSpeech.QUEUE_FLUSH, null, "1")
+        }
     }
 
     override fun initView() {
@@ -328,9 +369,9 @@ class CameraActivity : BaseActivity() {
     override fun initListner() {
         imv_pic!!.setOnClickListener { v: View? ->
             if (bitmaps == null || bitmaps.size == 0) return@setOnClickListener
-            if (path.isNullOrEmpty()) return@setOnClickListener
+            if (path.isEmpty()) return@setOnClickListener
             val dialogImg = DialogImg(this, path)
-            if (dialogImg != null && !isFinishing) dialogImg.show()
+            if (!isFinishing) dialogImg.show()
         }
 
         iv_dele!!.setOnClickListener { v: View? -> et_rfid!!.setText("") }
@@ -461,7 +502,7 @@ class CameraActivity : BaseActivity() {
         waterInfos.clear()
 
         val userName = PreferUtils.getString(this, Constants.UserName)
-        var name = if (userName.isNullOrBlank()) {
+        val name = if (userName.isNullOrBlank()) {
             "未知"
         } else {
             userName
@@ -474,7 +515,11 @@ class CameraActivity : BaseActivity() {
         era_tag = if (ifC72() || ifHC720s()) {
             Utils.getText(imv_tips)
         } else {
+
             Utils.getEdit(et_rfid)
+        }
+        if (!ifC72() && !ifHC720s()) {
+            if (bitmaps.isNullOrEmpty()) submit(era_tag!!)
         }
         waterInfos.add("耳标号:$era_tag")
         waterInfos.add("被保险人:$farm_name")
@@ -627,13 +672,41 @@ class CameraActivity : BaseActivity() {
                 showStr("请选择畜种")
             }
         }
-        //  }
-        /*  if (ifHC720s()) {
-              if (keyCode == 293 && event.repeatCount == 0) {
-
-              }
-
-          }*/
         return super.onKeyDown(keyCode, event)
     }
+
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            /*
+                使用的是小米手机进行测试，打开设置，在系统和设备列表项中找到更多设置，
+            点击进入更多设置，在点击进入语言和输入法，见语言项列表，点击文字转语音（TTS）输出，
+            首选引擎项有三项为Pico TTs，科大讯飞语音引擎3.0，度秘语音引擎3.0。其中Pico TTS不支持
+            中文语言状态。其他两项支持中文。选择科大讯飞语音引擎3.0。进行测试。
+
+                如果自己的测试机里面没有可以读取中文的引擎，
+            那么不要紧，我在该Module包中放了一个科大讯飞语音引擎3.0.apk，将该引擎进行安装后，进入到
+            系统设置中，找到文字转语音（TTS）输出，将引擎修改为科大讯飞语音引擎3.0即可。重新启动测试
+            Demo即可体验到文字转中文语言。
+             */
+            // setLanguage设置语言
+            val result = mTextToSpeech!!.setLanguage(Locale.CHINA)
+            // TextToSpeech.LANG_MISSING_DATA：表示语言的数据丢失
+            // TextToSpeech.LANG_NOT_SUPPORTED：不支持
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                showStr("数据丢失或不支持")
+            } else if (result == TextToSpeech.LANG_AVAILABLE) {
+                LogUtils.e("result  ${TextToSpeech.LANG_AVAILABLE}")
+            }
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        // 不管是否正在朗读TTS都被打断
+        mTextToSpeech!!.stop()
+        // 关闭，释放资源
+        mTextToSpeech!!.shutdown()
+    }
+
+
 }

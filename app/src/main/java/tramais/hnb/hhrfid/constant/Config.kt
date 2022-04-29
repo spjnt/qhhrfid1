@@ -2,11 +2,15 @@ package tramais.hnb.hhrfid.constant
 
 
 object Config {
+    var img_quality_smaller = 60
     var img_quality_small = 70
-    var img_quality_common =80
+    var img_quality_common = 80
 
     @JvmField
     var REQUEST_SING = 1 shl 111
+
+    /*科大讯飞中文引擎下载地址*/
+    var voice_engine = "https://www.pgyer.com/fqCd"
 
     /*生产ip:139.170.248.162:6051
 测试ip：111.44.133.34:6050*/

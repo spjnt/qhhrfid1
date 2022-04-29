@@ -2,7 +2,6 @@ package tramais.hnb.hhrfid.service
 
 import android.app.Service
 import android.content.Intent
-import android.os.AsyncTask
 import android.os.IBinder
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONArray
@@ -17,6 +16,7 @@ import tramais.hnb.hhrfid.litePalBean.*
 import tramais.hnb.hhrfid.net.OkhttpUtil
 import tramais.hnb.hhrfid.net.Params
 import tramais.hnb.hhrfid.net.RequestUtil
+import tramais.hnb.hhrfid.util.EasyExecutor
 import tramais.hnb.hhrfid.util.GsonUtil.Companion.instant
 import tramais.hnb.hhrfid.util.PreferUtils
 
@@ -384,7 +384,13 @@ class DownloadService : Service() {
                 override fun onSuccess(bean: HttpBean, id: Int) {
                     instant!!.praseAllMessageArray(bean.response) { rtnCode: Int, mess: String?, totalNums: Int, datas: JSONArray? ->
                         jsonArray = datas
-                        PraseAllData().execute()
+                        executor.execute {
+                            if (jsonArray != null && jsonArray!!.size > 0) {
+                                underWrites = instant!!.parseCommonUseArr(jsonArray, FarmList::class.java)
+                                saveCache(underWrites)
+                            }
+                        }
+                        //   PraseAllData().execute()
                     }
                 }
 
@@ -396,6 +402,8 @@ class DownloadService : Service() {
         }
 
     private fun saveCache(underWrites: List<FarmList>?) {
+        deleteAll(FarmListCache::class.java, "isUpLoad =?", "1")
+
         // LitePal.deleteAll(FarmListCache::class.java)
         if (underWrites != null && underWrites.isNotEmpty()) {
             for (item in underWrites) {
@@ -493,7 +501,7 @@ class DownloadService : Service() {
         }
 
     private val riskReason: Unit
-        private get() {
+        get() {
             deleteAll(RiskReasonCache::class.java)
             RequestUtil.getInstance(this)!!.getRiskReason("", object : GetCommonWithError<RiskReason> {
                 override fun getCommon(t: RiskReason) {
@@ -502,8 +510,8 @@ class DownloadService : Service() {
                     if (data != null && data.isNotEmpty()) {
                         for (item in data) {
                             val cache = RiskReasonCache()
-                            val reasonName = item.reasonName
-                            cache.reasonName = reasonName
+                            //  val reasonName = item.reasonName
+                            cache.reasonName = item.reasonName
                             cache.reasonCode = item.reasonCode
                             cache.fcategory = item.fCategory
                             cache.save()
@@ -522,21 +530,27 @@ class DownloadService : Service() {
             })
         }
 
-    private inner class PraseAllData : AsyncTask<Void?, Void?, Any?>() {
-        override fun doInBackground(vararg params: Void?): Any? {
-            if (jsonArray != null && jsonArray!!.size > 0) {
-                underWrites = instant!!.parseCommonUseArr(jsonArray, FarmList::class.java)
-                saveCache(underWrites)
-            }
-            return null
-        }
+    /* private inner class PraseAllData : AsyncTask<Void?, Void?, Any?>() {
+         override fun doInBackground(vararg params: Void?): Any? {
+             if (jsonArray != null && jsonArray!!.size > 0) {
+                 underWrites = instant!!.parseCommonUseArr(jsonArray, FarmList::class.java)
+                 saveCache(underWrites)
+             }
+             return null
+         }
 
+     }*/
+
+    val executor by lazy {
+        return@lazy EasyExecutor.newBuilder(1)
+                .setName("Sample Executor")
+                .setPriority(Thread.MAX_PRIORITY)
+                .build()
     }
-
     var inten: Intent? = null
     fun print(url: String) {
         downLoad_num++
-//        LogUtils.e("downLoad_num  $downLoad_num  $url")
+        //LogUtils.e("downLoad_num  $downLoad_num  $url")
         inten = Intent()
         inten!!.putExtra(Constants.DownLoad_desc, downLoad_num)
         inten!!.action = "tramais.hnb.hhrfid.service.DownLoadService"

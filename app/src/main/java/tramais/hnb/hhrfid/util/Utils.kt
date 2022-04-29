@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.text.TextUtils
+import android.util.Log
 import android.widget.EditText
 import android.widget.TextView
 import com.alibaba.fastjson.JSONArray
@@ -13,7 +14,9 @@ import tramais.hnb.hhrfid.base.QhApplication.Companion.context
 import tramais.hnb.hhrfid.bean.Region
 import tramais.hnb.hhrfid.constant.Constants
 import tramais.hnb.hhrfid.interfaces.GetCommon
+import tramais.hnb.hhrfid.litePalBean.AnimalSaveCache
 import tramais.hnb.hhrfid.litePalBean.RegionCache
+import java.io.File
 import java.text.DecimalFormat
 import java.util.*
 import java.util.regex.Pattern
@@ -258,5 +261,54 @@ object Utils {
         return result
     }
 
+    fun getFilesAllName(path: String?): List<String>? {
+        val file = path?.let { File(it) }
+        val files: Array<File> = file!!.listFiles()
+        if (files == null) {
+            Log.e("error", "空目录")
+            return null
+        }
+        val s: MutableList<String> = ArrayList()
+        for (i in files.indices) {
+            val name = files[i].name
+            val name_ = name.split("_")[0]
+            if (!s.contains(name_))
+                s.add(name_)
+        }
+        return s
+    }
 
+    fun up() {
+        val ids = "632221197105172014"
+        val path = FileUtil.getSDPath() + Constants.sdk_middle_animal + "$ids/"
+        val filesAllName = getFilesAllName(path)
+        for (item in filesAllName!!) {
+            val saveCache = AnimalSaveCache()
+            saveCache.farmName = "罗华前"
+            saveCache.tel = "13997402160"
+            saveCache.isUpLoad = "0"
+            saveCache.statu = "新建"
+            saveCache.ageMonth = "12"
+            saveCache.latitude = 0.0
+            saveCache.longitude = 0.0
+            saveCache.animalType = "藏系牦牛~IXO~990319~140248"
+            saveCache.isMakeDeal = "0"
+            saveCache.category_name = ""
+            saveCache.img1 = path + item + "_" + "0.jpg"
+            saveCache.img2 = path + item + "_" + "1.jpg"
+            saveCache.img3 = path + item + "_" + "2.jpg"
+            saveCache.img4 = path + item + "_" + "3.jpg"
+            saveCache.lableNum = item
+            saveCache.farmID = ids
+            saveCache.comPanyNumber = "63222100"
+            saveCache.employeeNumber = "19274525"
+            saveCache.creatTime = TimeUtil.getTime(Constants.yyyy_MM_ddHHmmss)
+            saveCache.save()
+        }
+        // LogUtils.e("name  $filesAllName")
+    }
+
+    infix fun String.plus(str:String):String{
+     return this.plus(str)
+    }
 }

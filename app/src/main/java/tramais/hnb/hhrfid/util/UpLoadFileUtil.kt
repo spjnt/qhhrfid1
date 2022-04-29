@@ -1,7 +1,9 @@
 package tramais.hnb.hhrfid.util
 
 import android.content.Context
+import android.os.Build
 import android.text.TextUtils
+import com.apkfuns.logutils.LogUtils
 import tramais.hnb.hhrfid.bean.HttpBean
 import tramais.hnb.hhrfid.constant.Config
 import tramais.hnb.hhrfid.constant.Constants
@@ -11,8 +13,13 @@ import tramais.hnb.hhrfid.interfaces.OkResponseInterface
 import tramais.hnb.hhrfid.net.OkhttpUtil
 import tramais.hnb.hhrfid.net.Params
 import java.util.*
+import kotlin.system.measureTimeMillis
 
 object UpLoadFileUtil {
+    fun ifC72(): Boolean {
+        return Build.MODEL.contains("HC72") || Build.MODEL.equals("SAH6380") || Build.MODEL.contains("c72") || Build.MODEL.contains("HC720")
+    }
+
     fun upLoadFile(context: Context?, category: String?, num: String?, paths: List<String?>?, getList: GetList) {
         val urls: LinkedList<String> = LinkedList<String>()
         urls.clear()
@@ -62,25 +69,23 @@ object UpLoadFileUtil {
     fun upLoadFile(context: Context?, category: String, num: String?, item: String?, serial: Int, getList: GetOneString) {
         // LogUtils.e("category  $category   $num  $item   $serial")
         if (item.isNullOrEmpty() || (!item.isNullOrEmpty() && item.contains("http"))) {
-            if (!item.isNullOrEmpty() && item.contains("http"))
+            if (!item.isNullOrEmpty() && item.contains("http")) {
                 getList.getString(item)
-            else
+            } else {
                 getList.getString("")
+            }
+
             System.gc()
             return
         }
-
-
         val params = Params.createParams()
-//        val measureTimeMillis = measureTimeMillis { ImageUtils.getStream(item) }
-//        LogUtils.e("me  $measureTimeMillis")
-    /*    val steam = if (category == "耳标照片") {
-            ImageUtils.getStream(item)
-        } else {
+        val steam = if (ifC72()) {
             ImageUtils.getStreamT(item)
-        }*/
+        } else {
+            ImageUtils.getStream(item)
+        }
         //  LogUtils.e("stream  $steam")
-        params.add("picture", ImageUtils.getStream(item))
+        params.add("picture", steam)
         when (category) {
             "身份证" -> params.add("filename", "sfz${num}.jpg")
             "身份证反面" -> params.add("filename", "sfzback${num}.jpg")

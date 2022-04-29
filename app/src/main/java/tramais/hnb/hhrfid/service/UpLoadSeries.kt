@@ -196,6 +196,7 @@ class UpLoadSeries : Service()/*, CoroutineScope by MainScope()*/ {
                 getOneString.getString("耳标信息上传完成")
             } else {
                 getOneString.getString("农户:${saveCache.farmName},耳标号:${lableNum}照片缺失")
+              //  LitePal.deleteAll(AnimalSaveCache::class.java,"creatTime =?",animalSaveCache.creatTime)
             }
         } else {
             //  Thread {
@@ -221,8 +222,6 @@ class UpLoadSeries : Service()/*, CoroutineScope by MainScope()*/ {
                         }
                     }
             })
-            //   }.start()
-
         }
 
     }

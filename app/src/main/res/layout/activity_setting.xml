@@ -81,12 +81,12 @@
         <include layout="@layout/gray_line" />
 
         <RelativeLayout
-            android:visibility="gone"
             android:id="@+id/rl_photo_choice"
             android:layout_width="match_parent"
             android:layout_height="@dimen/size_40"
+            android:background="@color/white"
 
-            android:background="@color/white">
+            android:visibility="gone">
 
             <TextView
                 style="@style/text_left_ll_big"
@@ -105,13 +105,13 @@
                 android:textSize="@dimen/text_size_14sp" />
         </RelativeLayout>
 
-       <!-- <include layout="@layout/gray_line" />-->
+        <!-- <include layout="@layout/gray_line" />-->
 
         <RelativeLayout
-            android:layout_marginTop="@dimen/size_20"
             android:id="@+id/iv_ref_choice"
             android:layout_width="match_parent"
             android:layout_height="@dimen/size_40"
+            android:layout_marginTop="@dimen/size_20"
             android:background="@color/white">
 
             <TextView
@@ -132,7 +132,6 @@
         </RelativeLayout>
 
         <include layout="@layout/gray_line" />
-
 
 
         <RelativeLayout
@@ -172,7 +171,6 @@
                 android:text="水印字体颜色" />
 
             <LinearLayout
-                android:background="@color/gray"
                 android:id="@+id/ll_color"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -180,6 +178,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/size_30"
                 android:layout_toLeftOf="@id/iv_arrow_r"
+                android:background="@color/gray"
 
                 android:padding="@dimen/size_4">
 
@@ -212,11 +211,12 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/size_10"
-                android:src="@mipmap/arrow_right_small"/>
+                android:src="@mipmap/arrow_right_small" />
 
         </RelativeLayout>
 
         <include layout="@layout/gray_line" />
+
         <RelativeLayout
             android:id="@+id/rl_version"
             android:layout_width="match_parent"
@@ -241,6 +241,7 @@
         </RelativeLayout>
 
         <include layout="@layout/gray_line" />
+
         <RelativeLayout
             android:id="@+id/rl_feedback"
             android:layout_width="match_parent"
@@ -261,6 +262,28 @@
         </RelativeLayout>
 
         <include layout="@layout/gray_line" />
+<!--
+        <RelativeLayout
+            android:id="@+id/voice_engine"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_40"
+            android:background="@color/white">
+
+            <TextView
+                style="@style/text_left_ll_big"
+                android:text="语音引擎" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/size_10"
+                android:text="复制链接"
+                android:textSize="@dimen/text_size_12sp" />
+        </RelativeLayout>
+
+        <include layout="@layout/gray_line" />-->
 
         <LinearLayout
             android:id="@+id/btn_quit"
